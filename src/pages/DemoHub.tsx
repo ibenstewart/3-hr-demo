@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase } from 'lucide-react'
+import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase, Megaphone } from 'lucide-react'
 
 const demos = [
   {
@@ -50,6 +50,14 @@ const demos = [
     phase: 'Full Journey (B2B)',
     color: 'bg-sky-blue',
   },
+  {
+    to: '/marketing',
+    icon: Megaphone,
+    title: 'Marketing Planner',
+    description: 'Pick any product idea and generate a full marketing plan — channels, tactics, timeline, and budget.',
+    phase: 'Go-to-Market',
+    color: 'bg-coral',
+  },
 ]
 
 export default function DemoHub() {
@@ -60,10 +68,10 @@ export default function DemoHub() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 animate-fade-in-up">
             One engineer. Three hours.{' '}
-            <span className="text-sky-blue">Six products.</span>
+            <span className="text-sky-blue">Seven products.</span>
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-1">
-            Six product demos exploring Skyscanner as a travel operating system.
+            Seven product demos exploring Skyscanner as a travel operating system.
           </p>
         </div>
       </div>

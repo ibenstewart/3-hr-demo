@@ -9,6 +9,7 @@ import PriceIntelligence from './pages/PriceIntelligence'
 import Experiences from './pages/Experiences'
 import ExperienceDetail from './pages/ExperienceDetail'
 import BusinessTravel from './pages/BusinessTravel'
+import MarketingPlanner from './pages/MarketingPlanner'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/experiences" element={<Experiences />} />
         <Route path="/experiences/:id" element={<ExperienceDetail />} />
         <Route path="/business-travel" element={<BusinessTravel />} />
+        <Route path="/marketing" element={<MarketingPlanner />} />
       </Routes>
       </ErrorBoundary>
     </div>
