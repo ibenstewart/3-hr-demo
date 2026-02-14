@@ -90,7 +90,12 @@
   --color-danger: var(--bpk-status-danger-spot);
   --color-danger-fill: var(--bpk-status-danger-fill);
   --color-scrim: var(--bpk-scrim);
+  --color-star: var(--bpk-marcomms-yellow);
+  --color-yellow: var(--bpk-marcomms-yellow);
   --font-family-sans: var(--bpk-font-family-base);
+  --shadow-sm: var(--bpk-box-shadow-sm);
+  --shadow-lg: var(--bpk-box-shadow-lg);
+  --shadow-xl: var(--bpk-box-shadow-xl);
 }
 
 /* ========== BASE STYLES ========== */

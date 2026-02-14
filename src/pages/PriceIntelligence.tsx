@@ -5,6 +5,11 @@ import { Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, Compos
 import { cn } from '../lib/utils'
 import { priceHistory, flightOptions, priceVerdict } from '../data/price-history'
 
+// Backpack token values for Recharts (which needs raw color strings, not CSS vars)
+const BPK_SKY_BLUE = 'rgb(0, 98, 227)'
+const BPK_TEXT_SECONDARY = 'rgb(98, 105, 113)'
+const BPK_LINE = 'rgb(193, 199, 207)'
+
 function CountdownTimer({ initialSeconds }: { initialSeconds: number }) {
   const [seconds, setSeconds] = useState(initialSeconds)
 
@@ -89,9 +94,9 @@ export default function PriceIntelligence() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={chartData}>
-                    <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#626971' }} />
+                    <XAxis dataKey="date" tick={{ fontSize: 12, fill: BPK_TEXT_SECONDARY }} />
                     <YAxis
-                      tick={{ fontSize: 12, fill: '#626971' }}
+                      tick={{ fontSize: 12, fill: BPK_TEXT_SECONDARY }}
                       tickFormatter={(v) => `£${v}`}
                       domain={['dataMin - 30', 'dataMax + 30']}
                     />
@@ -99,29 +104,29 @@ export default function PriceIntelligence() {
                       formatter={(value) => [`£${value}`, 'Price']}
                       contentStyle={{
                         borderRadius: '8px',
-                        border: '1px solid #C1C7CF',
+                        border: `1px solid ${BPK_LINE}`,
                         fontSize: '14px',
                       }}
                     />
                     <ReferenceLine
                       y={priceVerdict.historicalAverage}
-                      stroke="#C1C7CF"
+                      stroke={BPK_LINE}
                       strokeDasharray="4 4"
-                      label={{ value: `Avg £${priceVerdict.historicalAverage}`, position: 'right', fontSize: 11, fill: '#626971' }}
+                      label={{ value: `Avg £${priceVerdict.historicalAverage}`, position: 'right', fontSize: 11, fill: BPK_TEXT_SECONDARY }}
                     />
                     <ReferenceLine
                       y={priceVerdict.currentPrice}
-                      stroke="#0062E3"
+                      stroke={BPK_SKY_BLUE}
                       strokeDasharray="4 4"
-                      label={{ value: `Now £${priceVerdict.currentPrice}`, position: 'left', fontSize: 11, fill: '#0062E3' }}
+                      label={{ value: `Now £${priceVerdict.currentPrice}`, position: 'left', fontSize: 11, fill: BPK_SKY_BLUE }}
                     />
                     <Line
                       type="monotone"
                       dataKey="price"
-                      stroke="#0062E3"
+                      stroke={BPK_SKY_BLUE}
                       strokeWidth={2}
                       dot={false}
-                      activeDot={{ r: 5, fill: '#0062E3' }}
+                      activeDot={{ r: 5, fill: BPK_SKY_BLUE }}
                     />
                   </ComposedChart>
                 </ResponsiveContainer>

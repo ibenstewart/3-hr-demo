@@ -30,7 +30,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
         </h3>
         <div className="flex items-center gap-2 mt-2">
           <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <Star className="w-4 h-4 fill-star text-star" />
             <span className="text-sm font-bold">{experience.rating}</span>
           </div>
           <span className="text-xs text-text-secondary">({experience.reviewCount.toLocaleString()} reviews)</span>

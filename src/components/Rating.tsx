@@ -13,9 +13,9 @@ export default function Rating({ rating, reviewCount, className }: RatingProps) 
 
   return (
     <div className={cn('flex items-center gap-1.5', className)}>
-      <span className="text-amber-400 text-sm tracking-tight">
+      <span className="text-star text-sm tracking-tight">
         {Array.from({ length: totalStars }, (_, i) => (
-          <span key={i} className={i < fullStars || (i === fullStars && hasHalf) ? 'text-amber-400' : 'text-gray-300'}>
+          <span key={i} className={i < fullStars || (i === fullStars && hasHalf) ? 'text-star' : 'text-line'}>
             ★
           </span>
         ))}

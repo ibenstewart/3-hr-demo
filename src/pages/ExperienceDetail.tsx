@@ -45,7 +45,7 @@ export default function ExperienceDetail() {
               <h1 className="text-2xl md:text-3xl font-black text-text-primary mt-1">{experience.title}</h1>
               <div className="flex items-center gap-4 mt-3">
                 <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                  <Star className="w-5 h-5 fill-star text-star" />
                   <span className="font-bold">{experience.rating}</span>
                   <span className="text-text-secondary text-sm">({experience.reviewCount.toLocaleString()} reviews)</span>
                 </div>
@@ -125,7 +125,7 @@ export default function ExperienceDetail() {
                     </div>
                     <div className="flex items-center gap-1 mb-2">
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <Star key={j} className={`w-3 h-3 ${j < review.rating ? 'fill-amber-400 text-amber-400' : 'text-line'}`} />
+                        <Star key={j} className={`w-3 h-3 ${j < review.rating ? 'fill-star text-star' : 'text-line'}`} />
                       ))}
                     </div>
                     <p className="text-sm text-text-secondary">{review.text}</p>

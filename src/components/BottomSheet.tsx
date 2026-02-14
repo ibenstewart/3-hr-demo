@@ -30,7 +30,7 @@ export default function BottomSheet({ isOpen, onClose, children, title }: Bottom
       {/* Sheet */}
       <div
         className={cn(
-          'absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl animate-slide-up',
+          'absolute bottom-0 left-0 right-0 bg-white rounded-t-[1.5rem] animate-slide-up',
           'max-h-[85vh] flex flex-col'
         )}
       >

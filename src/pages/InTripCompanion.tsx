@@ -55,7 +55,7 @@ export default function InTripCompanion() {
             </div>
             <div className="text-right">
               <div className="flex items-center gap-2 text-white/80">
-                <Sun className="w-5 h-5 text-amber-300" />
+                <Sun className="w-5 h-5 text-yellow" />
                 <span className="text-lg font-bold">18°C</span>
               </div>
               <p className="text-xs text-white/50">Sunny</p>
