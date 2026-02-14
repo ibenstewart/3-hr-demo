@@ -1,73 +1,46 @@
-# React + TypeScript + Vite
+# Three Hour Build Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**What if one engineer could build all of this in a few hours?**
 
-Currently, two official plugins are available:
+Six interactive product demos exploring what Skyscanner could look like as a travel operating system — consumer and business. Every demo was built from scratch with AI pair programming (Claude Code) in a single session.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## The Demos
 
-## React Compiler
+### 1. AI Trip Planner
+Conversational trip planning that replaces 10 browser tabs. Type a natural language query like "10 days in Japan, cherry blossom season" and get a full day-by-day itinerary with flights, hotels, and activities. Edit any day with AI assistance.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. In-Trip Companion
+A post-booking travel assistant for your Barcelona trip. Day-by-day schedule with weather, an AI chat overlay for real-time questions, and quick actions for common in-trip needs.
 
-## Expanding the ESLint configuration
+### 3. Smart Ancillaries
+AI-powered personalised upselling after booking. Shows contextual add-ons (seats, bags, lounge, insurance) with a trip readiness score and running total.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 4. Price Intelligence
+Predictive pricing with a 90-day price history chart, AI-generated buy/wait verdicts, and a Price Freeze countdown timer.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 5. Tours & Experiences
+Activity metasearch for Barcelona — compare prices across Viator, GetYourGuide, and direct operators. Category filters, sort options, detail pages with reviews, availability calendar, and smart cross-sell suggestions.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 6. Business Travel Agent
+Full B2B business travel flow: natural language search, AI-curated flight/hotel options with policy compliance, Slack-based manager approval, automated booking, and real-time disruption handling with rebooking alternatives.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Running Locally
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS 4 with Skyscanner Backpack design tokens
+- React Router 7
+- Recharts (price history chart)
+- Lucide React (icons)
+- All data is mock — no backend required
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Built With
+
+Built entirely with [Claude Code](https://claude.com/claude-code) as an AI pair programming experiment.
