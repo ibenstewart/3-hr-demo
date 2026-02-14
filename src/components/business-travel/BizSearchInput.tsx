@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Search, Briefcase, Plane, Clock, TrendingDown } from 'lucide-react'
-import { cn } from '../../lib/utils'
 import { exampleQueries, recentTrips, suggestedDeals, companyContext } from '../../data/business-travel'
 
 interface BizSearchInputProps {

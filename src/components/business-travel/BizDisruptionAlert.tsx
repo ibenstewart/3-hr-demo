@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { AlertTriangle, ArrowRight, Check, MessageSquare, Clock } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import type { DisruptionScenario } from '../../data/business-travel'
-import { companyContext } from '../../data/business-travel'
 
 interface BizDisruptionAlertProps {
   disruption: DisruptionScenario
