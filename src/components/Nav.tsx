@@ -8,6 +8,7 @@ const links = [
   { to: '/ancillaries', label: 'Ancillaries' },
   { to: '/prices', label: 'Prices' },
   { to: '/experiences', label: 'Experiences' },
+  { to: '/business-travel', label: 'Biz Travel' },
 ]
 
 export default function Nav() {

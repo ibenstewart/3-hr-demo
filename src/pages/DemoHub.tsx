@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Plane, Map, ShoppingBag, TrendingUp, Compass } from 'lucide-react'
+import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase } from 'lucide-react'
 
 const demos = [
   {
@@ -42,6 +42,14 @@ const demos = [
     phase: 'Trip',
     color: 'bg-haiti',
   },
+  {
+    to: '/business-travel',
+    icon: Briefcase,
+    title: 'Business Travel Agent',
+    description: 'AI-powered SMB business travel — natural language booking with Slack approvals and disruption support.',
+    phase: 'Full Journey (B2B)',
+    color: 'bg-sky-blue',
+  },
 ]
 
 export default function DemoHub() {
@@ -59,8 +67,8 @@ export default function DemoHub() {
             in a weekend?
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-2">
-            Five product prototypes that tell the story of Skyscanner as a{' '}
-            <span className="text-white font-semibold">travel operating system</span> — not just a flight comparison site.
+            Six product prototypes that tell the story of Skyscanner as a{' '}
+            <span className="text-white font-semibold">travel operating system</span> — consumer and business, not just a flight comparison site.
           </p>
         </div>
       </div>
@@ -113,9 +121,13 @@ export default function DemoHub() {
             <span className="text-line">→</span>
             <span className="bg-haiti text-white px-4 py-2 rounded-full font-semibold">Trip</span>
           </div>
+          <div className="mt-4 flex items-center justify-center gap-3 text-sm">
+            <span className="text-line">+</span>
+            <span className="bg-sky-blue text-white px-4 py-2 rounded-full font-semibold">Full Journey (B2B)</span>
+          </div>
           <p className="text-text-secondary text-sm mt-4 max-w-lg mx-auto">
-            Together, these demos prove Skyscanner can own the entire traveller journey.
-            One person built all five in a weekend.
+            Together, these demos prove Skyscanner can own the entire traveller journey — consumer and business.
+            One person built all six in a weekend.
           </p>
         </div>
       </div>
