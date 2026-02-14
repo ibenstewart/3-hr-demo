@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* ========== BACKPACK DESIGN TOKENS ========== */
+:root {
+  /* Spacing (4px grid) */
+  --bpk-spacing-sm: 0.25rem;
+  --bpk-spacing-md: 0.5rem;
+  --bpk-spacing-base: 1rem;
+  --bpk-spacing-lg: 1.5rem;
+  --bpk-spacing-xl: 2rem;
+  --bpk-spacing-xxl: 2.5rem;
+
+  /* Colors — Canvas */
+  --bpk-canvas: rgb(255, 255, 255);
+  --bpk-canvas-contrast: rgb(239, 243, 248);
+
+  /* Colors — Surface */
+  --bpk-surface-default: rgb(255, 255, 255);
+  --bpk-surface-elevated: rgb(255, 255, 255);
+  --bpk-surface-highlight: rgb(224, 228, 233);
+  --bpk-surface-contrast: rgb(5, 32, 60);
+  --bpk-surface-subtle: rgb(227, 240, 255);
+  --bpk-surface-hero: rgb(0, 98, 227);
+
+  /* Colors — Text */
+  --bpk-text-primary: rgb(22, 22, 22);
+  --bpk-text-secondary: rgb(98, 105, 113);
+  --bpk-text-disabled: rgba(0, 0, 0, 0.2);
+  --bpk-text-link: rgb(0, 98, 227);
+  --bpk-text-error: rgb(231, 8, 102);
+  --bpk-text-on-dark: rgb(255, 255, 255);
+
+  /* Colors — Core (brand) */
+  --bpk-core-accent: rgb(0, 98, 227);
+  --bpk-core-primary: rgb(5, 32, 60);
+
+  /* Colors — Status */
+  --bpk-status-success-spot: rgb(12, 131, 138);
+  --bpk-status-success-fill: rgb(212, 255, 242);
+  --bpk-status-warning-spot: rgb(245, 93, 66);
+  --bpk-status-warning-fill: rgb(255, 247, 207);
+  --bpk-status-danger-spot: rgb(231, 8, 102);
+  --bpk-status-danger-fill: rgb(255, 233, 249);
+
+  /* Colors — Line */
+  --bpk-line: rgb(193, 199, 207);
+  --bpk-scrim: rgba(0, 0, 0, 0.7);
+
+  /* Colors — Marcomms */
+  --bpk-marcomms-sky-blue: rgb(0, 98, 227);
+  --bpk-marcomms-dark-sky: rgb(5, 32, 60);
+  --bpk-marcomms-berry: rgb(231, 8, 102);
+  --bpk-marcomms-orange: rgb(255, 123, 89);
+  --bpk-marcomms-yellow: rgb(254, 235, 135);
+  --bpk-marcomms-eco-green: rgb(15, 161, 169);
+
+  /* Typography */
+  --bpk-font-family-base: 'Skyscanner Relative', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+
+  /* Shadows */
+  --bpk-box-shadow-sm: 0px 1px 3px 0px rgba(37, 32, 31, 0.3);
+  --bpk-box-shadow-lg: 0px 4px 14px 0px rgba(37, 32, 31, 0.25);
+  --bpk-box-shadow-xl: 0px 12px 50px 0px rgba(37, 32, 31, 0.25);
+
+  /* Animation */
+  --bpk-duration-sm: 200ms;
+  --bpk-duration-base: 400ms;
+}
+
+/* ========== TAILWIND THEME EXTENSION ========== */
+@theme inline {
+  --color-sky-blue: var(--bpk-marcomms-sky-blue);
+  --color-haiti: var(--bpk-marcomms-dark-sky);
+  --color-canvas: var(--bpk-canvas);
+  --color-canvas-contrast: var(--bpk-canvas-contrast);
+  --color-surface: var(--bpk-surface-default);
+  --color-surface-highlight: var(--bpk-surface-highlight);
+  --color-surface-subtle: var(--bpk-surface-subtle);
+  --color-text-primary: var(--bpk-text-primary);
+  --color-text-secondary: var(--bpk-text-secondary);
+  --color-text-link: var(--bpk-text-link);
+  --color-line: var(--bpk-line);
+  --color-berry: var(--bpk-marcomms-berry);
+  --color-coral: var(--bpk-marcomms-orange);
+  --color-eco: var(--bpk-marcomms-eco-green);
+  --color-success: var(--bpk-status-success-spot);
+  --color-success-fill: var(--bpk-status-success-fill);
+  --color-warning: var(--bpk-status-warning-spot);
+  --color-warning-fill: var(--bpk-status-warning-fill);
+  --color-danger: var(--bpk-status-danger-spot);
+  --color-danger-fill: var(--bpk-status-danger-fill);
+  --color-scrim: var(--bpk-scrim);
+  --font-family-sans: var(--bpk-font-family-base);
+}
+
+/* ========== BASE STYLES ========== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--bpk-font-family-base);
+  color: var(--bpk-text-primary);
+  background-color: var(--bpk-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--bpk-core-accent);
+  outline-offset: 2px;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countdown-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-countdown-pulse {
+  animation: countdown-pulse 2s ease-in-out infinite;
+}
+
+/* Stagger delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* Streaming dot animation */
+.streaming-dots span {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+.streaming-dots span:nth-child(2) { animation-delay: 0.2s; }
+.streaming-dots span:nth-child(3) { animation-delay: 0.4s; }
