@@ -38,6 +38,17 @@ export default function Ancillaries() {
   return (
     <div className="min-h-screen bg-canvas-contrast">
       <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* Trip context banner */}
+        <Link
+          to="/companion"
+          className="block bg-sky-blue/5 border border-sky-blue/20 rounded-lg px-4 py-2.5 mb-6 hover:bg-sky-blue/10 transition-colors"
+        >
+          <p className="text-sm text-text-primary">
+            <span className="font-semibold">Your trip companion activates on Feb 12</span>
+            <span className="text-sky-blue ml-2 text-xs font-semibold">View companion →</span>
+          </p>
+        </Link>
+
         {/* Booking card */}
         <div className="bg-white rounded-xl p-6 shadow-sm mb-8 animate-fade-in-up">
           <div className="flex items-center gap-3 mb-4">

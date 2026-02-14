@@ -20,12 +20,7 @@ export default function Nav() {
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="1.5" fill="none" />
-              <path d="M5 15 C 5 9, 19 9, 19 15" stroke="white" strokeWidth="1.5" fill="none" />
-              <circle cx="12" cy="11" r="3" fill="white" />
-            </svg>
-            <span className="font-bold text-lg">Skyscanner</span>
+            <span className="font-bold text-lg tracking-tight">Skyscanner</span>
           </Link>
 
           {/* Desktop links */}

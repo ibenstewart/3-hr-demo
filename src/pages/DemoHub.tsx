@@ -58,15 +58,21 @@ export default function DemoHub() {
       {/* Hero */}
       <div className="bg-haiti text-white py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-sky-blue font-bold text-sm tracking-wide uppercase mb-4 animate-fade-in-up">
-            Three Hour Build Challenge
-          </p>
-          <h1 className="text-4xl md:text-5xl font-black leading-tight mb-6 animate-fade-in-up stagger-1">
-            What if one engineer could build{' '}
-            <span className="text-sky-blue">all of this</span>{' '}
-            in a few hours?
+          <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 animate-fade-in-up">
+            One engineer. Three hours.{' '}
+            <span className="text-sky-blue">Six products.</span>
           </h1>
+          <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-1">
+            Six product demos exploring Skyscanner as a travel operating system.
+          </p>
         </div>
+      </div>
+
+      {/* Strategy line */}
+      <div className="max-w-3xl mx-auto px-6 -mt-4 mb-2 text-center">
+        <p className="text-text-secondary text-sm py-4">
+          Each demo maps to an opportunity on the New Ideas long list. Together they show what Skyscanner looks like as a travel operating system, not just a flight search box.
+        </p>
       </div>
 
       {/* Demo Cards */}

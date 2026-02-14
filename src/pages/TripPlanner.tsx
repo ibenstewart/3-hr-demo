@@ -14,6 +14,15 @@ export default function TripPlanner() {
   const [editText, setEditText] = useState('')
 
   const handleSearch = (q?: string) => {
+    const searchQuery = q || query.trim()
+    if (!searchQuery) {
+      // Auto-fill with first suggestion
+      const fallback = promptSuggestions[0]
+      setQuery(fallback)
+      setView('loading')
+      setTimeout(() => setView('results'), 1800)
+      return
+    }
     if (q) setQuery(q)
     setView('loading')
     setTimeout(() => setView('results'), 1800)
@@ -51,13 +60,12 @@ export default function TripPlanner() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && query.trim() && handleSearch()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="10 days in Japan in April, budget £4,000..."
               className="w-full px-6 py-4 pr-14 rounded-2xl text-lg bg-white text-text-primary placeholder:text-text-secondary/50 shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-blue"
             />
             <button
               onClick={() => handleSearch()}
-              disabled={!query.trim()}
               className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-sky-blue rounded-xl flex items-center justify-center hover:bg-sky-blue/90 transition-colors disabled:opacity-40"
             >
               <Search className="w-5 h-5 text-white" />
@@ -125,6 +133,15 @@ export default function TripPlanner() {
           {/* Day sidebar */}
           <div className="hidden md:block w-48 flex-shrink-0">
             <div className="sticky top-24 space-y-1">
+              {/* Persistent trip total */}
+              <button
+                onClick={() => setActiveDay(itinerary.length)}
+                className="w-full bg-white rounded-lg p-3 shadow-sm mb-3 text-left hover:shadow-md transition-shadow"
+              >
+                <p className="text-xs text-text-secondary font-semibold">Trip total</p>
+                <p className="text-lg font-black text-sky-blue">£{tripSummary.totalCost.toLocaleString()}</p>
+                <p className="text-xs text-sky-blue font-semibold mt-1">View breakdown →</p>
+              </button>
               {itinerary.map(day => (
                 <button
                   key={day.day}

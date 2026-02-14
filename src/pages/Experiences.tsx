@@ -101,6 +101,17 @@ export default function Experiences() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Trip context banner */}
+        <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-lg px-4 py-2.5 mb-6 flex items-center justify-between">
+          <p className="text-sm text-text-primary">
+            <span className="font-semibold">Based on your Barcelona trip</span>
+            <span className="text-text-secondary"> · Feb 12–16, 2026</span>
+          </p>
+          <Link to="/companion" className="text-xs text-sky-blue font-semibold hover:underline">
+            View trip →
+          </Link>
+        </div>
+
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3 mb-6">
           <div className="flex flex-wrap gap-2">

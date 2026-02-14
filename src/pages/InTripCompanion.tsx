@@ -30,12 +30,27 @@ export default function InTripCompanion() {
     setMessages(prev => [...prev, userMsg])
     setNewMessage('')
 
-    // Simulated AI response
+    // Contextual AI response based on keywords
+    const lowerMsg = newMessage.toLowerCase()
+    let reply = "I'll look into that for your Barcelona trip. Your next activity is coming up shortly — check your schedule above."
+
+    if (lowerMsg.match(/restaurant|eat|food|dinner|lunch|hungry/)) {
+      reply = "Great choice exploring local food! I'd recommend Can Culleretes in the Gothic Quarter — it's Barcelona's oldest restaurant, open since 1786. Amazing Catalan stew and crema catalana. It's a 10-minute walk from your hotel. Want me to add it to today's schedule?"
+    } else if (lowerMsg.match(/weather|rain|forecast|cold|warm|umbrella/)) {
+      reply = "Barcelona today: 16°C, partly cloudy with sunshine expected this afternoon. No rain forecast until Thursday. Perfect for walking — you won't need a jacket after midday."
+    } else if (lowerMsg.match(/taxi|uber|transport|bus|metro|train|get to|how to get/)) {
+      reply = "The Barcelona metro is your best bet — it's fast and covers everything. Your nearest station is Passeig de Gràcia (L2/L3/L4). A T-Casual 10-trip card is €11.35 and works on metro, bus, and tram. Taxis are reasonable too — airport to city centre is about €40."
+    } else if (lowerMsg.match(/help|what can|what do you/)) {
+      reply = "I can help with: restaurant recommendations, transport advice, weather updates, schedule changes, activity suggestions, and emergency info. Just ask naturally — I know your itinerary and Barcelona inside out."
+    } else if (lowerMsg.match(/cancel|change|move|reschedule|skip/)) {
+      reply = "No problem — I've noted that change. I'll shuffle your schedule to make the most of your free time. You could visit the Boqueria market instead, or just enjoy a coffee in Plaça Reial. Want me to suggest alternatives?"
+    }
+
     setTimeout(() => {
       const aiMsg: ChatMessage = {
         id: `a-${Date.now()}`,
         role: 'assistant',
-        content: "I've noted that. Let me update your schedule accordingly. Is there anything else you'd like to adjust?",
+        content: reply,
         timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
       }
       setMessages(prev => [...prev, aiMsg])
@@ -228,19 +243,33 @@ export default function InTripCompanion() {
           )
         })()}
 
-        {/* Cross-demo link */}
-        <Link
-          to="/experiences"
-          className="mt-8 mb-4 block bg-gradient-to-r from-haiti to-sky-blue text-white rounded-xl p-5 hover:shadow-lg transition-shadow"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-bold">Things to do in Barcelona</p>
-              <p className="text-sm text-white/70">Compare experiences from Viator, GetYourGuide & more</p>
+        {/* Cross-demo links */}
+        <div className="mt-8 mb-4 space-y-3">
+          <Link
+            to="/experiences"
+            className="block bg-gradient-to-r from-haiti to-sky-blue text-white rounded-xl p-5 hover:shadow-lg transition-shadow"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-bold">Things to do in Barcelona</p>
+                <p className="text-sm text-white/70">Compare experiences from Viator, GetYourGuide & more</p>
+              </div>
+              <ArrowRight className="w-5 h-5" />
             </div>
-            <ArrowRight className="w-5 h-5" />
-          </div>
-        </Link>
+          </Link>
+          <Link
+            to="/ancillaries"
+            className="block bg-white rounded-xl p-4 shadow-sm border border-line hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-text-primary text-sm">Need travel insurance or airport transfer?</p>
+                <p className="text-xs text-text-secondary">View smart add-ons for your trip</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-sky-blue" />
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Chat FAB */}
