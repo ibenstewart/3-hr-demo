@@ -62,49 +62,49 @@ export default function BusinessTravel() {
     if (s.hotel) setSelectedHotel(s.hotel)
   }
 
-  const handleThinkingComplete = () => {
+  const handleThinkingComplete = useCallback(() => {
     setState('results')
-  }
+  }, [])
 
-  const handleSelectFlight = (flight: FlightOption) => {
+  const handleSelectFlight = useCallback((flight: FlightOption) => {
     setSelectedFlight(flight)
-  }
+  }, [])
 
-  const handleSelectLegFlight = (legId: string, flight: FlightOption) => {
+  const handleSelectLegFlight = useCallback((legId: string, flight: FlightOption) => {
     setLegSelections(prev => ({ ...prev, [legId]: flight }))
-  }
+  }, [])
 
-  const handleContinueToSummary = () => {
+  const handleContinueToSummary = useCallback(() => {
     setState('summary')
-  }
+  }, [])
 
-  const handleChangeHotel = (hotel: HotelOption) => {
+  const handleChangeHotel = useCallback((hotel: HotelOption) => {
     setSelectedHotel(hotel)
-  }
+  }, [])
 
-  const handleRequestApproval = () => {
+  const handleRequestApproval = useCallback(() => {
     setState('approval')
-  }
+  }, [])
 
-  const handleApproved = () => {
+  const handleApproved = useCallback(() => {
     setState('booking')
-  }
+  }, [])
 
-  const handleBookingComplete = () => {
+  const handleBookingComplete = useCallback(() => {
     setState('confirmed')
-  }
+  }, [])
 
-  const handleTriggerDisruption = () => {
+  const handleTriggerDisruption = useCallback(() => {
     setState('disruption')
-  }
+  }, [])
 
-  const handleRebooked = () => {
+  const handleRebooked = useCallback(() => {
     setState('rebooked')
-  }
+  }, [])
 
-  const handleDismissDisruption = () => {
+  const handleDismissDisruption = useCallback(() => {
     setState('confirmed')
-  }
+  }, [])
 
   // ============ SEARCH STATE ============
   if (state === 'search') {

@@ -13,32 +13,23 @@ interface BizBookingStateProps {
 }
 
 export default function BizBookingState({ steps, onComplete }: BizBookingStateProps) {
-  const [completedSteps, setCompletedSteps] = useState<number[]>([])
-  const [activeStep, setActiveStep] = useState(0)
+  // Use React state instead of mutable closure variable — safe with StrictMode
+  const [currentStep, setCurrentStep] = useState(-1)
 
   useEffect(() => {
-    let current = 0
-
-    const advance = () => {
-      if (current < steps.length) {
-        setActiveStep(current)
-        setTimeout(() => {
-          setCompletedSteps(prev => [...prev, steps[current].id])
-          current++
-          if (current < steps.length) {
-            setTimeout(advance, 500)
-          } else {
-            setTimeout(onComplete, 800)
-          }
-        }, 600 + Math.random() * 400)
-      }
+    if (currentStep < steps.length) {
+      const timer = setTimeout(
+        () => setCurrentStep(s => s + 1),
+        currentStep === -1 ? 400 : 700
+      )
+      return () => clearTimeout(timer)
+    } else {
+      const timer = setTimeout(onComplete, 600)
+      return () => clearTimeout(timer)
     }
+  }, [currentStep, steps.length, onComplete])
 
-    const timer = setTimeout(advance, 400)
-    return () => clearTimeout(timer)
-  }, [steps, onComplete])
-
-  const progress = (completedSteps.length / steps.length) * 100
+  const progress = (Math.max(0, currentStep) / steps.length) * 100
 
   return (
     <div className="min-h-screen bg-haiti flex flex-col items-center justify-center px-6">
@@ -58,8 +49,8 @@ export default function BizBookingState({ steps, onComplete }: BizBookingStatePr
         {/* Steps */}
         <div className="space-y-3 text-left">
           {steps.map((step, i) => {
-            const isCompleted = completedSteps.includes(step.id)
-            const isActive = i === activeStep && !isCompleted
+            const isCompleted = i < currentStep
+            const isActive = i === currentStep
 
             return (
               <div

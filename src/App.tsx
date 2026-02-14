@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router'
 import Nav from './components/Nav'
+import ErrorBoundary from './components/ErrorBoundary'
 import DemoHub from './pages/DemoHub'
 import TripPlanner from './pages/TripPlanner'
 import InTripCompanion from './pages/InTripCompanion'
@@ -13,6 +14,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-canvas">
       <Nav />
+      <ErrorBoundary>
       <Routes>
         <Route path="/" element={<DemoHub />} />
         <Route path="/trip-planner" element={<TripPlanner />} />
@@ -23,6 +25,7 @@ export default function App() {
         <Route path="/experiences/:id" element={<ExperienceDetail />} />
         <Route path="/business-travel" element={<BusinessTravel />} />
       </Routes>
+      </ErrorBoundary>
     </div>
   )
 }

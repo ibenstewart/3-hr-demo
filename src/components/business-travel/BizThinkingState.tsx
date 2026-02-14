@@ -11,31 +11,22 @@ interface BizThinkingStateProps {
 }
 
 export default function BizThinkingState({ scenario, query, onComplete }: BizThinkingStateProps) {
-  const [completedSteps, setCompletedSteps] = useState<number[]>([])
-  const [activeStep, setActiveStep] = useState(0)
+  // Use React state instead of mutable closure variable — safe with StrictMode
+  const [currentStep, setCurrentStep] = useState(-1)
+  const steps = scenario.thinkingSteps
 
   useEffect(() => {
-    const steps = scenario.thinkingSteps
-    let current = 0
-
-    const advance = () => {
-      if (current < steps.length) {
-        setActiveStep(current)
-        setTimeout(() => {
-          setCompletedSteps(prev => [...prev, steps[current].id])
-          current++
-          if (current < steps.length) {
-            setTimeout(advance, 300)
-          } else {
-            setTimeout(onComplete, 600)
-          }
-        }, 400 + Math.random() * 300)
-      }
+    if (currentStep < steps.length) {
+      const timer = setTimeout(
+        () => setCurrentStep(s => s + 1),
+        currentStep === -1 ? 500 : 500
+      )
+      return () => clearTimeout(timer)
+    } else {
+      const timer = setTimeout(onComplete, 400)
+      return () => clearTimeout(timer)
     }
-
-    const timer = setTimeout(advance, 500)
-    return () => clearTimeout(timer)
-  }, [scenario, onComplete])
+  }, [currentStep, steps.length, onComplete])
 
   return (
     <div className="min-h-screen bg-haiti flex flex-col items-center justify-center px-6">
@@ -71,9 +62,9 @@ export default function BizThinkingState({ scenario, query, onComplete }: BizThi
 
         {/* Steps */}
         <div className="space-y-3">
-          {scenario.thinkingSteps.map((step, i) => {
-            const isCompleted = completedSteps.includes(step.id)
-            const isActive = i === activeStep && !isCompleted
+          {steps.map((step, i) => {
+            const isCompleted = i < currentStep
+            const isActive = i === currentStep
 
             return (
               <div

@@ -84,7 +84,7 @@ export default function Experiences() {
       <div className="relative bg-haiti text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-haiti to-haiti/80" />
         <img
-          src="https://images.unsplash.com/photo-1583422409516-2895a77efed6?w=1600&h=400&fit=crop"
+          src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1600&h=400&fit=crop"
           alt="Barcelona"
           className="absolute inset-0 w-full h-full object-cover opacity-30"
         />

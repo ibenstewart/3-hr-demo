@@ -59,17 +59,13 @@ export default function DemoHub() {
       <div className="bg-haiti text-white py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-sky-blue font-bold text-sm tracking-wide uppercase mb-4 animate-fade-in-up">
-            Weekend Build Challenge
+            Three Hour Build Challenge
           </p>
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-6 animate-fade-in-up stagger-1">
             What if one engineer could build{' '}
             <span className="text-sky-blue">all of this</span>{' '}
-            in a weekend?
+            in a few hours?
           </h1>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-2">
-            Six product prototypes that tell the story of Skyscanner as a{' '}
-            <span className="text-white font-semibold">travel operating system</span> — consumer and business, not just a flight comparison site.
-          </p>
         </div>
       </div>
 
@@ -107,29 +103,6 @@ export default function DemoHub() {
           ))}
         </div>
 
-        {/* Narrative Arc */}
-        <div className="mt-16 mb-12 text-center">
-          <h3 className="text-lg font-bold text-text-primary mb-6">The Traveller Journey</h3>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
-            <span className="bg-sky-blue text-white px-4 py-2 rounded-full font-semibold">Discover + Plan</span>
-            <span className="text-line">→</span>
-            <span className="bg-berry text-white px-4 py-2 rounded-full font-semibold">Plan + Book</span>
-            <span className="text-line">→</span>
-            <span className="bg-eco text-white px-4 py-2 rounded-full font-semibold">Book → Prepare</span>
-            <span className="text-line">→</span>
-            <span className="bg-coral text-white px-4 py-2 rounded-full font-semibold">Manage + Trip</span>
-            <span className="text-line">→</span>
-            <span className="bg-haiti text-white px-4 py-2 rounded-full font-semibold">Trip</span>
-          </div>
-          <div className="mt-4 flex items-center justify-center gap-3 text-sm">
-            <span className="text-line">+</span>
-            <span className="bg-sky-blue text-white px-4 py-2 rounded-full font-semibold">Full Journey (B2B)</span>
-          </div>
-          <p className="text-text-secondary text-sm mt-4 max-w-lg mx-auto">
-            Together, these demos prove Skyscanner can own the entire traveller journey — consumer and business.
-            One person built all six in a weekend.
-          </p>
-        </div>
       </div>
     </div>
   )
