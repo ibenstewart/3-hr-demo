@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase, Megaphone } from 'lucide-react'
+import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase, Megaphone, Code2, Play } from 'lucide-react'
 
 const demos = [
   {
@@ -73,6 +73,13 @@ export default function DemoHub() {
           <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-1">
             Seven product demos exploring Skyscanner as a travel operating system.
           </p>
+          <Link
+            to="/journey"
+            className="inline-flex items-center gap-2 bg-sky-blue text-white px-6 py-3 rounded-xl font-bold mt-8 hover:brightness-110 transition-all animate-fade-in-up stagger-2"
+          >
+            <Play className="w-4 h-4" />
+            Start the guided journey
+          </Link>
         </div>
       </div>
 
@@ -115,6 +122,29 @@ export default function DemoHub() {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Stats CTA */}
+        <div className="mt-8 mb-4">
+          <Link
+            to="/stats"
+            className="group block bg-haiti rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 animate-fade-in-up stagger-6"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 w-12 h-12 rounded-xl flex items-center justify-center">
+                  <Code2 className="w-6 h-6 text-sky-blue" />
+                </div>
+                <div>
+                  <h3 className="text-white font-bold">See how it was built</h3>
+                  <p className="text-white/50 text-sm">8,341 lines of code. 20 components. 3 hours. The full story.</p>
+                </div>
+              </div>
+              <svg className="w-5 h-5 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
         </div>
 
       </div>

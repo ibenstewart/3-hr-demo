@@ -10,6 +10,7 @@ const links = [
   { to: '/experiences', label: 'Experiences' },
   { to: '/business-travel', label: 'Biz Travel' },
   { to: '/marketing', label: 'Marketing' },
+  { to: '/stats', label: 'The Build' },
 ]
 
 export default function Nav() {

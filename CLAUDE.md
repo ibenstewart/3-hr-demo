@@ -1,7 +1,7 @@
 # Three Hour Build Challenge
 
 ## What This Is
-Six interactive product demos showing what Skyscanner could look like as a travel operating system. Built as a rapid prototyping exercise with Claude Code. Deployed on Vercel.
+Seven interactive product demos showing what Skyscanner could look like as a travel operating system. Built as a rapid prototyping exercise with Claude Code. Deployed on Vercel.
 
 ## Tech Stack
 - React 19 + TypeScript, Vite 7, Tailwind CSS 4, React Router 7
@@ -18,7 +18,7 @@ src/
   lib/                # Utilities (cn helper via clsx + tailwind-merge)
 ```
 
-## The 6 Demos
+## The 7 Demos
 | Route | Demo | Data file |
 |-------|------|-----------|
 | `/` | DemoHub (landing) | — |
@@ -28,6 +28,7 @@ src/
 | `/prices` | Price Intelligence | `price-history.ts` |
 | `/experiences` | Tours & Experiences | `experiences.ts` |
 | `/business-travel` | Business Travel Agent | `business-travel.ts` |
+| `/marketing` | Marketing Planner | `marketing-plans.ts` |
 
 ## Conventions
 - **Backpack design tokens** via CSS custom properties mapped to Tailwind theme (see `index.css`)

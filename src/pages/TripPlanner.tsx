@@ -1,9 +1,22 @@
-import { useState } from 'react'
-import { MapPin, Edit3, Check, X, Plane, Hotel, Sparkles, Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { MapPin, Edit3, Check, X, Plane, Hotel, Sparkles, Search, Zap } from 'lucide-react'
 import { cn } from '../lib/utils'
-import { itinerary, tripSummary, promptSuggestions } from '../data/japan-itinerary'
+import {
+  itinerary as mockItinerary,
+  tripSummary as mockTripSummary,
+  promptSuggestions,
+} from '../data/japan-itinerary'
+import type { ItineraryDay, TripSummary } from '../data/japan-itinerary'
 
 type ViewState = 'landing' | 'loading' | 'results'
+
+const loadingSteps = [
+  'Understanding your trip...',
+  'Finding the best destinations...',
+  'Planning day by day...',
+  'Estimating costs...',
+  'Adding local recommendations...',
+]
 
 export default function TripPlanner() {
   const [view, setView] = useState<ViewState>('landing')
@@ -13,17 +26,89 @@ export default function TripPlanner() {
   const [editedDays, setEditedDays] = useState<Set<number>>(new Set())
   const [editText, setEditText] = useState('')
 
-  const handleSearch = (q?: string) => {
+  // Live AI state
+  const [isLiveAI, setIsLiveAI] = useState(false)
+  const [liveItinerary, setLiveItinerary] = useState<ItineraryDay[] | null>(null)
+  const [liveSummary, setLiveSummary] = useState<TripSummary | null>(null)
+  const [loadingStep, setLoadingStep] = useState(0)
+  const [aiError, setAiError] = useState<string | null>(null)
+
+  // Active data — mock or live
+  const itinerary = isLiveAI && liveItinerary ? liveItinerary : mockItinerary
+  const summary = isLiveAI && liveSummary ? liveSummary : mockTripSummary
+
+  // Loading step animation (cosmetic, runs while API call happens)
+  useEffect(() => {
+    if (view !== 'loading') return
+    if (loadingStep >= loadingSteps.length - 1) return
+    const timer = setTimeout(() => {
+      setLoadingStep(s => s + 1)
+    }, 1500)
+    return () => clearTimeout(timer)
+  }, [view, loadingStep])
+
+  const handleSearch = async (q?: string) => {
     const searchQuery = q || query.trim()
     if (!searchQuery) {
-      // Auto-fill with first suggestion
       const fallback = promptSuggestions[0]
       setQuery(fallback)
+      setIsLiveAI(false)
       setView('loading')
       setTimeout(() => setView('results'), 1800)
       return
     }
     if (q) setQuery(q)
+
+    // Check if it's a suggestion (mock path) or custom query (live AI path)
+    const isSuggestion = promptSuggestions.includes(searchQuery)
+
+    if (isSuggestion) {
+      setIsLiveAI(false)
+      setView('loading')
+      setTimeout(() => setView('results'), 1800)
+      return
+    }
+
+    // Live AI path
+    setIsLiveAI(true)
+    setAiError(null)
+    setLoadingStep(0)
+    setView('loading')
+    setActiveDay(1)
+
+    try {
+      const response = await fetch('/api/plan-trip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: searchQuery }),
+      })
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: 'Request failed' }))
+        throw new Error(err.error || `HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      // Add Unsplash images for each day's city
+      const enrichedItinerary: ItineraryDay[] = data.itinerary.map((day: ItineraryDay) => ({
+        ...day,
+        mapImage: day.mapImage || `https://source.unsplash.com/800x400/?${encodeURIComponent(day.city + ' city skyline')}`,
+      }))
+
+      setLiveItinerary(enrichedItinerary)
+      setLiveSummary(data.summary)
+      setView('results')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong'
+      setAiError(message)
+    }
+  }
+
+  const handleFallbackToMock = () => {
+    setIsLiveAI(false)
+    setAiError(null)
+    setQuery(promptSuggestions[0])
     setView('loading')
     setTimeout(() => setView('results'), 1800)
   }
@@ -36,7 +121,6 @@ export default function TripPlanner() {
   const submitEdit = (day: number) => {
     if (!editText.trim()) return
     setEditingDay(null)
-    // Simulate AI processing
     setTimeout(() => {
       setEditedDays(prev => new Set(prev).add(day))
     }, 1000)
@@ -82,6 +166,10 @@ export default function TripPlanner() {
               </button>
             ))}
           </div>
+          <p className="text-white/30 text-xs mt-6 animate-fade-in-up stagger-5">
+            <Zap className="w-3 h-3 inline mr-1" />
+            Type your own trip for a live AI-generated itinerary
+          </p>
         </div>
       </div>
     )
@@ -90,13 +178,72 @@ export default function TripPlanner() {
   if (view === 'loading') {
     return (
       <div className="min-h-screen bg-haiti flex flex-col items-center justify-center px-6">
-        <div className="text-center">
+        <div className="text-center max-w-md">
           <Sparkles className="w-12 h-12 text-sky-blue mx-auto mb-6 animate-pulse" />
-          <h2 className="text-2xl font-bold text-white mb-3">Planning your trip...</h2>
-          <div className="streaming-dots text-white/60 text-4xl">
-            <span>·</span><span>·</span><span>·</span>
-          </div>
-          <p className="text-white/40 text-sm mt-4">{query}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Planning your trip...</h2>
+          <p className="text-white/40 text-sm mb-8">{query}</p>
+
+          {isLiveAI ? (
+            <>
+              {/* Step-by-step loading for live AI */}
+              <div className="space-y-3 text-left">
+                {loadingSteps.map((msg, i) => (
+                  <div
+                    key={msg}
+                    className={cn(
+                      'flex items-center gap-3 transition-all duration-300',
+                      i <= loadingStep ? 'opacity-100' : 'opacity-0'
+                    )}
+                  >
+                    <div className={cn(
+                      'w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300',
+                      i < loadingStep ? 'bg-eco' : i === loadingStep ? 'bg-sky-blue animate-pulse' : 'bg-white/10'
+                    )}>
+                      {i < loadingStep ? (
+                        <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <div className="w-2 h-2 bg-white rounded-full" />
+                      )}
+                    </div>
+                    <span className={cn(
+                      'text-sm font-medium transition-colors duration-300',
+                      i < loadingStep ? 'text-white/50' : i === loadingStep ? 'text-white' : 'text-white/30'
+                    )}>
+                      {msg}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {isLiveAI && (
+                <div className="mt-8 flex items-center justify-center gap-2 text-white/30 text-xs">
+                  <Zap className="w-3 h-3" /> Live AI — powered by Claude
+                </div>
+              )}
+
+              {/* Error state */}
+              {aiError && (
+                <div className="mt-8 animate-fade-in">
+                  <div className="bg-danger-fill border border-danger/20 rounded-xl p-4 text-left mb-4">
+                    <p className="text-sm text-danger font-semibold mb-1">Couldn&apos;t generate your trip</p>
+                    <p className="text-xs text-text-secondary">{aiError}</p>
+                  </div>
+                  <button
+                    onClick={handleFallbackToMock}
+                    className="bg-white/10 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/20 transition-colors"
+                  >
+                    Load demo itinerary instead
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="streaming-dots text-white/60 text-4xl">
+              <span>·</span><span>·</span><span>·</span>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -109,11 +256,18 @@ export default function TripPlanner() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap items-start justify-between gap-4 animate-fade-in-up">
             <div>
-              <p className="text-sky-blue text-sm font-bold uppercase tracking-wide mb-1">AI-Generated Itinerary</p>
-              <h1 className="text-2xl md:text-3xl font-black">{tripSummary.destination}</h1>
-              <p className="text-white/60 mt-1">{tripSummary.dates} · {tripSummary.totalDays} days</p>
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-sky-blue text-sm font-bold uppercase tracking-wide">AI-Generated Itinerary</p>
+                {isLiveAI && (
+                  <span className="bg-eco/20 text-eco text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> Live AI
+                  </span>
+                )}
+              </div>
+              <h1 className="text-2xl md:text-3xl font-black">{summary.destination}</h1>
+              <p className="text-white/60 mt-1">{summary.dates} · {summary.totalDays} days</p>
               <div className="flex flex-wrap gap-2 mt-3">
-                {tripSummary.tags.map(tag => (
+                {summary.tags.map(tag => (
                   <span key={tag} className="bg-white/10 text-white/80 px-3 py-1 rounded-full text-xs font-semibold">
                     {tag}
                   </span>
@@ -122,7 +276,7 @@ export default function TripPlanner() {
             </div>
             <div className="bg-white/10 rounded-xl p-4 text-sm backdrop-blur-sm">
               <p className="text-white/60 text-xs mb-2">Estimated total</p>
-              <p className="text-3xl font-black">£{tripSummary.totalCost.toLocaleString()}</p>
+              <p className="text-3xl font-black">£{summary.totalCost.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -133,13 +287,12 @@ export default function TripPlanner() {
           {/* Day sidebar */}
           <div className="hidden md:block w-48 flex-shrink-0">
             <div className="sticky top-24 space-y-1">
-              {/* Persistent trip total */}
               <button
                 onClick={() => setActiveDay(itinerary.length)}
                 className="w-full bg-white rounded-lg p-3 shadow-sm mb-3 text-left hover:shadow-md transition-shadow"
               >
                 <p className="text-xs text-text-secondary font-semibold">Trip total</p>
-                <p className="text-lg font-black text-sky-blue">£{tripSummary.totalCost.toLocaleString()}</p>
+                <p className="text-lg font-black text-sky-blue">£{summary.totalCost.toLocaleString()}</p>
                 <p className="text-xs text-sky-blue font-semibold mt-1">View breakdown →</p>
               </button>
               {itinerary.map(day => (
@@ -201,17 +354,19 @@ export default function TripPlanner() {
                 </div>
 
                 {/* Map image */}
-                <div className="rounded-xl overflow-hidden h-48 mb-6 bg-canvas-contrast relative">
-                  <img
-                    src={currentDay.mapImage}
-                    alt={currentDay.city}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  <div className="absolute bottom-3 left-3 flex items-center gap-1 text-white text-sm font-semibold">
-                    <MapPin className="w-4 h-4" /> {currentDay.city}, Japan
+                {currentDay.mapImage && (
+                  <div className="rounded-xl overflow-hidden h-48 mb-6 bg-canvas-contrast relative">
+                    <img
+                      src={currentDay.mapImage}
+                      alt={currentDay.city}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1 text-white text-sm font-semibold">
+                      <MapPin className="w-4 h-4" /> {currentDay.city}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Edit inline */}
                 {editingDay === currentDay.day && (
@@ -292,32 +447,32 @@ export default function TripPlanner() {
               </div>
             )}
 
-            {/* Price summary — show below Day 10 */}
+            {/* Price summary */}
             {activeDay === itinerary.length && (
               <div className="mt-8 bg-white rounded-xl p-6 shadow-sm animate-fade-in-up">
                 <h3 className="font-bold text-text-primary text-lg mb-4">Trip Cost Breakdown</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2 text-text-secondary">
-                      <Plane className="w-4 h-4" /> Flights: {tripSummary.flights.route}
+                      <Plane className="w-4 h-4" /> Flights: {summary.flights.route}
                     </span>
-                    <span className="font-bold">£{tripSummary.flights.price}</span>
+                    <span className="font-bold">£{summary.flights.price}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2 text-text-secondary">
-                      <Hotel className="w-4 h-4" /> Hotels: {tripSummary.hotels.nights} nights avg £{tripSummary.hotels.avgPerNight}/night
+                      <Hotel className="w-4 h-4" /> Hotels: {summary.hotels.nights} nights avg £{summary.hotels.avgPerNight}/night
                     </span>
-                    <span className="font-bold">£{tripSummary.hotels.total}</span>
+                    <span className="font-bold">£{summary.hotels.total}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="flex items-center gap-2 text-text-secondary">
                       <MapPin className="w-4 h-4" /> Activities & transport
                     </span>
-                    <span className="font-bold">£{tripSummary.activities.total}</span>
+                    <span className="font-bold">£{summary.activities.total}</span>
                   </div>
                   <div className="border-t border-line pt-3 flex justify-between font-bold text-lg">
                     <span>Total estimated</span>
-                    <span className="text-sky-blue">£{tripSummary.totalCost.toLocaleString()}</span>
+                    <span className="text-sky-blue">£{summary.totalCost.toLocaleString()}</span>
                   </div>
                 </div>
                 <button className="w-full mt-4 bg-sky-blue text-white font-bold py-3 rounded-lg hover:bg-sky-blue/90 transition-colors">

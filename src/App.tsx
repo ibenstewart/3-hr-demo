@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router'
 import Nav from './components/Nav'
 import ErrorBoundary from './components/ErrorBoundary'
+import JourneyButton from './components/JourneyButton'
 import DemoHub from './pages/DemoHub'
 import TripPlanner from './pages/TripPlanner'
 import InTripCompanion from './pages/InTripCompanion'
@@ -10,6 +11,8 @@ import Experiences from './pages/Experiences'
 import ExperienceDetail from './pages/ExperienceDetail'
 import BusinessTravel from './pages/BusinessTravel'
 import MarketingPlanner from './pages/MarketingPlanner'
+import Stats from './pages/Stats'
+import Journey from './pages/Journey'
 
 export default function App() {
   return (
@@ -26,7 +29,10 @@ export default function App() {
         <Route path="/experiences/:id" element={<ExperienceDetail />} />
         <Route path="/business-travel" element={<BusinessTravel />} />
         <Route path="/marketing" element={<MarketingPlanner />} />
+        <Route path="/stats" element={<Stats />} />
+        <Route path="/journey" element={<Journey />} />
       </Routes>
+      <JourneyButton />
       </ErrorBoundary>
     </div>
   )
