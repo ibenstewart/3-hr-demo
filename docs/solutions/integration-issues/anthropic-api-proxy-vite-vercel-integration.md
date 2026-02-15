@@ -7,7 +7,7 @@ components: [vite.config.ts, api/plan-trip.ts, TripPlanner.tsx, .env.local]
 severity: medium
 root_cause: |
   Three layered issues: (1) Shell environment leaked corporate Anthropic proxy
-  (ANTHROPIC_BASE_URL=Skyscanner Portkey gateway) into Anthropic SDK initialization,
+  (ANTHROPIC_BASE_URL=SkyVoyager Portkey gateway) into Anthropic SDK initialization,
   routing personal API key to corporate gateway. (2) Vite dev server has no mechanism
   to serve Vercel Edge Functions. (3) .env.local vars not available in Vite server plugins
   without explicit loadEnv() call.
@@ -35,7 +35,7 @@ Four interrelated problems encountered while adding live AI (Anthropic Claude) t
 Running `env | grep -i anthropic` revealed corporate shell variables:
 
 ```
-ANTHROPIC_BASE_URL=https://modelops-gateway.cellsdev-1.skyscannerplatform.net
+ANTHROPIC_BASE_URL=https://modelops-gateway.cellsdev-1.skyvoyagerplatform.net
 ANTHROPIC_AUTH_TOKEN=dummy
 ANTHROPIC_CUSTOM_HEADERS=x-portkey-api-key: zGBu/OWc5IUhWZ07T25tyEg0JI1N
 x-portkey-config: pc-claude-6c0482

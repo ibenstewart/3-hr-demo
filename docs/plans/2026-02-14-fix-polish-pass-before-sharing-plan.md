@@ -17,7 +17,7 @@ Quick cleanup before putting the demo on GitHub.
 
 - [x] Change `"Weekend Build Challenge"` → `"Three Hour Build Challenge"`
 - [x] Change `"in a weekend?"` → `"in a few hours?"`
-- [x] Remove the subtitle paragraph ("Six product prototypes that tell the story of Skyscanner...")
+- [x] Remove the subtitle paragraph ("Six product prototypes that tell the story of SkyVoyager...")
 
 ### 2. Remove Traveller Journey section
 

@@ -1,7 +1,7 @@
 # Three Hour Build Challenge
 
 ## What This Is
-Seven interactive product demos showing what Skyscanner could look like as a travel operating system. Built as a rapid prototyping exercise with Claude Code. Deployed on Vercel.
+Seven interactive product demos showing what SkyVoyager could look like as a travel operating system. Built as a rapid prototyping exercise with Claude Code. Deployed on Vercel.
 
 ## Tech Stack
 - React 19 + TypeScript, Vite 7, Tailwind CSS 4, React Router 7

@@ -161,7 +161,7 @@ useEffect(() => {
 ## Related Documentation
 
 - Plan: `docs/plans/2026-02-14-feat-business-travel-demo-plan.md`
-- Weekend demos plan: `docs/plans/2026-02-14-feat-skyscanner-weekend-demos-plan.md`
+- Weekend demos plan: `docs/plans/2026-02-14-feat-skyvoyager-weekend-demos-plan.md`
 - Backpack compliance audit: `docs/solutions/ui-bugs/backpack-design-system-compliance-integration.md`
-- Source PoC: `/Users/benstewart/skyscanner/ideas/biz-travel/poc/`
-- Product spec: `/Users/benstewart/skyscanner/ideas/biz-travel/travel_ai_agentic_smb_business_travel_product_spec_v_0.md`
+- Source PoC: `/Users/benstewart/skyvoyager/ideas/biz-travel/poc/`
+- Product spec: `/Users/benstewart/skyvoyager/ideas/biz-travel/travel_ai_agentic_smb_business_travel_product_spec_v_0.md`

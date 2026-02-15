@@ -384,7 +384,7 @@ export default async function handler(req: Request) {
   })
 }
 
-const TRIP_PLANNER_SYSTEM_PROMPT = `You are a travel planning AI for Skyscanner.
+const TRIP_PLANNER_SYSTEM_PROMPT = `You are a travel planning AI for SkyVoyager.
 Given a trip request, return a JSON itinerary matching this exact TypeScript interface:
 
 {

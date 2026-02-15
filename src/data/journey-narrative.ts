@@ -23,7 +23,7 @@ export const journeySteps: JourneyStep[] = [
   },
   {
     title: "Before her next trip",
-    description: "Sarah just booked flights to Lisbon. She needs travel insurance, an airport transfer, and maybe some activities. What if Skyscanner helped her prepare — and earned margin doing it?",
+    description: "Sarah just booked flights to Lisbon. She needs travel insurance, an airport transfer, and maybe some activities. What if SkyVoyager helped her prepare — and earned margin doing it?",
     demoRoute: '/ancillaries',
     demoTitle: 'Smart Ancillaries',
     icon: 'shopping-bag',
@@ -37,7 +37,7 @@ export const journeySteps: JourneyStep[] = [
   },
   {
     title: "Filling her days",
-    description: "She's booked her flights and hotel. Now she wants to explore — food tours, museum passes, sunset cruises. What if Skyscanner compared experiences like it compares flights?",
+    description: "She's booked her flights and hotel. Now she wants to explore — food tours, museum passes, sunset cruises. What if SkyVoyager compared experiences like it compares flights?",
     demoRoute: '/experiences',
     demoTitle: 'Tours & Experiences',
     icon: 'plane',

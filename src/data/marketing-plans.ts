@@ -89,7 +89,7 @@ export const marketingPlans: MarketingPlan[] = [
     productName: 'In-Trip Companion',
     tagline: 'Your trip doesn\'t end at booking — it starts there',
     targetAudience: 'Travellers who\'ve already booked and want a better in-trip experience',
-    positioning: 'The post-booking assistant that turns Skyscanner from a search engine into a travel companion.',
+    positioning: 'The post-booking assistant that turns SkyVoyager from a search engine into a travel companion.',
     channels: [
       { name: 'Email Onboarding', icon: 'mail', fit: 'high', reason: 'Every booking confirmation is a distribution channel. Introduce the companion at the moment of highest excitement.' },
       { name: 'Push Notifications', icon: 'bell', fit: 'high', reason: 'Time-sensitive travel info (gate changes, weather, restaurant hours) makes push feel helpful, not spammy.' },
@@ -140,7 +140,7 @@ export const marketingPlans: MarketingPlan[] = [
     ],
     tactics: [
       { id: 18, name: 'Calculator Marketing', category: 'Free Tools', effort: 'medium', impact: 'high', description: 'Build an "Ancillary Revenue Calculator" — partners input their booking volume and see projected revenue uplift from AI recommendations.', firstSteps: ['Define revenue model inputs: bookings, basket size, conversion rate', 'Build calculator with real uplift data from pilots', 'Gate results behind email capture for sales follow-up'] },
-      { id: 70, name: 'Conference Speaking', category: 'Events', effort: 'medium', impact: 'high', description: 'Speak at Phocuswright, WiT, and TravelTech on "The AI Ancillary Revolution" — position Skyscanner as thought leader.', firstSteps: ['Submit 3 conference talk proposals for upcoming events', 'Build talk deck with live product demo component', 'Follow up with every attendee who visits the booth'] },
+      { id: 70, name: 'Conference Speaking', category: 'Events', effort: 'medium', impact: 'high', description: 'Speak at Phocuswright, WiT, and TravelTech on "The AI Ancillary Revolution" — position SkyVoyager as thought leader.', firstSteps: ['Submit 3 conference talk proposals for upcoming events', 'Build talk deck with live product demo component', 'Follow up with every attendee who visits the booth'] },
       { id: 63, name: 'Integration Marketing', category: 'Partnerships', effort: 'medium', impact: 'high', description: 'Co-market with pilot partners. Joint press releases, case studies, and webinars demonstrate real-world results.', firstSteps: ['Agree joint marketing commitment with first pilot partner', 'Produce case study template: problem → solution → results', 'Co-host webinar: "How [Partner] increased ancillary revenue 40%"'] },
       { id: 109, name: 'Public Demos', category: 'Content', effort: 'low', impact: 'medium', description: 'Record and publish product demo videos showing the AI recommendation engine in action across different scenarios.', firstSteps: ['Script 3 demo scenarios: family trip, business trip, backpacker', 'Record polished product walkthroughs under 3 minutes', 'Distribute via LinkedIn, YouTube, and sales outreach'] },
     ],
@@ -178,8 +178,8 @@ export const marketingPlans: MarketingPlan[] = [
     tactics: [
       { id: 4, name: 'Programmatic SEO', category: 'Content & SEO', effort: 'medium', impact: 'high', description: 'Build "Best time to fly [route]" and "Flight price trends [route]" pages at scale. Each route page shows predictions and captures email signups.', firstSteps: ['Identify top 100 routes by search volume', 'Build template with price chart, prediction, and alert CTA', 'Generate and index first batch, measure organic traffic'] },
       { id: 15, name: 'Engineering as Marketing', category: 'Free Tools', effort: 'medium', impact: 'high', description: 'Build an embeddable "Price Prediction Widget" that travel blogs can add to their sites. Every embed is a backlink and lead source.', firstSteps: ['Build lightweight embed script with route selector and price chart', 'Create landing page for bloggers to grab the embed code', 'Reach out to 50 travel blogs offering the free widget'] },
-      { id: 49, name: 'Monthly Newsletter', category: 'Email', effort: 'low', impact: 'medium', description: '"The Price Intelligence Report" — monthly email with pricing trends, best deals, and predictions for upcoming holiday periods.', firstSteps: ['Design newsletter template with data visualisations', 'Set up automated data pipeline for monthly pricing insights', 'Launch with existing Skyscanner email list segment'] },
-      { id: 74, name: 'Press Coverage', category: 'PR', effort: 'low', impact: 'high', description: 'Pitch seasonal price predictions to travel journalists: "Skyscanner data shows summer flights 23% cheaper if you book by March."', firstSteps: ['Build press-ready data pack with seasonal price predictions', 'Identify 30 travel journalists who cover booking advice', 'Time pitches to coincide with booking seasons'] },
+      { id: 49, name: 'Monthly Newsletter', category: 'Email', effort: 'low', impact: 'medium', description: '"The Price Intelligence Report" — monthly email with pricing trends, best deals, and predictions for upcoming holiday periods.', firstSteps: ['Design newsletter template with data visualisations', 'Set up automated data pipeline for monthly pricing insights', 'Launch with existing SkyVoyager email list segment'] },
+      { id: 74, name: 'Press Coverage', category: 'PR', effort: 'low', impact: 'high', description: 'Pitch seasonal price predictions to travel journalists: "SkyVoyager data shows summer flights 23% cheaper if you book by March."', firstSteps: ['Build press-ready data pack with seasonal price predictions', 'Identify 30 travel journalists who cover booking advice', 'Time pitches to coincide with booking seasons'] },
     ],
     budget: [
       { category: 'SEO & Content', percentage: 40, color: 'bg-sky-blue' },
@@ -200,12 +200,12 @@ export const marketingPlans: MarketingPlan[] = [
     productName: 'Tours & Experiences',
     tagline: 'Activity metasearch — the booking.com for things to do',
     targetAudience: 'Travellers researching activities and tours at their destination, comparing across providers',
-    positioning: 'Compare tour prices across Viator, GetYourGuide, and direct providers — like Skyscanner for flights, but for experiences.',
+    positioning: 'Compare tour prices across Viator, GetYourGuide, and direct providers — like SkyVoyager for flights, but for experiences.',
     channels: [
       { name: 'Content & SEO', icon: 'search', fit: 'high', reason: '"Things to do in [city]" and "[activity] in [city] price" queries have massive volume and direct commercial intent.' },
       { name: 'Creator Marketing', icon: 'users', fit: 'high', reason: 'Travel and lifestyle creators naturally showcase experiences — authentic content that drives bookings.' },
       { name: 'Google Ads', icon: 'target', fit: 'high', reason: 'High-intent "book [activity]" searches convert directly. Google Ads captures demand the moment it exists.' },
-      { name: 'Cross-Sell', icon: 'repeat', fit: 'medium', reason: 'Flight bookers on Skyscanner are already going somewhere — introduce experiences at the perfect moment.' },
+      { name: 'Cross-Sell', icon: 'repeat', fit: 'medium', reason: 'Flight bookers on SkyVoyager are already going somewhere — introduce experiences at the perfect moment.' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Build "Things to do in [City]" SEO pages for top 50 destinations', 'Launch Google Ads for "book [activity] [city]" queries', 'Create experience comparison content: "Viator vs GetYourGuide vs Direct"'] },
@@ -252,7 +252,7 @@ export const marketingPlans: MarketingPlan[] = [
     tactics: [
       { id: 39, name: 'LinkedIn Audience', category: 'Social', effort: 'low', impact: 'high', description: 'Build a founder-led LinkedIn presence sharing business travel insights, pain points, and product development stories. Authentic B2B content.', firstSteps: ['Commit to 3 posts per week on business travel challenges', 'Share "building in public" stories about the product', 'Engage with comments from target SMB audience'] },
       { id: 98, name: 'Template Marketing', category: 'Content', effort: 'low', impact: 'high', description: 'Offer free business travel policy templates, expense report templates, and booking request forms. Practical tools that capture leads.', firstSteps: ['Create 5 downloadable templates: travel policy, expense report, approval form, itinerary, cost comparison', 'Build landing page with email gate', 'Promote templates in LinkedIn posts and SEO content'] },
-      { id: 87, name: 'Powered-By Marketing', category: 'Product-Led', effort: 'low', impact: 'medium', description: '"Powered by Skyscanner Business" badge on all booking confirmations and itineraries. Every business trip becomes a brand impression.', firstSteps: ['Design subtle "Powered by Skyscanner Business" badge', 'Add to all customer-facing outputs: confirmations, itineraries, reports', 'Track impressions and click-throughs from badge'] },
+      { id: 87, name: 'Powered-By Marketing', category: 'Product-Led', effort: 'low', impact: 'medium', description: '"Powered by SkyVoyager Business" badge on all booking confirmations and itineraries. Every business trip becomes a brand impression.', firstSteps: ['Design subtle "Powered by SkyVoyager Business" badge', 'Add to all customer-facing outputs: confirmations, itineraries, reports', 'Track impressions and click-throughs from badge'] },
       { id: 137, name: 'Two-Sided Referrals', category: 'Growth', effort: 'medium', impact: 'high', description: 'Referral programme where both referrer and new team get account credit. SMB founders talk to each other — leverage that network.', firstSteps: ['Design "Give £50, get £50" referral programme', 'Add referral prompt after positive booking experiences', 'Build referral dashboard and tracking'] },
     ],
     budget: [
