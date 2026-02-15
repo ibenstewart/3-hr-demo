@@ -88,7 +88,25 @@ export default function TripPlanner() {
         throw new Error(err.error || `HTTP ${response.status}`)
       }
 
-      const data = await response.json()
+      // Read streamed text response, accumulate until complete
+      const reader = response.body?.getReader()
+      if (!reader) throw new Error('No response stream')
+
+      const decoder = new TextDecoder()
+      let fullText = ''
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        fullText += decoder.decode(value, { stream: true })
+      }
+
+      // Strip markdown fences if present
+      let jsonText = fullText.trim()
+      if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '')
+      }
+
+      const data = JSON.parse(jsonText)
 
       // Add Unsplash images for each day's city
       const enrichedItinerary: ItineraryDay[] = data.itinerary.map((day: ItineraryDay) => ({

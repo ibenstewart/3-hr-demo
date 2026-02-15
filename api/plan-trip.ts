@@ -72,30 +72,36 @@ export default async function handler(req: Request) {
       defaultHeaders: {},
     })
 
-    const message = await client.messages.create({
+    // Stream the response so Vercel sees data within 25s
+    const stream = client.messages.stream({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 8192,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: query }],
     })
 
-    const textBlock = message.content.find(b => b.type === 'text')
-    if (!textBlock || textBlock.type !== 'text') {
-      return new Response(
-        JSON.stringify({ error: 'No response from AI' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      )
-    }
+    // Pipe text chunks to a ReadableStream
+    const encoder = new TextEncoder()
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const event of stream) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              controller.enqueue(encoder.encode(event.delta.text))
+            }
+          }
+          controller.close()
+        } catch (err) {
+          controller.error(err)
+        }
+      },
+    })
 
-    // Strip markdown code fences if present, then parse
-    let jsonText = textBlock.text.trim()
-    if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '')
-    }
-    const parsed = JSON.parse(jsonText)
-
-    return new Response(JSON.stringify(parsed), {
-      headers: { 'Content-Type': 'application/json' },
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+      },
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
