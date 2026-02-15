@@ -494,7 +494,7 @@ export default function TripPlanner() {
                   </div>
                 </div>
                 <button className="w-full mt-4 bg-sky-blue text-white font-bold py-3 rounded-lg hover:bg-sky-blue/90 transition-colors">
-                  Search flights on Skyscanner
+                  Search flights on SkyVoyager
                 </button>
               </div>
             )}

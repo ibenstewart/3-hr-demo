@@ -9,15 +9,15 @@ date: 2026-02-14
 
 ## Overview
 
-Add travel.ai — an agentic SMB business travel product — as Demo 6 to the existing Weekend Build Challenge app. This demo covers the **full B2B traveller journey**: natural language search → AI option curation → Slack-based manager approval → automated booking → disruption handling. It repositions the demo suite from "5 consumer ideas" to "5 consumer ideas + 1 B2B play", showing leadership that Skyscanner's AI strategy spans both sides.
+Add travel.ai — an agentic SMB business travel product — as Demo 6 to the existing Weekend Build Challenge app. This demo covers the **full B2B traveller journey**: natural language search → AI option curation → Slack-based manager approval → automated booking → disruption handling. It repositions the demo suite from "5 consumer ideas" to "5 consumer ideas + 1 B2B play", showing leadership that SkyVoyager's AI strategy spans both sides.
 
-The existing standalone PoC (`/Users/benstewart/skyscanner/ideas/biz-travel/poc/`) has 15+ components with a terminal/monospace aesthetic. This plan covers restyling it to Backpack design system, integrating it as a route in the weekend demo app, and porting the full flow including multi-city trips and disruption handling.
+The existing standalone PoC (`/Users/benstewart/skyvoyager/ideas/biz-travel/poc/`) has 15+ components with a terminal/monospace aesthetic. This plan covers restyling it to Backpack design system, integrating it as a route in the weekend demo app, and porting the full flow including multi-city trips and disruption handling.
 
 ## Problem Statement / Motivation
 
-The current 5 demos tell a consumer story. Business travel is a separate, high-value opportunity for Skyscanner — especially for SMBs where travel is unmanaged. Adding this demo:
+The current 5 demos tell a consumer story. Business travel is a separate, high-value opportunity for SkyVoyager — especially for SMBs where travel is unmanaged. Adding this demo:
 
-- Shows leadership that Skyscanner's AI strategy extends to B2B
+- Shows leadership that SkyVoyager's AI strategy extends to B2B
 - Demonstrates a differentiated product (Slack-native approvals, policy awareness, disruption support)
 - Proves the "weekend build" thesis applies to enterprise products too
 - Completes the portfolio: consumer + business = full travel operating system
@@ -267,7 +267,7 @@ No new dependencies needed. The existing app already has everything:
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | Component count (15+) adds complexity | Longer build time than other demos | Phase the build; search+results alone is demoa-ble |
-| Slack preview is complex to style in Backpack | May look odd if too "Skyscanner-ified" | Keep Slack preview with its own authentic Slack styling (purple sidebar, #2C2D30 header) — it's meant to look like Slack |
+| Slack preview is complex to style in Backpack | May look odd if too "SkyVoyager-ified" | Keep Slack preview with its own authentic Slack styling (purple sidebar, #2C2D30 header) — it's meant to look like Slack |
 | Multi-city flow is the most complex state | Could introduce bugs in state transitions | Build multi-city last; single-city flow is the demo star |
 | 6 demos on DemoHub may crowd the grid | 2×3 grid or awkward 3+3 layout | Works naturally as 2 rows of 3 in the existing `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` grid |
 | Terminal aesthetic removal may lose some charm | The "agent" feel comes from monospace | Compensate with Backpack's blue accent + AI thinking animations |
@@ -275,17 +275,17 @@ No new dependencies needed. The existing app already has everything:
 ## References
 
 ### Source Material
-- Product spec: `/Users/benstewart/skyscanner/ideas/biz-travel/travel_ai_agentic_smb_business_travel_product_spec_v_0.md`
-- Existing PoC: `/Users/benstewart/skyscanner/ideas/biz-travel/poc/src/`
-- PoC best practices: `/Users/benstewart/skyscanner/ideas/biz-travel/BEST_PRACTICES.md`
-- Previous plans: `/Users/benstewart/skyscanner/ideas/biz-travel/docs/plans/`
+- Product spec: `/Users/benstewart/skyvoyager/ideas/biz-travel/travel_ai_agentic_smb_business_travel_product_spec_v_0.md`
+- Existing PoC: `/Users/benstewart/skyvoyager/ideas/biz-travel/poc/src/`
+- PoC best practices: `/Users/benstewart/skyvoyager/ideas/biz-travel/BEST_PRACTICES.md`
+- Previous plans: `/Users/benstewart/skyvoyager/ideas/biz-travel/docs/plans/`
 
 ### Weekend Demo App
 - App entry: `src/App.tsx` (router with 6 routes + detail page)
 - Design tokens: `src/index.css` (Backpack CSS custom properties + Tailwind theme)
 - Nav component: `src/components/Nav.tsx`
 - DemoHub: `src/pages/DemoHub.tsx`
-- Existing plan: `docs/plans/2026-02-14-feat-skyscanner-weekend-demos-plan.md`
+- Existing plan: `docs/plans/2026-02-14-feat-skyvoyager-weekend-demos-plan.md`
 
 ### Key Files to Port
 - `ideas/biz-travel/poc/src/App.tsx` → `src/pages/BusinessTravel.tsx`

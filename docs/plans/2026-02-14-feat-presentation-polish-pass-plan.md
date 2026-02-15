@@ -16,7 +16,7 @@ Polish the demos for stakeholder presentation. Focus on narrative clarity, cross
 **File:** `src/pages/DemoHub.tsx`
 
 - [x] Change hero to confident statement: "One engineer. Three hours. Six products."
-- [x] Subtitle underneath: "Six product demos exploring Skyscanner as a travel operating system."
+- [x] Subtitle underneath: "Six product demos exploring SkyVoyager as a travel operating system."
 - [x] Swapped styling — punchy line is the big `h1`, description is smaller `<p>`
 
 ### 2. Strategy subtitle below hero
@@ -30,7 +30,7 @@ Polish the demos for stakeholder presentation. Focus on narrative clarity, cross
 
 **File:** `src/components/Nav.tsx`
 
-- [x] Replaced generic SVG with text-only "Skyscanner" (Option A)
+- [x] Replaced generic SVG with text-only "SkyVoyager" (Option A)
 
 ### 4. Contextual AI chat responses in InTripCompanion
 
@@ -66,7 +66,7 @@ Polish the demos for stakeholder presentation. Focus on narrative clarity, cross
 
 - [x] Hero lands as a confident statement, not a question
 - [x] Strategy line connects demos to New Ideas long list
-- [x] Logo is clean text-only "Skyscanner"
+- [x] Logo is clean text-only "SkyVoyager"
 - [x] InTripCompanion chat responds contextually to 5 keyword patterns + default
 - [x] 3 cross-demo connection points visible without clicking
 - [x] Trip cost visible from any day via persistent sidebar card

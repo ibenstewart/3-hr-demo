@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 
 export const config = { runtime: 'edge' }
 
-const SYSTEM_PROMPT = `You are a travel planning AI for Skyscanner. Given a trip request, return a JSON object with two keys: "summary" and "itinerary".
+const SYSTEM_PROMPT = `You are a travel planning AI for SkyVoyager. Given a trip request, return a JSON object with two keys: "summary" and "itinerary".
 
 The "summary" object must match this shape:
 {

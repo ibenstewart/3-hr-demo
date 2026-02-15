@@ -1,16 +1,16 @@
-# Skyscanner Weekend Demos: Build Specs for Claude Code
+# SkyVoyager Weekend Demos: Build Specs for Claude Code
 
 ## Purpose
 
-These specs are for five functional web app demos that prove a single engineer with AI tools can build meaningful product prototypes in a weekend. The audience is Skyscanner's senior leadership team (CEO, Strategy, Commercial, Product, M&A). The goal is to shift their mental model: these aren't 12-month roadmap items. They're weekend builds.
+These specs are for five functional web app demos that prove a single engineer with AI tools can build meaningful product prototypes in a weekend. The audience is SkyVoyager's senior leadership team (CEO, Strategy, Commercial, Product, M&A). The goal is to shift their mental model: these aren't 12-month roadmap items. They're weekend builds.
 
-Each demo should look and feel like a real Skyscanner product. They use mock data, but the UI, interactions, and flows should be polished enough that someone could mistake them for an internal prototype from an actual product team.
+Each demo should look and feel like a real SkyVoyager product. They use mock data, but the UI, interactions, and flows should be polished enough that someone could mistake them for an internal prototype from an actual product team.
 
 ---
 
 ## Design System: Backpack-Inspired
 
-Since we can't use the proprietary `@skyscanner/backpack-web` npm package outside the Skyscanner codebase, replicate the visual language using these tokens and principles.
+Since we can't use the proprietary `@skyvoyager/backpack-web` npm package outside the SkyVoyager codebase, replicate the visual language using these tokens and principles.
 
 ### Colours
 
@@ -29,7 +29,7 @@ Since we can't use the proprietary `@skyscanner/backpack-web` npm package outsid
 
 ### Typography
 
-Use `"Skyscanner Relative", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` as the font stack. Since we don't have the proprietary font file, the system sans-serif fallback will look close enough.
+Use `"SkyVoyager Relative", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` as the font stack. Since we don't have the proprietary font file, the system sans-serif fallback will look close enough.
 
 | Style | Size | Weight | Line Height |
 |-------|------|--------|-------------|
@@ -52,7 +52,7 @@ All spacing should be multiples of 8px: `4, 8, 12, 16, 24, 32, 48, 64`.
 - **Buttons**: Primary = Sky Blue bg, white text, `border-radius: 8px`, `padding: 12px 24px`, `font-weight: 700`. Secondary = white bg, Sky Blue border and text.
 - **Chips/Tags**: `border-radius: 20px`, `padding: 4px 12px`, light blue bg (`#E1F0FF`) with Sky Blue text for selected state. Grey bg for unselected.
 - **Input Fields**: `border: 1px solid #C2C9CD`, `border-radius: 8px`, `padding: 12px 16px`. Focus state = Sky Blue border.
-- **Navigation Bar**: Haiti background, white text, Skyscanner sunrise logo (use an SVG of the Skyscanner sunrise symbol or just text "Skyscanner" in white, 700 weight).
+- **Navigation Bar**: Haiti background, white text, SkyVoyager sunrise logo (use an SVG of the SkyVoyager sunrise symbol or just text "SkyVoyager" in white, 700 weight).
 - **Bottom Sheet / Drawer**: Slides up from bottom on mobile, `border-radius: 16px 16px 0 0` at top.
 
 ### General Rules
@@ -79,7 +79,7 @@ All spacing should be multiples of 8px: `4, 8, 12, 16, 24, 32, 48, 64`.
 
 ### What It Proves
 
-Skyscanner can own the Discover and Plan phases of the traveller journey, not just search. This replaces the "10 browser tabs" experience of trip planning with a single conversational interface.
+SkyVoyager can own the Discover and Plan phases of the traveller journey, not just search. This replaces the "10 browser tabs" experience of trip planning with a single conversational interface.
 
 ### The Flow
 
@@ -103,7 +103,7 @@ Skyscanner can own the Discover and Plan phases of the traveller journey, not ju
    - Hotels: 10 nights average £95/night - £950
    - Activities: estimated £400
    - Total: ~£2,030
-   - CTA button: "Search flights on Skyscanner" (links nowhere, just styled correctly)
+   - CTA button: "Search flights on SkyVoyager" (links nowhere, just styled correctly)
 
 ### Mock Data
 
@@ -115,7 +115,7 @@ Create a complete 10-day Japan itinerary with real places, real activities, real
 
 ### What It Proves
 
-Skyscanner can exist beyond the booking moment. This shows a post-booking experience that keeps travellers engaged during their trip, opening up ground transport, dining, experiences, and insurance revenue streams.
+SkyVoyager can exist beyond the booking moment. This shows a post-booking experience that keeps travellers engaged during their trip, opening up ground transport, dining, experiences, and insurance revenue streams.
 
 ### The Flow
 
@@ -148,7 +148,7 @@ Full 4-day Barcelona trip. Real restaurants, real transport options with real pr
 
 ### What It Proves
 
-Skyscanner is leaving money on the table by ending the relationship at booking. This shows AI-powered, personalised upselling of ancillaries after a flight is booked, with a revenue model that's pure margin.
+SkyVoyager is leaving money on the table by ending the relationship at booking. This shows AI-powered, personalised upselling of ancillaries after a flight is booked, with a revenue model that's pure margin.
 
 ### The Flow
 
@@ -187,13 +187,13 @@ Use the same Edinburgh → Barcelona trip as Demo 2 for continuity. Real-ish pri
 
 ### What It Proves
 
-Skyscanner sits on years of pricing data and does almost nothing with it. This demo shows two fintech-adjacent features: predictive pricing guidance and a price lock mechanism, both of which create new revenue streams (price freeze fees) and deepen trust.
+SkyVoyager sits on years of pricing data and does almost nothing with it. This demo shows two fintech-adjacent features: predictive pricing guidance and a price lock mechanism, both of which create new revenue streams (price freeze fees) and deepen trust.
 
 ### The Flow
 
 **Part A: Price Intelligence Dashboard**
 
-1. **Route search**: Standard Skyscanner-style origin/destination/date selector at top. Pre-filled: Edinburgh → New York, 15-22 June 2026.
+1. **Route search**: Standard SkyVoyager-style origin/destination/date selector at top. Pre-filled: Edinburgh → New York, 15-22 June 2026.
 
 2. **Price history chart**: A clean line chart (use Recharts or Chart.js) showing:
    - X axis: last 12 months of price data for this route
@@ -236,7 +236,7 @@ Skyscanner sits on years of pricing data and does almost nothing with it. This d
 
 ### What It Proves
 
-The most obvious adjacent vertical. Skyscanner's metasearch model (compare across providers, don't hold inventory) extends naturally to activities and experiences. This captures revenue from the Trip phase and keeps users in the Skyscanner ecosystem.
+The most obvious adjacent vertical. SkyVoyager's metasearch model (compare across providers, don't hold inventory) extends naturally to activities and experiences. This captures revenue from the Trip phase and keeps users in the SkyVoyager ecosystem.
 
 ### The Flow
 
@@ -285,17 +285,17 @@ When presenting these demos, the narrative should connect them:
 1. **Trip Planner** generates the itinerary (Discover + Plan)
 2. **In-Trip Companion** takes over once you're travelling (Manage + Trip)
 3. **Smart Ancillaries** monetises the gap between booking and travel (Book → Prepare)
-4. **Price Intelligence** makes Skyscanner the trusted advisor, not just a search box (Plan + Book)
+4. **Price Intelligence** makes SkyVoyager the trusted advisor, not just a search box (Plan + Book)
 5. **Tours & Experiences** extends metasearch into the Trip phase (Trip)
 
-Together, they tell the story: Skyscanner can be a travel operating system, not just a flight comparison site. And a single person built all five in a weekend.
+Together, they tell the story: SkyVoyager can be a travel operating system, not just a flight comparison site. And a single person built all five in a weekend.
 
 ---
 
 ## File Structure Suggestion
 
 ```
-skyscanner-demos/
+skyvoyager-demos/
 ├── package.json
 ├── vite.config.js (or next.config.js)
 ├── tailwind.config.js
@@ -303,7 +303,7 @@ skyscanner-demos/
 │   ├── styles/
 │   │   └── backpack.css          # Backpack-inspired design tokens as CSS custom properties
 │   ├── components/
-│   │   ├── Nav.jsx               # Shared Skyscanner nav bar
+│   │   ├── Nav.jsx               # Shared SkyVoyager nav bar
 │   │   ├── Card.jsx              # Reusable card component
 │   │   ├── Button.jsx            # Primary/Secondary button
 │   │   ├── Chip.jsx              # Filter chips
@@ -327,7 +327,7 @@ skyscanner-demos/
 │   ├── App.jsx                   # Router with demo selector
 │   └── main.jsx
 └── public/
-    └── skyscanner-logo.svg       # Skyscanner sunrise logo
+    └── skyvoyager-logo.svg       # SkyVoyager sunrise logo
 ```
 
 ---
@@ -336,7 +336,7 @@ skyscanner-demos/
 
 Build in this order for maximum reuse:
 
-1. **Shared components + design tokens first** (Nav, Card, Button, Chip, CSS variables). Get the Skyscanner look locked in.
+1. **Shared components + design tokens first** (Nav, Card, Button, Chip, CSS variables). Get the SkyVoyager look locked in.
 2. **Demo 5: Tours & Experiences** - simplest to build, mostly cards and filters. Good for proving the design system works.
 3. **Demo 3: Smart Ancillaries** - similar card-based layout, adds interactive "add to cart" state.
 4. **Demo 4: Price Intelligence** - introduces charting. Medium complexity.

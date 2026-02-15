@@ -1,5 +1,5 @@
 ---
-title: "Rapid Prototyping 5 Skyscanner Demos with Backpack Design System Compliance"
+title: "Rapid Prototyping 5 SkyVoyager Demos with Backpack Design System Compliance"
 date: 2026-02-14
 category: ui-bugs
 tags:
@@ -26,7 +26,7 @@ slug: backpack-design-system-compliance-integration
 
 ## Problem Statement
 
-Built 5 polished Skyscanner product demo apps (AI Trip Planner, In-Trip Companion, Smart Ancillaries, Price Intelligence + Price Freeze, Tours & Experiences) in a single React + Vite + TypeScript application for senior leadership. The build needed to use Backpack design system tokens consistently, but initial implementation drifted from Backpack compliance with hardcoded colors, off-grid spacing, and library-specific color format issues. A systematic audit found 21 compliance issues that needed fixing.
+Built 5 polished SkyVoyager product demo apps (AI Trip Planner, In-Trip Companion, Smart Ancillaries, Price Intelligence + Price Freeze, Tours & Experiences) in a single React + Vite + TypeScript application for senior leadership. The build needed to use Backpack design system tokens consistently, but initial implementation drifted from Backpack compliance with hardcoded colors, off-grid spacing, and library-specific color format issues. A systematic audit found 21 compliance issues that needed fixing.
 
 ## Symptoms / Requirements
 
@@ -227,6 +227,6 @@ export const BPK_LINE = 'rgb(193, 199, 207)'
 
 ## Related Documentation
 
-- [skyscanner-demos-spec.md](../../../skyscanner-demos-spec.md) — Full specification for all 5 demos
-- [docs/plans/2026-02-14-feat-skyscanner-weekend-demos-plan.md](../../plans/2026-02-14-feat-skyscanner-weekend-demos-plan.md) — Build plan
+- [skyvoyager-demos-spec.md](../../../skyvoyager-demos-spec.md) — Full specification for all 5 demos
+- [docs/plans/2026-02-14-feat-skyvoyager-weekend-demos-plan.md](../../plans/2026-02-14-feat-skyvoyager-weekend-demos-plan.md) — Build plan
 - CSS Platform PoC (`pocs/css-flight-site/`) — Prior PoC with similar Backpack integration patterns

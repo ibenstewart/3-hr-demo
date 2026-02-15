@@ -2,7 +2,7 @@
 
 **What if one engineer could build all of this in a few hours?**
 
-Six interactive product demos exploring what Skyscanner could look like as a travel operating system — consumer and business. Every demo was built from scratch with AI pair programming (Claude Code) in a single session.
+Six interactive product demos exploring what SkyVoyager could look like as a travel operating system — consumer and business. Every demo was built from scratch with AI pair programming (Claude Code) in a single session.
 
 ## The Demos
 
@@ -35,7 +35,7 @@ npm run dev
 
 - React 19 + TypeScript
 - Vite 7
-- Tailwind CSS 4 with Skyscanner Backpack design tokens
+- Tailwind CSS 4 with SkyVoyager Backpack design tokens
 - React Router 7
 - Recharts (price history chart)
 - Lucide React (icons)

@@ -1,14 +1,14 @@
 ---
-title: "feat: Build 5 Skyscanner Weekend Demo Apps"
+title: "feat: Build 5 SkyVoyager Weekend Demo Apps"
 type: feat
 date: 2026-02-14
 ---
 
-# Build 5 Skyscanner Weekend Demo Apps
+# Build 5 SkyVoyager Weekend Demo Apps
 
 ## Overview
 
-Build five polished, functional web app demos proving a single engineer with AI tools can build meaningful product prototypes in a weekend. The audience is Skyscanner's senior leadership (CEO, Strategy, Commercial, Product, M&A). All five demos run as routes in a single React + Vite app with a shared Backpack-inspired design system.
+Build five polished, functional web app demos proving a single engineer with AI tools can build meaningful product prototypes in a weekend. The audience is SkyVoyager's senior leadership (CEO, Strategy, Commercial, Product, M&A). All five demos run as routes in a single React + Vite app with a shared Backpack-inspired design system.
 
 **Demos:**
 1. AI Trip Planner — conversational trip planning
@@ -19,7 +19,7 @@ Build five polished, functional web app demos proving a single engineer with AI 
 
 ## Problem Statement / Motivation
 
-Skyscanner's leadership views these ideas as 12-month roadmap items. The goal is to shift that mental model: these are weekend builds. Together they tell the story that Skyscanner can be a **travel operating system**, not just a flight comparison site.
+SkyVoyager's leadership views these ideas as 12-month roadmap items. The goal is to shift that mental model: these are weekend builds. Together they tell the story that SkyVoyager can be a **travel operating system**, not just a flight comparison site.
 
 The narrative arc across demos:
 - **Discover + Plan** → Demo 1 (Trip Planner)
@@ -36,7 +36,7 @@ The narrative arc across demos:
 |-------|--------|-----------|
 | Framework | React + Vite | Fast scaffold, existing PoC patterns |
 | Language | TypeScript | Matches css-flight-site patterns, minimal overhead with Vite |
-| Styling | Tailwind CSS v4 + custom Backpack tokens | Spec requirement; actual Backpack npm package not available outside Skyscanner codebase |
+| Styling | Tailwind CSS v4 + custom Backpack tokens | Spec requirement; actual Backpack npm package not available outside SkyVoyager codebase |
 | Routing | React Router v7 | Route per demo + detail pages |
 | Charts | Recharts | Demo 4 price history; good Tailwind integration, hover tooltips out of the box |
 | Maps | Static images with CSS pin overlays | Demo 1; 80% visual impact in 10% of the time vs Leaflet |
@@ -45,13 +45,13 @@ The narrative arc across demos:
 
 ### Design Token Strategy
 
-Use the **actual Backpack CSS custom properties** from `/Users/benstewart/skyscanner/pocs/backpack-claude-skill/.claude/skills/backpack/assets/backpack-tokens.css` as the foundation (153 lines, sourced from `@skyscanner/bpk-foundations-web@24.1.0`). Extend with spec-specific tokens:
+Use the **actual Backpack CSS custom properties** from `/Users/benstewart/skyvoyager/pocs/backpack-claude-skill/.claude/skills/backpack/assets/backpack-tokens.css` as the foundation (153 lines, sourced from `@skyvoyager/bpk-foundations-web@24.1.0`). Extend with spec-specific tokens:
 
 - Cabaret accent → use `--bpk-marcomms-berry` (`rgb(231, 8, 102)`)
 - Coral Orange → use `--bpk-marcomms-orange` (`rgb(255, 123, 89)`)
 - Map Backpack token names to Tailwind classes via `tailwind.config.js`
 
-This gives the most authentic Skyscanner look vs the approximate hex values in the spec.
+This gives the most authentic SkyVoyager look vs the approximate hex values in the spec.
 
 ### App Structure
 
@@ -75,7 +75,7 @@ A clean landing page with bold headline: *"What if one engineer could build all 
 
 **2. Persistent Navigation**
 
-Top nav bar (Haiti background) with Skyscanner logo left, 5 horizontal demo links right (Trip Planner | Companion | Ancillaries | Prices | Experiences). Active demo underlined. Mobile: hamburger menu. Enables smooth demo-hopping during presentations.
+Top nav bar (Haiti background) with SkyVoyager logo left, 5 horizontal demo links right (Trip Planner | Companion | Ancillaries | Prices | Experiences). Active demo underlined. Mobile: hamburger menu. Enables smooth demo-hopping during presentations.
 
 **3. Demo 1: AI Streaming Transition**
 
@@ -131,7 +131,7 @@ Following the spec's recommended build order, with shared foundation first:
 - Shared components: Nav, Card, Button, Chip, PriceTag, Rating, StreamingText
 - Demo hub landing page
 - Router setup with all routes
-- Skyscanner sunrise logo SVG
+- SkyVoyager sunrise logo SVG
 
 ### Phase 1: Demo 5 — Tours & Experiences
 - Destination landing page with hero
@@ -198,7 +198,7 @@ Following the spec's recommended build order, with shared foundation first:
 - **State management**: Use explicit state machines in page components for multi-step flows (loading → results, add/remove items, freeze flow). Pattern from biz-travel PoC.
 - **Mock data**: Hardcoded JSON files in `src/data/`. Realistic airline names, city names, GBP pricing. No API calls.
 - **AI delays**: `setTimeout` with 1-2 second delays + pulsing dot animation. No actual AI integration.
-- **Images**: Unsplash URLs for Demo 5 experience photos. Static map images for Demo 1. Skyscanner logo as inline SVG.
+- **Images**: Unsplash URLs for Demo 5 experience photos. Static map images for Demo 1. SkyVoyager logo as inline SVG.
 - **No dark mode**: Light mode only per spec.
 - **Animations**: 200ms ease transitions on hover/focus. Card hover = translateY(-2px) + shadow increase. Reuse animation utilities from css-flight-site (fade-in-up, float, gradient-shift).
 
@@ -248,12 +248,12 @@ Following the spec's recommended build order, with shared foundation first:
 ## References & Research
 
 ### Internal References
-- Spec document: `skyscanner-demos-spec.md` (this repo)
+- Spec document: `skyvoyager-demos-spec.md` (this repo)
 - Backpack tokens: `pocs/backpack-claude-skill/.claude/skills/backpack/assets/backpack-tokens.css`
 - Token reference: `pocs/backpack-claude-skill/.claude/skills/backpack/references/token-reference.md`
 - CSS flight site PoC: `pocs/css-flight-site/` (React + Vite + Tailwind v4 patterns)
 - Dashboard patterns: `ideas/biz-travel/docs/solutions/ui-patterns/react-poc-dashboard-patterns.md`
-- CLAUDE.md conventions: `skyscanner/.claude/CLAUDE.md`
+- CLAUDE.md conventions: `skyvoyager/.claude/CLAUDE.md`
 
 ### Key Convention Notes
 - Backpack components work best for buttons/cards; use plain Tailwind for typography (from CLAUDE.md)
