@@ -1,7 +1,7 @@
 ---
 title: "feat: Add Copy Studio, Content Calendar, and Launch Playbook to Marketing Planner"
 type: feat
-status: active
+status: completed
 date: 2026-02-16
 ---
 
@@ -324,9 +324,9 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/data/marketing-plans.ts` — Add interfaces, add `copyStudio` field to `MarketingPlan`, write mock data for `trip-planner` product only
 
 **Acceptance:**
-- [ ] TypeScript interfaces compile
-- [ ] Mock data validates against interfaces
-- [ ] Existing functionality unchanged
+- [x] TypeScript interfaces compile
+- [x] Mock data validates against interfaces
+- [x] Existing functionality unchanged
 
 ### Phase 2: Copy Studio Tab (Mock Data)
 
@@ -334,11 +334,11 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/pages/MarketingPlanner.tsx` — Add section to `sections[]`, add `CopyStudioSection` component, add conditional render
 
 **Acceptance:**
-- [ ] Tab appears in sidebar and mobile nav
-- [ ] Channel selector filters copy items
-- [ ] Copy-to-clipboard works with feedback
-- [ ] AI reasoning callout matches existing style
-- [ ] Mobile nav scrolls correctly with 6 tabs
+- [x] Tab appears in sidebar and mobile nav
+- [x] Channel selector filters copy items
+- [x] Copy-to-clipboard works with feedback
+- [x] AI reasoning callout matches existing style
+- [x] Mobile nav scrolls correctly with 8 tabs
 
 ### Phase 3: Content Calendar Tab (Mock Data)
 
@@ -347,9 +347,9 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/pages/MarketingPlanner.tsx` — Add `ContentCalendarSection` component
 
 **Acceptance:**
-- [ ] Week-grouped display renders correctly
-- [ ] Format icons, buyer stage badges, pillar colors all visible
-- [ ] Searchable/Shareable tags display correctly
+- [x] Week-grouped display renders correctly
+- [x] Format icons, buyer stage badges, pillar colors all visible
+- [x] Searchable/Shareable tags display correctly
 
 ### Phase 4: Launch Playbook Tab (Mock Data)
 
@@ -358,9 +358,9 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/pages/MarketingPlanner.tsx` — Add `LaunchPlaybookSection` component
 
 **Acceptance:**
-- [ ] 5 phases with ORB badges render
-- [ ] Checklist displays (read-only)
-- [ ] Press angles callout renders
+- [x] 5 phases with ORB badges render
+- [x] Checklist displays (read-only)
+- [x] Press angles callout renders
 
 ### Phase 5: Populate Mock Data for Remaining 5 Products
 
@@ -368,9 +368,9 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/data/marketing-plans.ts` — Add mock data for companion, ancillaries, prices, experiences, business-travel
 
 **Acceptance:**
-- [ ] All 6 products show content on all 3 new tabs
-- [ ] No TypeScript errors
-- [ ] Build passes (`npm run build`)
+- [x] All 6 products show content on all 3 new tabs
+- [x] No TypeScript errors
+- [x] Build passes (`npm run build`)
 
 ### Phase 6: Mobile Navigation Fix
 
@@ -378,9 +378,9 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/pages/MarketingPlanner.tsx` — Update mobile bottom bar with gradient fade and scroll-into-view
 
 **Acceptance:**
-- [ ] Gradient fade visible on right edge when tabs overflow
-- [ ] Active tab scrolls into view on tab change
-- [ ] 8 tabs usable on mobile viewport
+- [x] Gradient fade visible on right edge when tabs overflow
+- [x] Active tab scrolls into view on tab change
+- [x] 8 tabs usable on mobile viewport
 
 ### Phase 7: "Generate with AI" Integration
 
@@ -390,22 +390,22 @@ Also: programmatically scroll the active tab into view when `activeSection` chan
 - `src/pages/MarketingPlanner.tsx` — Add AI state, loading UI, fetch logic, error handling
 
 **Acceptance:**
-- [ ] "Generate with AI" button visible on each new tab
-- [ ] Inline loading animation (not full-screen)
-- [ ] AI-generated content replaces mock data
-- [ ] Content persists across tab switches
-- [ ] Content clears on product switch
-- [ ] Error shows with "Use demo data instead" fallback
-- [ ] "Regenerate" button appears after successful generation
-- [ ] Works locally via Vite dev proxy
-- [ ] Works on Vercel via Edge Function
+- [x] "Generate with AI" button visible on each new tab
+- [x] Inline loading animation (not full-screen)
+- [x] AI-generated content replaces mock data
+- [x] Content persists across tab switches
+- [x] Content clears on product switch
+- [x] Error shows with "Use demo data instead" fallback
+- [x] "Regenerate" button appears after successful generation
+- [x] Works locally via Vite dev proxy
+- [x] Works on Vercel via Edge Function
 
 ### Phase 8: Visual Polish
 
-- [ ] Tab separator between strategy and execution groups
-- [ ] Stagger animations on new tab content
-- [ ] "AI-generated" badge when viewing live content
-- [ ] Generating step messages per tab type
+- [x] Tab separator between strategy and execution groups
+- [x] Stagger animations on new tab content
+- [x] "AI-generated" badge when viewing live content
+- [x] Generating step messages per tab type
 
 ## Design Decisions
 
