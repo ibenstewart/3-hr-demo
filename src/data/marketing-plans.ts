@@ -3,6 +3,19 @@ export interface Channel {
   icon: string
   fit: 'high' | 'medium'
   reason: string
+  roi: number
+  cpa: string
+  incrementality: number
+  efficiency: 'efficient' | 'diminishing' | 'saturated'
+}
+
+// --- Competitor Analysis ---
+export interface Competitor {
+  name: string
+  positioning: string
+  primaryChannels: string[]
+  strength: string
+  gap: string
 }
 
 export interface TimelinePhase {
@@ -64,12 +77,33 @@ export interface ContentCalendarData {
 }
 
 // --- Launch Playbook ---
+export interface HeroOutput {
+  type: 'landing-page' | 'creator-list' | 'slack-message' | 'email-draft'
+  label: string
+}
+
+export interface CreatorProfile {
+  name: string
+  handle: string
+  followers: string
+  niche: string
+  relevance: number
+}
+
+export interface PlaybookAction {
+  text: string
+  hero?: HeroOutput
+  creators?: CreatorProfile[]
+  slackMessage?: { channel: string; body: string }
+  emailDraft?: { to: string; subject: string; body: string }
+}
+
 export interface LaunchPhase {
   phase: string
   timeline: string
   channelType: 'owned' | 'rented' | 'borrowed'
   messaging: string
-  actions: string[]
+  actions: (string | PlaybookAction)[]
 }
 
 export interface ChecklistItem {
@@ -89,6 +123,7 @@ export interface MarketingPlan {
   tagline: string
   targetAudience: string
   positioning: string
+  competitors: Competitor[]
   channels: Channel[]
   timeline: TimelinePhase[]
   tactics: Tactic[]
@@ -106,11 +141,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'Replace 10 browser tabs with one conversation',
     targetAudience: 'Millennial & Gen-Z leisure travellers who research trips across multiple sites',
     positioning: 'The first trip planner that actually plans your trip — not just lists options.',
+    competitors: [
+      { name: 'Google Travel', positioning: 'Integrated trip planning within Google ecosystem', primaryChannels: ['Search dominance', 'YouTube', 'Google Ads'], strength: 'Unbeatable distribution — baked into every Google search', gap: 'Generic recommendations, no AI conversation. Users still need 10 tabs.' },
+      { name: 'TripAdvisor', positioning: 'User-generated reviews and crowd-sourced travel advice', primaryChannels: ['SEO', 'UGC Content', 'Display Ads'], strength: '500M+ reviews create trust and SEO dominance for destination queries', gap: 'Reviews ≠ planning. No personalised itinerary building. Feels dated.' },
+      { name: 'Kayak', positioning: 'Price comparison and trip planning tools', primaryChannels: ['Programmatic SEO', 'App Store', 'Paid Search'], strength: 'Strong brand in price comparison with useful planning tools', gap: 'Planning tools are manual. No AI. No conversation. Just forms and filters.' },
+    ],
     channels: [
-      { name: 'SEO & Content', icon: 'search', fit: 'high', reason: 'Travellers start with Google. Programmatic SEO for "X days in Y" queries captures high-intent traffic at scale.' },
-      { name: 'Social Video', icon: 'video', fit: 'high', reason: 'Trip planning is inherently visual. Short-form video of AI-generated itineraries gets organic shares.' },
-      { name: 'Creator Partnerships', icon: 'users', fit: 'high', reason: 'Travel influencers using the tool creates authentic demo content their audience trusts.' },
-      { name: 'Product Hunt', icon: 'rocket', fit: 'medium', reason: 'AI + travel is trending. A well-timed launch captures early adopter mindshare.' },
+      { name: 'SEO & Content', icon: 'search', fit: 'high', reason: 'Travellers start with Google. Programmatic SEO for "X days in Y" queries captures high-intent traffic at scale.', roi: 5.2, cpa: '$8', incrementality: 72, efficiency: 'efficient' },
+      { name: 'Social Video', icon: 'video', fit: 'high', reason: 'Trip planning is inherently visual. Short-form video of AI-generated itineraries gets organic shares.', roi: 4.1, cpa: '$12', incrementality: 68, efficiency: 'efficient' },
+      { name: 'Creator Partnerships', icon: 'users', fit: 'high', reason: 'Travel influencers using the tool creates authentic demo content their audience trusts.', roi: 3.8, cpa: '$18', incrementality: 81, efficiency: 'efficient' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: 'AI trip planning is a story journalists want to tell. One feature in a major outlet drives 10x the traffic of paid ads.', roi: 7.4, cpa: '$3', incrementality: 85, efficiency: 'efficient' },
+      { name: 'Product Hunt', icon: 'rocket', fit: 'medium', reason: 'AI + travel is trending. A well-timed launch captures early adopter mindshare.', roi: 2.1, cpa: '$22', incrementality: 45, efficiency: 'diminishing' },
+      { name: 'Email Marketing', icon: 'mail', fit: 'medium', reason: 'Trip inspiration emails to existing SkyVoyager users. Low cost, high conversion from warm audience.', roi: 6.8, cpa: '$2', incrementality: 35, efficiency: 'saturated' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Launch SEO content hub targeting "X days in Y country" queries', 'Create 5 hero demo videos showing AI planning trips', 'Set up analytics and conversion tracking'] },
@@ -190,10 +232,10 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'AI that plans trips like a well-travelled friend', actions: ['Recruit 100 internal testers across Skyscanner offices', 'Set up feedback Slack channel #ai-trip-planner-beta', 'Fix top 5 usability issues from internal testing', 'Collect 10 internal testimonial quotes'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'The trip planner that actually plans your trip', actions: ['Create landing page with early access signup', 'Email existing SkyVoyager power users (top 1K)', 'Launch on internal blog and employee social channels', 'Target 500 alpha signups'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'AI that plans trips like a well-travelled friend', actions: ['Recruit 100 internal testers across Skyscanner offices', { text: 'Send launch announcement to #product Slack channel', hero: { type: 'slack-message', label: 'View draft message' }, slackMessage: { channel: '#product-launches', body: '🚀 *AI Trip Planner* is ready for internal testing!\n\nWe need 100 testers to try our new AI trip planner before we go public. It creates complete itineraries in 30 seconds.\n\n*What we need:* Plan a real trip and share your honest feedback.\n*Time commitment:* 15 minutes\n*Perk:* First 50 testers get early access for life\n\nSign up → skyvoyager.com/internal-beta\n\ncc @travel-team @product' } }, 'Fix top 5 usability issues from internal testing', 'Collect 10 internal testimonial quotes'] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'The trip planner that actually plans your trip', actions: [{ text: 'Create landing page with early access signup', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Email existing SkyVoyager power users (top 1K)', 'Launch on internal blog and employee social channels', 'Target 500 alpha signups'] },
         { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'rented', messaging: 'Stop researching. Start exploring.', actions: ['Send early access invites to alpha waitlist', 'Seed 5 hero demo videos on TikTok and Reels', 'Engage travel subreddits with authentic trip reports', 'Partner with 3 mid-tier travel creators for first reviews'] },
-        { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'borrowed', messaging: '30 seconds to your perfect itinerary', actions: ['Pitch exclusive preview to travel journalists (Condé Nast Traveller, Lonely Planet)', 'Launch Creator Partnership programme (10 travel influencers)', 'Publish "How We Built It" technical blog post for HN/dev audience', 'Open beta to all waitlist signups'] },
+        { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'borrowed', messaging: '30 seconds to your perfect itinerary', actions: ['Pitch exclusive preview to travel journalists', { text: 'Identify 10 travel creators for partnership programme', hero: { type: 'creator-list', label: 'View creator shortlist' }, creators: [{ name: 'Kara and Nate', handle: '@karaandnate', followers: '3.8M', niche: 'Budget travel vlogging', relevance: 95 }, { name: 'Hey Nadine', handle: '@heynadine', followers: '1.2M', niche: 'Solo female travel', relevance: 92 }, { name: 'Lost LeBlanc', handle: '@lostleblanc', followers: '2.1M', niche: 'Luxury travel cinematography', relevance: 88 }, { name: 'The Bucket List Family', handle: '@thebucketlistfamily', followers: '2.9M', niche: 'Family adventure travel', relevance: 85 }, { name: 'Sorelle Amore', handle: '@sorelleamore', followers: '890K', niche: 'Photography & slow travel', relevance: 82 }, { name: 'Drew Binsky', handle: '@drewbinsky', followers: '3.2M', niche: 'Every country challenge', relevance: 80 }, { name: 'Sailing La Vagabonde', handle: '@lavagabonde', followers: '1.8M', niche: 'Sailing & adventure', relevance: 75 }, { name: 'Mark Wiens', handle: '@markwiens', followers: '9.4M', niche: 'Food travel', relevance: 78 }] }, 'Publish "How We Built It" technical blog post for HN audience', 'Open beta to all waitlist signups'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'Your next trip, planned by AI', actions: ['Product Hunt launch (Tuesday, coordinated upvote campaign)', 'Launch blog post + email blast to full SkyVoyager user base', 'Press embargo lifts — coordinate reviews from 5+ publications', 'Enable viral sharing: "Share your itinerary" feature goes live'] },
       ],
       checklist: [
@@ -223,11 +265,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'Your trip doesn\'t end at booking — it starts there',
     targetAudience: 'Travellers who\'ve already booked and want a better in-trip experience',
     positioning: 'The post-booking assistant that turns SkyVoyager from a search engine into a travel companion.',
+    competitors: [
+      { name: 'Google Maps', positioning: 'Default navigation and local discovery for travellers', primaryChannels: ['Pre-installed', 'Search', 'Local Ads'], strength: 'Already on every phone. Deep local data. Hard to compete on mapping.', gap: 'No trip context. Doesn\'t know you\'re on holiday or what you booked. No proactive alerts.' },
+      { name: 'TripIt', positioning: 'Travel itinerary organiser from email confirmations', primaryChannels: ['Word of mouth', 'App Store', 'Concur integration'], strength: 'Automatic itinerary parsing from confirmation emails. Business traveller favourite.', gap: 'Organises but doesn\'t assist. No local tips, no real-time alerts, no AI recommendations.' },
+      { name: 'Airbnb', positioning: 'Local experiences and accommodation platform', primaryChannels: ['SEO', 'Social', 'Email', 'App'], strength: 'Strong "live like a local" brand. Experiences marketplace is growing.', gap: 'Only covers Airbnb bookings. No flight info, no cross-platform trip view.' },
+    ],
     channels: [
-      { name: 'Email Onboarding', icon: 'mail', fit: 'high', reason: 'Every booking confirmation is a distribution channel. Introduce the companion at the moment of highest excitement.' },
-      { name: 'Push Notifications', icon: 'bell', fit: 'high', reason: 'Time-sensitive travel info (gate changes, weather, restaurant hours) makes push feel helpful, not spammy.' },
-      { name: 'App Store', icon: 'smartphone', fit: 'high', reason: 'App Store Optimization for "travel assistant" and "trip planner" keywords captures users actively looking.' },
-      { name: 'Partnerships', icon: 'handshake', fit: 'medium', reason: 'Hotels and airlines can white-label the companion, expanding reach through existing touchpoints.' },
+      { name: 'Email Onboarding', icon: 'mail', fit: 'high', reason: 'Every booking confirmation is a distribution channel. Introduce the companion at the moment of highest excitement.', roi: 8.2, cpa: '$1', incrementality: 42, efficiency: 'efficient' },
+      { name: 'Push Notifications', icon: 'bell', fit: 'high', reason: 'Time-sensitive travel info (gate changes, weather, restaurant hours) makes push feel helpful, not spammy.', roi: 5.6, cpa: '$0', incrementality: 55, efficiency: 'efficient' },
+      { name: 'App Store', icon: 'smartphone', fit: 'high', reason: 'App Store Optimization for "travel assistant" and "trip planner" keywords captures users actively looking.', roi: 3.4, cpa: '$14', incrementality: 78, efficiency: 'efficient' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: 'AI travel companion stories get tech press coverage. "Your phone becomes your tour guide" is a headline that writes itself.', roi: 6.1, cpa: '$4', incrementality: 82, efficiency: 'efficient' },
+      { name: 'Partnerships', icon: 'handshake', fit: 'medium', reason: 'Hotels and airlines can white-label the companion, expanding reach through existing touchpoints.', roi: 2.8, cpa: '$25', incrementality: 38, efficiency: 'diminishing' },
+      { name: 'Social Video', icon: 'video', fit: 'medium', reason: '"My phone just told me my gate changed before the airport screen" — real-time companion moments make viral social content.', roi: 3.2, cpa: '$16', incrementality: 62, efficiency: 'diminishing' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Integrate companion CTA into booking confirmation emails', 'Optimise App Store listing with travel assistant keywords', 'Create "trip countdown" email sequence for booked travellers'] },
@@ -272,7 +321,9 @@ export const marketingPlans: MarketingPlan[] = [
       ]},
       { channel: 'landing-page', channelLabel: 'Landing Page', icon: 'file-text', items: [
         { type: 'headline', text: 'Your trip doesn\'t end at booking — it starts there', variant: 'Hero' },
+        { type: 'headline', text: 'Real-time tips, alerts, and local picks — right in your pocket', variant: 'Feature-led' },
         { type: 'cta', text: 'Get my trip guide', variant: 'Value-first' },
+        { type: 'cta', text: 'See it in action — pick a destination', variant: 'Interactive' },
       ]},
     ],
     contentCalendar: {
@@ -293,8 +344,8 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Your trip doesn\'t end at booking', actions: ['Dog-food with upcoming business trips across the company', 'Test push notification timing with internal users', 'Collect feedback on recommendation quality'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Meet your in-trip AI assistant', actions: ['Add Companion CTA to booking confirmation emails', 'Launch to top 5% most active SkyVoyager bookers', 'Measure activation rate and daily usage'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Your trip doesn\'t end at booking', actions: ['Dog-food with upcoming business trips across the company', { text: 'Send beta recruitment message to #travel-team', hero: { type: 'slack-message', label: 'View draft message' }, slackMessage: { channel: '#travel-team', body: '📱 *In-Trip Companion* needs beta testers!\n\nGot an upcoming trip? We want you to try our AI companion that sends real-time alerts, local restaurant picks, and proactive disruption warnings.\n\n*How to join:*\n1. Book any trip through SkyVoyager\n2. Enable the Companion in your trip settings\n3. Share feedback in #companion-beta\n\n*What to test:* Push notifications, local recommendations, gate change alerts\n\nSignup: skyvoyager.com/companion-beta' } }, 'Collect feedback on recommendation quality'] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Meet your in-trip AI assistant', actions: [{ text: 'Create landing page with companion feature showcase', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Launch to top 5% most active SkyVoyager bookers', 'Measure activation rate and daily usage'] },
         { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'rented', messaging: 'Travel smarter, not harder', actions: ['App Store listing optimization for "travel assistant"', 'Launch "Day in [City]" video series', 'A/B test push notification opt-in flow'] },
         { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'borrowed', messaging: 'The travel companion that knows before you do', actions: ['Partner with 3 hotel chains for white-label pilot', 'Pitch travel journalists on "post-booking revolution" angle', 'Launch in-trip photo journal sharing feature'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'Never travel alone again', actions: ['Roll out to all SkyVoyager bookers', 'Email blast: "Your next trip comes with a free AI guide"', 'Launch post-trip review collection driving SEO'] },
@@ -324,11 +375,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'Pure margin revenue, powered by intelligence',
     targetAudience: 'B2B: Airline and OTA partners looking to boost ancillary revenue. B2C: Travellers who\'ve just booked.',
     positioning: 'AI that knows what your travellers need before they do — and recommends it at exactly the right moment.',
+    competitors: [
+      { name: 'Amadeus', positioning: 'Legacy GDS with ancillary merchandising bolted on', primaryChannels: ['Enterprise Sales', 'Events', 'Partner Network'], strength: 'Installed base. Every airline already uses Amadeus for something.', gap: 'Generic rules engine, not ML. Same offers to everyone. Slow to deploy new models.' },
+      { name: 'Travelport', positioning: 'GDS platform with ancillary retailing capabilities', primaryChannels: ['Enterprise Sales', 'Industry Events', 'Trade Press'], strength: 'Strong airline relationships and NDC-ready platform.', gap: 'Ancillary recommendations are rule-based, not personalised. Low attach rates.' },
+      { name: 'PROS', positioning: 'AI-powered revenue management and pricing', primaryChannels: ['Enterprise Sales', 'Whitepapers', 'Conferences'], strength: 'Sophisticated pricing AI. Strong in airline revenue management.', gap: 'Focused on pricing, not ancillary product recommendations. Different problem.' },
+    ],
     channels: [
-      { name: 'B2B Sales', icon: 'briefcase', fit: 'high', reason: 'Revenue-generating products sell themselves in partner meetings. The demo is the pitch.' },
-      { name: 'Integration Marketing', icon: 'plug', fit: 'high', reason: 'Joint case studies with early partners prove ROI and attract new ones.' },
-      { name: 'Conference Speaking', icon: 'mic', fit: 'high', reason: 'Travel industry events (Phocuswright, WiT) are where buyers decide on technology partners.' },
-      { name: 'Product-Led Growth', icon: 'zap', fit: 'medium', reason: 'Self-serve dashboard lets small OTAs onboard without a sales call.' },
+      { name: 'B2B Sales', icon: 'briefcase', fit: 'high', reason: 'Revenue-generating products sell themselves in partner meetings. The demo is the pitch.', roi: 4.5, cpa: '$120', incrementality: 90, efficiency: 'efficient' },
+      { name: 'Integration Marketing', icon: 'plug', fit: 'high', reason: 'Joint case studies with early partners prove ROI and attract new ones.', roi: 6.2, cpa: '$45', incrementality: 75, efficiency: 'efficient' },
+      { name: 'Conference Speaking', icon: 'mic', fit: 'high', reason: 'Travel industry events (Phocuswright, WiT) are where buyers decide on technology partners.', roi: 3.8, cpa: '$85', incrementality: 70, efficiency: 'efficient' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: 'Trade press coverage in Phocuswire, Skift, and TTG positions SkyVoyager as the innovation leader in ancillary revenue.', roi: 5.1, cpa: '$15', incrementality: 65, efficiency: 'efficient' },
+      { name: 'Product-Led Growth', icon: 'zap', fit: 'medium', reason: 'Self-serve dashboard lets small OTAs onboard without a sales call.', roi: 2.4, cpa: '$65', incrementality: 52, efficiency: 'diminishing' },
+      { name: 'Content Marketing', icon: 'file-text', fit: 'medium', reason: '"Ancillary Revenue Playbook" whitepaper and blog content captures B2B search demand from OTAs researching solutions.', roi: 3.1, cpa: '$35', incrementality: 48, efficiency: 'diminishing' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Build interactive product demo with ROI calculator', 'Create "Ancillary Revenue Playbook" gated whitepaper', 'Identify 20 target OTA partners and build account plans'] },
@@ -373,6 +431,7 @@ export const marketingPlans: MarketingPlan[] = [
       ]},
       { channel: 'landing-page', channelLabel: 'Landing Page', icon: 'file-text', items: [
         { type: 'headline', text: 'AI that knows what your travellers need before they do', variant: 'Hero' },
+        { type: 'headline', text: 'Turn every booking into a revenue opportunity', variant: 'Revenue angle' },
         { type: 'cta', text: 'Calculate your revenue uplift', variant: 'Calculator CTA' },
         { type: 'cta', text: 'See the 3-minute demo', variant: 'Low commitment' },
       ]},
@@ -394,8 +453,8 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Pure margin revenue, powered by intelligence', actions: ['Build interactive product demo with ROI calculator', 'Create ancillary revenue playbook whitepaper', 'Identify 20 target OTA partners'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'AI recommendations that boost revenue 30%', actions: ['Launch pilot with 3 OTA partners', 'Set up partner dashboard for self-serve onboarding', 'Measure revenue uplift vs control group'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Pure margin revenue, powered by intelligence', actions: ['Build interactive product demo with ROI calculator', 'Create ancillary revenue playbook whitepaper', { text: 'Draft partner outreach email to top 20 OTAs', hero: { type: 'email-draft', label: 'View draft email' }, emailDraft: { to: 'partnerships@[ota-partner].com', subject: 'AI ancillary recommendations: 30% revenue uplift in 6 weeks', body: 'Hi [Name],\n\nI\'m reaching out because [OTA Partner] processes millions of bookings where travellers don\'t add extras — and we think that\'s leaving significant revenue on the table.\n\nWe\'ve built an AI engine that recommends the right ancillary (baggage, insurance, lounge access, car hire) at the right moment in the booking flow. Early pilots show a 30% increase in ancillary attach rates.\n\nWould you be open to a 15-minute demo? I can show you projected revenue impact based on your booking volume.\n\nBest,\n[Name]\nHead of Partnerships, SkyVoyager' } }] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'AI recommendations that boost revenue 30%', actions: [{ text: 'Create product landing page for partner acquisition', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Set up partner dashboard for self-serve onboarding', 'Measure revenue uplift vs control group'] },
         { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'borrowed', messaging: 'The demo is the pitch', actions: ['Submit conference proposals to Phocuswright and WiT', 'Publish first case study with pilot results', 'Launch LinkedIn ad campaign targeting OTA decision-makers'] },
         { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'rented', messaging: 'Join the partners already seeing 30% uplift', actions: ['Open self-serve dashboard for long-tail OTAs', 'Host "Ancillary Revenue Summit" virtual event', 'Scale outbound with proven ROI data'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'The smartest ancillary engine in travel', actions: ['General availability announcement', 'Press coverage coordinated with partner testimonials', 'Launch affiliate programme for technology consultants'] },
@@ -424,11 +483,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'Fintech meets travel — predict, freeze, save',
     targetAudience: 'Price-sensitive leisure travellers who track flight prices and want certainty',
     positioning: 'Stop guessing when to book. Price Intelligence gives you the data and the safety net.',
+    competitors: [
+      { name: 'Hopper', positioning: 'Mobile-first price prediction and freeze for flights and hotels', primaryChannels: ['App Store', 'Push Notifications', 'Social Media'], strength: 'Best-in-class mobile UX. Price freeze is a killer feature. Strong brand with young travellers.', gap: 'Mobile-only. No web presence. No embeddable tools. Walled garden approach.' },
+      { name: 'Google Flights', positioning: 'Free flight search with basic price tracking', primaryChannels: ['Google Search integration', 'Chrome notifications'], strength: 'Infinite distribution. Built into every "flights to X" Google search.', gap: 'Basic price tracking, no prediction confidence scores. No price freeze. No alerts beyond email.' },
+      { name: 'Kayak', positioning: 'Meta-search with price alerts and trends', primaryChannels: ['SEO', 'App Store', 'Display Ads'], strength: 'Strong SEO presence for price comparison queries. Good price trend data.', gap: 'Trends are descriptive, not predictive. No price freeze. Monetised by referral fees, not user trust.' },
+    ],
     channels: [
-      { name: 'Programmatic SEO', icon: 'search', fit: 'high', reason: '"Cheap flights to X" and "best time to book Y" searches represent massive volume with direct purchase intent.' },
-      { name: 'Email Marketing', icon: 'mail', fit: 'high', reason: 'Price alerts are the original growth loop. Smart alerts drive daily engagement and trust.' },
-      { name: 'Free Tools', icon: 'wrench', fit: 'high', reason: 'A free price prediction widget drives traffic, captures leads, and demonstrates the product before signup.' },
-      { name: 'PR & Press', icon: 'newspaper', fit: 'medium', reason: 'Price prediction stories get media coverage — journalists love "best time to book" data stories.' },
+      { name: 'Programmatic SEO', icon: 'search', fit: 'high', reason: '"Cheap flights to X" and "best time to book Y" searches represent massive volume with direct purchase intent.', roi: 6.8, cpa: '$5', incrementality: 75, efficiency: 'efficient' },
+      { name: 'Email Marketing', icon: 'mail', fit: 'high', reason: 'Price alerts are the original growth loop. Smart alerts drive daily engagement and trust.', roi: 9.2, cpa: '$1', incrementality: 40, efficiency: 'saturated' },
+      { name: 'Free Tools', icon: 'wrench', fit: 'high', reason: 'A free price prediction widget drives traffic, captures leads, and demonstrates the product before signup.', roi: 4.5, cpa: '$10', incrementality: 82, efficiency: 'efficient' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: 'Price prediction stories get media coverage — journalists love "best time to book" data stories.', roi: 8.1, cpa: '$3', incrementality: 88, efficiency: 'efficient' },
+      { name: 'Social Video', icon: 'video', fit: 'medium', reason: '"I saved £400 by waiting 3 days — here\'s how" content drives engagement and app downloads.', roi: 2.8, cpa: '$18', incrementality: 58, efficiency: 'diminishing' },
+      { name: 'Google Ads', icon: 'target', fit: 'medium', reason: 'Capture "cheap flights" and "best flight deals" searches — high intent but competitive CPC.', roi: 1.9, cpa: '$28', incrementality: 32, efficiency: 'saturated' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Launch "Best Time to Book" programmatic SEO pages for top 100 routes', 'Build free price prediction widget for embedding on travel blogs', 'Set up smart price alert email sequences'] },
@@ -498,8 +564,8 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Know when to book, not guess', actions: ['Launch price prediction pages for top 100 routes', 'Build free price prediction widget for embedding', 'Set up smart price alert email sequences'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Flight prices, predicted by AI', actions: ['Email top SkyVoyager users about price alerts', 'Test price freeze conversion flow', 'Measure prediction accuracy against actual prices'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Know when to book, not guess', actions: ['Launch price prediction pages for top 100 routes', 'Build free price prediction widget for embedding', { text: 'Announce beta to #data-science and #product teams', hero: { type: 'slack-message', label: 'View draft message' }, slackMessage: { channel: '#data-science', body: '📊 *Price Intelligence* beta is live!\n\nOur ML model can now predict flight price movements with 87% accuracy across 500+ routes.\n\n*What we need:*\n• Data scientists: Review prediction confidence methodology\n• Product: Test price alert UX on 3 routes\n• Everyone: Try freezing a price on a route you\'re interested in\n\nDashboard → skyvoyager.com/price-intel-beta\n\nFeedback in #price-intelligence-feedback 🙏' } }] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Flight prices, predicted by AI', actions: [{ text: 'Build landing page for price alerts signup', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Test price freeze conversion flow', 'Measure prediction accuracy against actual prices'] },
         { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'borrowed', messaging: 'Stop overpaying for flights', actions: ['Pitch summer travel predictions to journalists', 'Launch price freeze with limited-time promotion', 'Reach out to 50 travel blogs offering free widget'] },
         { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'rented', messaging: 'AI says: book now (or wait)', actions: ['Scale programmatic SEO to 500+ route pages', 'Launch "Price Intelligence Index" monthly report', 'Affiliate programme for travel bloggers embedding widget'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'Your flight price crystal ball', actions: ['GA launch with press coordination', 'Retarget alert users with price freeze upsell', 'Publish year-end "State of Flight Prices" report'] },
@@ -529,11 +595,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'Activity metasearch — the booking.com for things to do',
     targetAudience: 'Travellers researching activities and tours at their destination, comparing across providers',
     positioning: 'Compare tour prices across Viator, GetYourGuide, and direct providers — like SkyVoyager for flights, but for experiences.',
+    competitors: [
+      { name: 'Viator', positioning: 'TripAdvisor-owned marketplace for tours and activities', primaryChannels: ['SEO', 'TripAdvisor integration', 'Google Ads'], strength: 'Massive inventory. TripAdvisor integration gives built-in demand. Strong SEO.', gap: 'No price comparison. Walled garden — can\'t see if the same tour is cheaper elsewhere.' },
+      { name: 'GetYourGuide', positioning: 'Curated experiences marketplace with strong European presence', primaryChannels: ['SEO', 'Paid Search', 'Creator Partnerships'], strength: 'Strong curation. Good mobile experience. Growing US presence.', gap: 'Single-provider pricing. No metasearch. Competes on curation, not value.' },
+      { name: 'Airbnb Experiences', positioning: 'Local-hosted unique activities and experiences', primaryChannels: ['Airbnb platform', 'Social Media', 'PR'], strength: '"Live like a local" brand resonance. Unique inventory from individual hosts.', gap: 'Quality inconsistent. No professional tour operators. Limited inventory in many cities.' },
+    ],
     channels: [
-      { name: 'Content & SEO', icon: 'search', fit: 'high', reason: '"Things to do in [city]" and "[activity] in [city] price" queries have massive volume and direct commercial intent.' },
-      { name: 'Creator Marketing', icon: 'users', fit: 'high', reason: 'Travel and lifestyle creators naturally showcase experiences — authentic content that drives bookings.' },
-      { name: 'Google Ads', icon: 'target', fit: 'high', reason: 'High-intent "book [activity]" searches convert directly. Google Ads captures demand the moment it exists.' },
-      { name: 'Cross-Sell', icon: 'repeat', fit: 'medium', reason: 'Flight bookers on SkyVoyager are already going somewhere — introduce experiences at the perfect moment.' },
+      { name: 'Content & SEO', icon: 'search', fit: 'high', reason: '"Things to do in [city]" and "[activity] in [city] price" queries have massive volume and direct commercial intent.', roi: 5.4, cpa: '$7', incrementality: 70, efficiency: 'efficient' },
+      { name: 'Creator Marketing', icon: 'users', fit: 'high', reason: 'Travel and lifestyle creators naturally showcase experiences — authentic content that drives bookings.', roi: 4.2, cpa: '$15', incrementality: 76, efficiency: 'efficient' },
+      { name: 'Google Ads', icon: 'target', fit: 'high', reason: 'High-intent "book [activity]" searches convert directly. Google Ads captures demand the moment it exists.', roi: 2.8, cpa: '$22', incrementality: 55, efficiency: 'diminishing' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: '"The Skyscanner for experiences" is a story that travel press will pick up. First-mover advantage in experience metasearch.', roi: 6.5, cpa: '$4', incrementality: 84, efficiency: 'efficient' },
+      { name: 'Cross-Sell', icon: 'repeat', fit: 'medium', reason: 'Flight bookers on SkyVoyager are already going somewhere — introduce experiences at the perfect moment.', roi: 7.1, cpa: '$2', incrementality: 28, efficiency: 'saturated' },
+      { name: 'Social Media', icon: 'video', fit: 'medium', reason: 'Experience highlights and "top things to do" content drives engagement and discovery on TikTok and Instagram.', roi: 2.5, cpa: '$19', incrementality: 60, efficiency: 'diminishing' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Build "Things to do in [City]" SEO pages for top 50 destinations', 'Launch Google Ads for "book [activity] [city]" queries', 'Create experience comparison content: "Viator vs GetYourGuide vs Direct"'] },
@@ -580,6 +653,7 @@ export const marketingPlans: MarketingPlan[] = [
         { type: 'headline', text: 'Compare experiences. Book the best deal.', variant: 'Hero' },
         { type: 'headline', text: 'Like SkyVoyager for flights — but for things to do', variant: 'Analogy' },
         { type: 'cta', text: 'Search experiences in your destination', variant: 'Action' },
+        { type: 'cta', text: 'Browse top-rated experiences', variant: 'Discovery' },
       ]},
     ],
     contentCalendar: {
@@ -600,9 +674,9 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Compare experiences, book the best deal', actions: ['Build "Things to do in [City]" SEO pages for top 50 destinations', 'Set up price comparison data pipeline', 'Test booking flow end-to-end with 5 providers'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'The metasearch for things to do', actions: ['Launch Google Ads for "book [activity] [city]" queries', 'Add experience recommendations to post-booking flight emails', 'Create comparison pages for top experience categories'] },
-        { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'borrowed', messaging: 'Stop overpaying for the same experience', actions: ['Partner with 10 travel creators for experience review content', 'Launch "Best Experiences" curated guides', 'A/B test cross-sell placement on flight confirmation page'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Compare experiences, book the best deal', actions: ['Build "Things to do in [City]" SEO pages for top 50 destinations', { text: 'Send launch message to #marketplace and #partnerships', hero: { type: 'slack-message', label: 'View draft message' }, slackMessage: { channel: '#marketplace', body: '🎯 *Tours & Experiences* marketplace is entering internal beta!\n\nWe\'re building the "Skyscanner for things to do" — compare prices across Viator, GetYourGuide, and direct providers.\n\n*What we need:*\n• Test the booking flow for 5 experience categories\n• Compare our prices against booking direct\n• Report any data quality issues\n\nTry it → skyvoyager.com/experiences-beta\n\nWe want to go to alpha in 2 weeks. Every tester helps 🙌' } }, 'Test booking flow end-to-end with 5 providers'] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'The metasearch for things to do', actions: [{ text: 'Create landing page for experiences marketplace', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Add experience recommendations to post-booking flight emails', 'Create comparison pages for top experience categories'] },
+        { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'borrowed', messaging: 'Stop overpaying for the same experience', actions: [{ text: 'Identify 10 travel & lifestyle creators for partnership', hero: { type: 'creator-list', label: 'View creator shortlist' }, creators: [{ name: 'Adventurous Kate', handle: '@adventurouskate', followers: '420K', niche: 'Solo adventure travel', relevance: 94 }, { name: 'Expert Vagabond', handle: '@expertvagabond', followers: '650K', niche: 'Adventure experiences', relevance: 91 }, { name: 'The Points Guy', handle: '@thepointsguy', followers: '1.5M', niche: 'Travel deals & reviews', relevance: 88 }, { name: 'Hand Luggage Only', handle: '@handluggageonly', followers: '890K', niche: 'European experiences', relevance: 86 }, { name: 'Nomadic Matt', handle: '@nomadicmatt', followers: '1.1M', niche: 'Budget travel & experiences', relevance: 84 }, { name: 'Alex in Wanderland', handle: '@alexinwanderland', followers: '280K', niche: 'Adventure tours', relevance: 80 }, { name: 'Travel Lemming', handle: '@travellemming', followers: '350K', niche: 'Unique experiences', relevance: 78 }, { name: 'Y Travel Blog', handle: '@ytravelblog', followers: '520K', niche: 'Family experiences', relevance: 75 }] }, 'Launch "Best Experiences" curated guides', 'A/B test cross-sell placement on flight confirmation page'] },
         { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'rented', messaging: 'Everything you\'ll do on your trip, in one place', actions: ['Scale SEO to 500+ destination experience pages', 'Launch experience bundles with promotional pricing', 'Run influencer whitelisting ads through creator accounts'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'Your trip. Your experiences. Best prices.', actions: ['Full launch announcement across all channels', 'User review and photo sharing feature goes live', 'Press coordination with "travel metasearch expands" angle'] },
       ],
@@ -631,11 +705,18 @@ export const marketingPlans: MarketingPlan[] = [
     tagline: 'AI-powered SMB travel management that actually works',
     targetAudience: 'SMB office managers and founders who manage business travel without a dedicated travel team',
     positioning: 'Enterprise travel management, minus the enterprise complexity. Natural language booking with built-in policy compliance.',
+    competitors: [
+      { name: 'Navan (TripActions)', positioning: 'Modern corporate travel platform for mid-market and enterprise', primaryChannels: ['Enterprise Sales', 'LinkedIn', 'Events'], strength: 'Strong product and brand. $9B+ valuation. Good traveller experience.', gap: 'Too expensive and complex for SMBs. Minimum 50+ travellers. No self-serve.' },
+      { name: 'SAP Concur', positioning: 'Legacy enterprise travel and expense management', primaryChannels: ['Enterprise Sales', 'Partner Channel', 'Events'], strength: 'Installed base of 50,000+ companies. Deeply embedded in enterprise workflows.', gap: 'Terrible UX. Slow to innovate. SMBs can\'t afford it or use it effectively.' },
+      { name: 'TravelPerk', positioning: 'Modern business travel platform for growing companies', primaryChannels: ['SEO', 'LinkedIn', 'Product-Led Growth'], strength: 'Good UI, flexible cancellation. Growing fast in European SMB market.', gap: 'No AI booking agent. Manual search and book. No natural language interface.' },
+    ],
     channels: [
-      { name: 'LinkedIn', icon: 'linkedin', fit: 'high', reason: 'SMB decision-makers live on LinkedIn. Thought leadership + targeted ads reach office managers and founders directly.' },
-      { name: 'Content Marketing', icon: 'file-text', fit: 'high', reason: '"Business travel policy template" and "manage company travel" content captures SMBs actively solving this problem.' },
-      { name: 'Product-Led Growth', icon: 'zap', fit: 'high', reason: 'Free tier for small teams (<5 travellers) creates a usage-based growth engine with natural upsell moments.' },
-      { name: 'Partnerships', icon: 'handshake', fit: 'medium', reason: 'Integrate with Slack, Xero, and HR tools. Each integration is a co-marketing opportunity and distribution channel.' },
+      { name: 'LinkedIn', icon: 'linkedin', fit: 'high', reason: 'SMB decision-makers live on LinkedIn. Thought leadership + targeted ads reach office managers and founders directly.', roi: 3.8, cpa: '$42', incrementality: 72, efficiency: 'efficient' },
+      { name: 'Content Marketing', icon: 'file-text', fit: 'high', reason: '"Business travel policy template" and "manage company travel" content captures SMBs actively solving this problem.', roi: 5.1, cpa: '$15', incrementality: 68, efficiency: 'efficient' },
+      { name: 'Product-Led Growth', icon: 'zap', fit: 'high', reason: 'Free tier for small teams (<5 travellers) creates a usage-based growth engine with natural upsell moments.', roi: 4.5, cpa: '$20', incrementality: 58, efficiency: 'efficient' },
+      { name: 'PR & Press', icon: 'newspaper', fit: 'high', reason: '"AI replaces the corporate travel agent" is a headline business and tech press will run. High-impact, low-cost awareness.', roi: 6.8, cpa: '$5', incrementality: 80, efficiency: 'efficient' },
+      { name: 'Partnerships', icon: 'handshake', fit: 'medium', reason: 'Integrate with Slack, Xero, and HR tools. Each integration is a co-marketing opportunity and distribution channel.', roi: 2.9, cpa: '$35', incrementality: 45, efficiency: 'diminishing' },
+      { name: 'Google Ads', icon: 'target', fit: 'medium', reason: 'Capture "business travel management tool" and "corporate travel booking" searches — high-intent B2B queries.', roi: 2.2, cpa: '$55', incrementality: 38, efficiency: 'saturated' },
     ],
     timeline: [
       { phase: 'Foundation', weeks: 'Weeks 1–3', actions: ['Launch LinkedIn content strategy: founder-led posts on business travel pain points', 'Create "Business Travel Policy Template" as lead magnet', 'Build free tier for teams under 5 travellers'] },
@@ -704,9 +785,9 @@ export const marketingPlans: MarketingPlan[] = [
     },
     launchPlaybook: {
       phases: [
-        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Business travel without the admin', actions: ['Build free tier for teams under 5 travellers', 'Create business travel policy template lead magnet', 'Launch founder LinkedIn content strategy (3 posts/week)'] },
-        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Book business trips with a conversation', actions: ['Invite 50 SMB founders from personal network', 'Launch on Slack App Directory', 'Publish first "building in public" blog post'] },
-        { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'rented', messaging: 'Enterprise tools, startup simplicity', actions: ['LinkedIn Ads targeting office managers at 10-200 person companies', 'Create customer case study from alpha users', 'Launch Xero and QuickBooks integrations with co-marketing'] },
+        { phase: 'Internal Launch', timeline: 'Weeks 1–2', channelType: 'owned', messaging: 'Business travel without the admin', actions: ['Build free tier for teams under 5 travellers', { text: 'Send launch announcement to #founders-network', hero: { type: 'slack-message', label: 'View draft message' }, slackMessage: { channel: '#founders-network', body: '✈️ *Business Travel Agent* needs its first 50 teams!\n\nWe\'ve built an AI that books business travel via natural language. Just type "Book me a flight to Berlin next Tuesday, economy, under £300" and it handles the rest.\n\n*For teams under 5 travellers:* Completely free\n*What we need:* Book a real business trip and tell us what broke\n\nTry it → skyvoyager.com/business/signup\n\nWe\'re targeting office managers and founders who are currently managing travel in spreadsheets. Know someone? Send them our way 🙏' } }, 'Launch founder LinkedIn content strategy (3 posts/week)'] },
+        { phase: 'Alpha Launch', timeline: 'Weeks 3–4', channelType: 'owned', messaging: 'Book business trips with a conversation', actions: [{ text: 'Create landing page for SMB business travel', hero: { type: 'landing-page', label: 'View draft landing page' } }, 'Launch on Slack App Directory', 'Publish first "building in public" blog post'] },
+        { phase: 'Beta Launch', timeline: 'Weeks 5–7', channelType: 'rented', messaging: 'Enterprise tools, startup simplicity', actions: ['LinkedIn Ads targeting office managers at 10-200 person companies', { text: 'Draft customer outreach email for case study', hero: { type: 'email-draft', label: 'View draft email' }, emailDraft: { to: 'sarah@[alpha-customer].com', subject: 'Would you share your story? (Quick case study)', body: 'Hi Sarah,\n\nYour team has been one of our most active users since the alpha — 47 trips booked with an average saving of 28% vs your previous process.\n\nWould you be open to a 20-minute chat for a case study? We\'d cover:\n• What business travel looked like before (the pain)\n• How the AI booking agent changed things\n• The actual numbers (time saved, cost reduced)\n\nWe\'d feature you on our site and share it with our network (great for your brand too).\n\nHappy to work around your schedule.\n\nBest,\n[Name]\nHead of Marketing, SkyVoyager Business' } }, 'Launch Xero and QuickBooks integrations with co-marketing'] },
         { phase: 'Early Access', timeline: 'Weeks 8–10', channelType: 'borrowed', messaging: 'Join 500 teams already saving 30% on travel', actions: ['Guest on 3 SMB/startup podcasts', 'Host webinar: "SMB Travel Management in the AI Era"', 'Launch referral programme: "Give £50, get £50"'] },
         { phase: 'Full Launch', timeline: 'Weeks 11–12', channelType: 'owned', messaging: 'The AI travel agent for growing teams', actions: ['Full launch announcement across all channels', 'Product Hunt launch (Tuesday, targeted at SMB audience)', 'Press pitch: "The Concur killer for startups"'] },
       ],

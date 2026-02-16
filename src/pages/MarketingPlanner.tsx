@@ -6,7 +6,6 @@ import {
   Clock,
   BarChart3,
   Lightbulb,
-  PieChart,
   ChevronRight,
   ArrowLeft,
   Users,
@@ -35,11 +34,22 @@ import {
   BookOpen,
   Share2,
   Loader2,
+  Eye,
+  Star,
+  MapPin,
+  Shield,
+  ArrowRight,
+  TrendingUp,
+  Clock4,
+  Swords,
+  Hash,
+  Send,
+  ChevronDown,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { marketingPlans } from '../data/marketing-plans'
-import type { MarketingPlan, Tactic, ContentPiece, ChannelCopy, ContentCalendarData, LaunchPlaybookData } from '../data/marketing-plans'
+import type { MarketingPlan, Tactic, ContentPiece, ChannelCopy, ContentCalendarData, LaunchPlaybookData, CreatorProfile } from '../data/marketing-plans'
 
 type ViewState = 'select' | 'generating' | 'plan'
 
@@ -278,10 +288,11 @@ function AiGenerateBar({ isGenerating, hasAiData, error, onGenerate, onClearAi, 
 
 const sections = [
   { id: 'overview', label: 'Overview', icon: Target, group: 'strategy' as const },
+  { id: 'competitors', label: 'Competitors', icon: Swords, group: 'strategy' as const },
   { id: 'channels', label: 'Channels', icon: BarChart3, group: 'strategy' as const },
   { id: 'timeline', label: '90-Day Plan', icon: Clock, group: 'strategy' as const },
   { id: 'tactics', label: 'Top Tactics', icon: Lightbulb, group: 'strategy' as const },
-  { id: 'budget', label: 'Budget', icon: PieChart, group: 'strategy' as const },
+  { id: 'budget', label: 'Budget Intelligence', icon: TrendingUp, group: 'strategy' as const },
   { id: 'copy-studio', label: 'Copy Studio', icon: Pen, group: 'execution' as const },
   { id: 'content-calendar', label: 'Content', icon: CalendarDays, group: 'execution' as const },
   { id: 'launch-playbook', label: 'Launch', icon: Megaphone, group: 'execution' as const },
@@ -454,12 +465,13 @@ function PlanView({
           {/* Content */}
           <div className="flex-1 min-w-0 pb-20 md:pb-0">
             {activeSection === 'overview' && <OverviewSection plan={plan} />}
+            {activeSection === 'competitors' && <CompetitorSection plan={plan} />}
             {activeSection === 'channels' && <ChannelsSection plan={plan} />}
             {activeSection === 'timeline' && <TimelineSection plan={plan} />}
             {activeSection === 'tactics' && (
               <TacticsSection plan={plan} activeTactic={activeTactic} setActiveTactic={setActiveTactic} />
             )}
-            {activeSection === 'budget' && <BudgetSection plan={plan} />}
+            {activeSection === 'budget' && <BudgetIntelligenceSection plan={plan} />}
             {activeSection === 'copy-studio' && (
               <CopyStudioSection
                 plan={plan}
@@ -556,19 +568,138 @@ function OverviewSection({ plan }: { plan: MarketingPlan }) {
   )
 }
 
+const efficiencyConfig = {
+  efficient: { color: 'text-eco', bg: 'bg-eco/10', label: 'Efficient' },
+  diminishing: { color: 'text-coral', bg: 'bg-coral/10', label: 'Diminishing' },
+  saturated: { color: 'text-berry', bg: 'bg-berry/10', label: 'Saturated' },
+}
+
+function CompetitorSection({ plan }: { plan: MarketingPlan }) {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h2 className="text-xl font-black text-text-primary mb-1">Competitive Landscape</h2>
+        <p className="text-text-secondary text-sm mb-4">How competitors market in this space — and where the gaps are</p>
+      </div>
+
+      {/* Comparison table */}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-surface-subtle/50">
+                <th className="text-left py-3 px-4 font-bold text-text-primary w-[140px]" />
+                <th className="text-left py-3 px-4 font-bold text-sky-blue border-l-2 border-sky-blue/20">
+                  {plan.productName}
+                </th>
+                {plan.competitors.slice(0, 2).map((c) => (
+                  <th key={c.name} className="text-left py-3 px-4 font-bold text-text-primary">
+                    {c.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-line/20">
+                <td className="py-3 px-4 text-xs font-bold uppercase tracking-wide text-text-secondary">Positioning</td>
+                <td className="py-3 px-4 text-text-primary border-l-2 border-sky-blue/20 bg-sky-blue/[0.02]">{plan.positioning}</td>
+                {plan.competitors.slice(0, 2).map((c) => (
+                  <td key={c.name} className="py-3 px-4 text-text-secondary">{c.positioning}</td>
+                ))}
+              </tr>
+              <tr className="border-t border-line/20">
+                <td className="py-3 px-4 text-xs font-bold uppercase tracking-wide text-text-secondary">Channels</td>
+                <td className="py-3 px-4 border-l-2 border-sky-blue/20 bg-sky-blue/[0.02]">
+                  <div className="flex flex-wrap gap-1">
+                    {plan.channels.filter(c => c.fit === 'high').map(c => (
+                      <span key={c.name} className="text-xs bg-sky-blue/10 text-sky-blue px-2 py-0.5 rounded-full font-semibold">{c.name}</span>
+                    ))}
+                  </div>
+                </td>
+                {plan.competitors.slice(0, 2).map((c) => (
+                  <td key={c.name} className="py-3 px-4">
+                    <div className="flex flex-wrap gap-1">
+                      {c.primaryChannels.map(ch => (
+                        <span key={ch} className="text-xs bg-surface-subtle text-text-secondary px-2 py-0.5 rounded-full font-medium">{ch}</span>
+                      ))}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+              <tr className="border-t border-line/20">
+                <td className="py-3 px-4 text-xs font-bold uppercase tracking-wide text-text-secondary">Strength</td>
+                <td className="py-3 px-4 text-text-primary border-l-2 border-sky-blue/20 bg-sky-blue/[0.02]">
+                  AI-native approach with real-time personalisation
+                </td>
+                {plan.competitors.slice(0, 2).map((c) => (
+                  <td key={c.name} className="py-3 px-4 text-text-secondary">{c.strength}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Competitor cards with gaps */}
+      <div className="space-y-3">
+        {plan.competitors.map((comp, i) => (
+          <div
+            key={comp.name}
+            className="bg-white rounded-xl p-5 shadow-sm animate-fade-in-up"
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-berry/10 flex items-center justify-center flex-shrink-0">
+                <Swords className="w-5 h-5 text-berry" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-text-primary">{comp.name}</h3>
+                <p className="text-sm text-text-secondary mt-1">{comp.positioning}</p>
+                <div className="mt-3 p-3 rounded-lg bg-eco/5 border border-eco/20">
+                  <div className="flex items-start gap-2">
+                    <Target className="w-3.5 h-3.5 text-eco mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wide text-eco">Opportunity</span>
+                      <p className="text-sm text-text-primary mt-0.5">{comp.gap}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* AI Reasoning */}
+      <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
+        <div className="flex items-start gap-2">
+          <Sparkles className="w-4 h-4 text-sky-blue mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-text-secondary">
+            <span className="font-semibold text-sky-blue">Competitive Intelligence:</span>{' '}
+            {plan.competitors[0]?.name} dominates through {plan.competitors[0]?.primaryChannels[0]?.toLowerCase()}, but their
+            weakness in AI-driven personalisation creates a clear lane for {plan.productName}. Focus marketing on the
+            gap: show what the competitors can&apos;t do, not what you do better at the same thing.
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ChannelsSection({ plan }: { plan: MarketingPlan }) {
   return (
     <div className="space-y-4 animate-fade-in">
       <h2 className="text-xl font-black text-text-primary mb-2">Recommended Channels</h2>
-      <p className="text-text-secondary text-sm mb-4">Ranked by fit for {plan.productName}</p>
+      <p className="text-text-secondary text-sm mb-4">Ranked by fit and incrementality for {plan.productName}</p>
 
       {plan.channels.map((channel, i) => {
         const Icon = channelIcons[channel.icon] || Search
+        const eff = efficiencyConfig[channel.efficiency]
         return (
           <div
             key={channel.name}
             className="bg-white rounded-xl p-5 shadow-sm animate-fade-in-up"
-            style={{ animationDelay: `${i * 0.1}s` }}
+            style={{ animationDelay: `${i * 0.08}s` }}
           >
             <div className="flex items-start gap-4">
               <div className={cn(
@@ -577,8 +708,8 @@ function ChannelsSection({ plan }: { plan: MarketingPlan }) {
               )}>
                 <Icon className={cn('w-5 h-5', channel.fit === 'high' ? 'text-white' : 'text-text-secondary')} />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-bold text-text-primary">{channel.name}</h3>
                   <span className={cn(
                     'text-xs px-2 py-0.5 rounded-full font-semibold',
@@ -586,13 +717,53 @@ function ChannelsSection({ plan }: { plan: MarketingPlan }) {
                   )}>
                     {channel.fit} fit
                   </span>
+                  <span className={cn('text-xs px-2 py-0.5 rounded-full font-semibold', eff.bg, eff.color)}>
+                    {eff.label}
+                  </span>
                 </div>
                 <p className="text-sm text-text-secondary mt-1">{channel.reason}</p>
+                {/* ROI metrics row */}
+                <div className="flex items-center gap-4 mt-3 pt-3 border-t border-line/30">
+                  <div className="text-center">
+                    <div className="text-sm font-black text-text-primary">{channel.roi}x</div>
+                    <div className="text-[10px] text-text-secondary uppercase tracking-wide">ROI</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-black text-text-primary">{channel.cpa}</div>
+                    <div className="text-[10px] text-text-secondary uppercase tracking-wide">CPA</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-black text-text-primary">{channel.incrementality}%</div>
+                    <div className="text-[10px] text-text-secondary uppercase tracking-wide">Incremental</div>
+                  </div>
+                  {/* Mini incrementality bar */}
+                  <div className="flex-1 max-w-[120px]">
+                    <div className="h-1.5 bg-surface-subtle rounded-full overflow-hidden">
+                      <div
+                        className={cn('h-full rounded-full', channel.incrementality > 60 ? 'bg-eco' : channel.incrementality > 40 ? 'bg-coral' : 'bg-berry')}
+                        style={{ width: `${channel.incrementality}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         )
       })}
+
+      {/* AI Reasoning */}
+      <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
+        <div className="flex items-start gap-2">
+          <Sparkles className="w-4 h-4 text-sky-blue mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-text-secondary">
+            <span className="font-semibold text-sky-blue">Channel Intelligence:</span>{' '}
+            Channels ranked by marketing incrementality — the percentage of conversions that wouldn&apos;t have happened without this channel.
+            High-incrementality channels ({plan.channels.filter(c => c.incrementality > 70).map(c => c.name).join(', ')}) deliver truly new customers,
+            while low-incrementality channels capture demand that already exists.
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -741,42 +912,201 @@ function EffortImpact({ label, level }: { label: string; level: 'low' | 'medium'
   )
 }
 
-function BudgetSection({ plan }: { plan: MarketingPlan }) {
+function BudgetIntelligenceSection({ plan }: { plan: MarketingPlan }) {
+  const [budgetTab, setBudgetTab] = useState<'allocation' | 'roi' | 'incrementality'>('allocation')
+
+  // Sort channels by incrementality for the reallocation insight
+  const sortedByIncr = [...plan.channels].sort((a, b) => a.incrementality - b.incrementality)
+  const lowest = sortedByIncr[0]
+  const highest = sortedByIncr[sortedByIncr.length - 1]
+
   return (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-xl font-black text-text-primary mb-2">Budget Allocation</h2>
-      <p className="text-text-secondary text-sm mb-4">Recommended spend distribution for maximum ROI</p>
+      <div>
+        <h2 className="text-xl font-black text-text-primary mb-1">Budget Intelligence</h2>
+        <p className="text-text-secondary text-sm mb-4">Allocation, ROI, and incrementality analysis</p>
+      </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-sm">
-        <div className="space-y-4">
-          {plan.budget.map((item, i) => (
-            <div key={item.category} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="font-semibold text-text-primary">{item.category}</span>
-                <span className="font-bold text-text-primary">{item.percentage}%</span>
-              </div>
-              <div className="h-3 bg-surface-subtle rounded-full overflow-hidden">
-                <div
-                  className={cn('h-full rounded-full transition-all duration-700', item.color)}
-                  style={{ width: `${item.percentage}%` }}
-                />
+      {/* Sub-tabs */}
+      <div className="flex gap-1 bg-surface-subtle rounded-lg p-1">
+        {([
+          { id: 'allocation' as const, label: 'Allocation' },
+          { id: 'roi' as const, label: 'ROI & Efficiency' },
+          { id: 'incrementality' as const, label: 'Incrementality' },
+        ]).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setBudgetTab(tab.id)}
+            className={cn(
+              'flex-1 px-3 py-2 rounded-md text-sm font-semibold transition-colors',
+              budgetTab === tab.id
+                ? 'bg-white text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Allocation tab (existing) */}
+      {budgetTab === 'allocation' && (
+        <div className="animate-fade-in">
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <div className="space-y-4">
+              {plan.budget.map((item, i) => (
+                <div key={item.category} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="font-semibold text-text-primary">{item.category}</span>
+                    <span className="font-bold text-text-primary">{item.percentage}%</span>
+                  </div>
+                  <div className="h-3 bg-surface-subtle rounded-full overflow-hidden">
+                    <div
+                      className={cn('h-full rounded-full transition-all duration-700', item.color)}
+                      style={{ width: `${item.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5 mt-4">
+            <div className="flex items-start gap-2">
+              <Sparkles className="w-4 h-4 text-sky-blue mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-text-secondary">
+                <span className="font-semibold text-sky-blue">Budget Strategy:</span> Heavy investment in{' '}
+                {plan.budget[0].category.toLowerCase()} ({plan.budget[0].percentage}%) because it drives the highest
+                long-term compounding returns. Paid channels kept lean at {plan.budget[plan.budget.length - 1].percentage}%
+                — used primarily for retargeting warm audiences rather than cold acquisition.
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
-        <div className="flex items-start gap-2">
-          <Sparkles className="w-4 h-4 text-sky-blue mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-text-secondary">
-            <span className="font-semibold text-sky-blue">Budget Strategy:</span> Heavy investment in{' '}
-            {plan.budget[0].category.toLowerCase()} ({plan.budget[0].percentage}%) because it drives the highest
-            long-term compounding returns. Paid channels kept lean at {plan.budget[plan.budget.length - 1].percentage}%
-            — used primarily for retargeting warm audiences rather than cold acquisition.
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ROI & Efficiency tab */}
+      {budgetTab === 'roi' && (
+        <div className="animate-fade-in space-y-4">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-subtle/50">
+                  <th className="text-left py-3 px-4 font-bold text-text-primary">Channel</th>
+                  <th className="text-right py-3 px-4 font-bold text-text-primary">ROI</th>
+                  <th className="text-right py-3 px-4 font-bold text-text-primary">CPA</th>
+                  <th className="text-right py-3 px-4 font-bold text-text-primary">Efficiency</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...plan.channels].sort((a, b) => b.roi - a.roi).map((ch, i) => {
+                  const eff = efficiencyConfig[ch.efficiency]
+                  return (
+                    <tr key={ch.name} className="border-t border-line/20 animate-fade-in-up" style={{ animationDelay: `${i * 0.06}s` }}>
+                      <td className="py-3 px-4 font-semibold text-text-primary">{ch.name}</td>
+                      <td className="py-3 px-4 text-right">
+                        <span className="font-black text-text-primary">{ch.roi}x</span>
+                      </td>
+                      <td className="py-3 px-4 text-right text-text-secondary">{ch.cpa}</td>
+                      <td className="py-3 px-4 text-right">
+                        <span className={cn('text-xs px-2 py-0.5 rounded-full font-semibold', eff.bg, eff.color)}>
+                          {eff.label}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ROI bar chart */}
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <h3 className="text-sm font-bold text-text-primary mb-4">Expected ROI by Channel</h3>
+            <div className="space-y-3">
+              {[...plan.channels].sort((a, b) => b.roi - a.roi).map((ch) => {
+                const maxRoi = Math.max(...plan.channels.map(c => c.roi))
+                return (
+                  <div key={ch.name} className="flex items-center gap-3">
+                    <span className="text-xs text-text-secondary w-28 truncate">{ch.name}</span>
+                    <div className="flex-1 h-5 bg-surface-subtle rounded overflow-hidden">
+                      <div
+                        className={cn(
+                          'h-full rounded transition-all duration-700',
+                          ch.efficiency === 'efficient' ? 'bg-sky-blue' : ch.efficiency === 'diminishing' ? 'bg-coral' : 'bg-berry'
+                        )}
+                        style={{ width: `${(ch.roi / maxRoi) * 100}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-black text-text-primary w-10 text-right">{ch.roi}x</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
+            <div className="flex items-start gap-2">
+              <Sparkles className="w-4 h-4 text-sky-blue mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-text-secondary">
+                <span className="font-semibold text-sky-blue">Spend Elasticity:</span>{' '}
+                {plan.channels.filter(c => c.efficiency === 'efficient').map(c => c.name).join(', ')} still have room to scale —
+                each additional pound spent delivers strong marginal returns. Channels marked &ldquo;Saturated&rdquo; have hit
+                diminishing returns and should be capped at current spend levels.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Incrementality tab */}
+      {budgetTab === 'incrementality' && (
+        <div className="animate-fade-in space-y-4">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-subtle/50">
+                  <th className="text-left py-3 px-4 font-bold text-text-primary">Channel</th>
+                  <th className="text-right py-3 px-4 font-bold text-text-primary">Incrementality</th>
+                  <th className="py-3 px-4 font-bold text-text-primary text-left pl-6">Distribution</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...plan.channels].sort((a, b) => b.incrementality - a.incrementality).map((ch, i) => (
+                  <tr key={ch.name} className="border-t border-line/20 animate-fade-in-up" style={{ animationDelay: `${i * 0.06}s` }}>
+                    <td className="py-3 px-4 font-semibold text-text-primary">{ch.name}</td>
+                    <td className="py-3 px-4 text-right">
+                      <span className="font-black text-text-primary">{ch.incrementality}%</span>
+                    </td>
+                    <td className="py-3 px-4 pl-6">
+                      <div className="w-full max-w-[160px] h-2 bg-surface-subtle rounded-full overflow-hidden">
+                        <div
+                          className={cn('h-full rounded-full', ch.incrementality > 60 ? 'bg-eco' : ch.incrementality > 40 ? 'bg-coral' : 'bg-berry')}
+                          style={{ width: `${ch.incrementality}%` }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="bg-eco/5 border border-eco/20 rounded-xl p-5">
+            <div className="flex items-start gap-2">
+              <TrendingUp className="w-4 h-4 text-eco mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-text-secondary">
+                <span className="font-semibold text-eco">Reallocation Opportunity:</span>{' '}
+                Shifting 10% of budget from {lowest.name} ({lowest.incrementality}% incremental) to{' '}
+                {highest.name} ({highest.incrementality}% incremental) would generate an estimated{' '}
+                <span className="font-bold text-text-primary">
+                  {Math.round((highest.incrementality - lowest.incrementality) * 0.4)}% more incremental conversions
+                </span>{' '}
+                at the same total spend. {lowest.name} captures mostly organic demand that would convert anyway.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -789,6 +1119,164 @@ const copyChannelIcons: Record<string, LucideIcon> = {
   mail: Mail,
   video: Video,
   'file-text': FileText,
+}
+
+// Color lookup: productCards bg class → CSS color value for gradients
+const productColorValues: Record<string, string> = {
+  'bg-sky-blue': 'rgb(0, 98, 227)',
+  'bg-coral': 'rgb(255, 123, 89)',
+  'bg-eco': 'rgb(15, 161, 169)',
+  'bg-berry': 'rgb(231, 8, 102)',
+  'bg-haiti': 'rgb(5, 32, 60)',
+}
+
+// Hardcoded features per product for the landing page preview
+const productFeatures: Record<string, { icon: LucideIcon; title: string; description: string }[]> = {
+  'trip-planner': [
+    { icon: Sparkles, title: 'AI-Powered Itineraries', description: 'Get a complete day-by-day plan in seconds, tailored to your interests and budget.' },
+    { icon: MapPin, title: 'Local Hidden Gems', description: 'Discover restaurants, viewpoints, and experiences that only locals know about.' },
+    { icon: Clock4, title: 'Real-Time Adjustments', description: 'Plans adapt on the fly when weather changes, flights shift, or you change your mind.' },
+  ],
+  companion: [
+    { icon: Bell, title: 'Proactive Alerts', description: 'Gate changes, delays, and disruptions — you\'ll know before the airport screens update.' },
+    { icon: MapPin, title: 'Local Recommendations', description: 'Restaurants, attractions, and tips curated for exactly where you are right now.' },
+    { icon: Globe, title: 'Language & Currency', description: 'Real-time translation and currency conversion without switching apps.' },
+  ],
+  ancillaries: [
+    { icon: TrendingUp, title: 'Revenue Optimisation', description: 'ML models surface the right ancillary at the right moment in the booking flow.' },
+    { icon: Zap, title: 'Personalised Bundles', description: 'Dynamic packaging based on traveller profile, route, and booking history.' },
+    { icon: Shield, title: 'Transparent Pricing', description: 'No dark patterns — clear value propositions that build trust and increase attach rates.' },
+  ],
+  prices: [
+    { icon: TrendingUp, title: 'Predictive Analytics', description: 'Know whether prices will rise or fall before your customers do.' },
+    { icon: Bell, title: 'Price Alerts', description: 'Automated notifications when fares drop below target thresholds.' },
+    { icon: BarChart3, title: 'Market Intelligence', description: 'Competitor pricing data across 52 markets, updated in real time.' },
+  ],
+  experiences: [
+    { icon: Star, title: 'Curated Quality', description: 'Every experience vetted by local experts — no tourist traps, just authentic moments.' },
+    { icon: MapPin, title: 'Destination-Matched', description: 'Recommendations tuned to season, weather, and local events happening during your trip.' },
+    { icon: Users, title: 'Group-Friendly', description: 'Filter by group size, accessibility needs, and age range for the perfect fit.' },
+  ],
+  'business-travel': [
+    { icon: Shield, title: 'Policy Compliance', description: 'Every booking checked against company travel policy before it\'s confirmed.' },
+    { icon: Briefcase, title: 'Expense Integration', description: 'Receipts, per diems, and reports generated automatically — no manual entry.' },
+    { icon: Clock4, title: '24/7 Travel Support', description: 'AI-powered rebooking and support that never sleeps, across every timezone.' },
+  ],
+}
+
+function LandingPagePreview({ headlines, ctas, tagline, productName, productId, color }: {
+  headlines: { text: string }[]
+  ctas: { text: string }[]
+  tagline: string
+  productName: string
+  productId: string
+  color: string
+}) {
+  const colorValue = productColorValues[color] || productColorValues['bg-sky-blue']
+  const features = productFeatures[productId] || productFeatures['trip-planner']
+
+  return (
+    <div className="animate-fade-in-up">
+      {/* Section label */}
+      <div className="flex items-center gap-2 mb-3">
+        <Eye className="w-4 h-4 text-text-secondary" />
+        <span className="text-sm font-bold text-text-secondary uppercase tracking-wide">Preview</span>
+      </div>
+
+      {/* Browser chrome frame */}
+      <div className="rounded-xl overflow-hidden shadow-lg border border-line/50">
+        {/* Browser top bar */}
+        <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-3 border-b border-gray-200">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-400" />
+            <div className="w-3 h-3 rounded-full bg-yellow-400" />
+            <div className="w-3 h-3 rounded-full bg-green-400" />
+          </div>
+          <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-text-secondary font-mono truncate">
+            skyvoyager.com/{productId}
+          </div>
+        </div>
+
+        {/* Page content */}
+        <div className="bg-white">
+          {/* Hero section */}
+          <div
+            className="px-8 py-16 text-center text-white relative overflow-hidden"
+            style={{
+              background: `linear-gradient(135deg, ${colorValue} 0%, ${colorValue}dd 50%, ${colorValue}99 100%)`,
+            }}
+          >
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: 'radial-gradient(circle at 20% 80%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
+              backgroundSize: '60px 60px',
+            }} />
+            <div className="relative z-10 max-w-lg mx-auto">
+              <h2 className="text-2xl md:text-3xl font-black mb-3 leading-tight">
+                {headlines[0]?.text || productName}
+              </h2>
+              <p className="text-white/80 text-sm mb-6">
+                {tagline}
+              </p>
+              <button className="inline-flex items-center gap-2 bg-white text-text-primary font-bold px-6 py-3 rounded-lg text-sm shadow-lg hover:shadow-xl transition-shadow">
+                {ctas[0]?.text || 'Get Started'}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Features section */}
+          <div className="px-8 py-12 bg-canvas-contrast">
+            <h3 className="text-center text-lg font-bold text-text-primary mb-8">Why {productName}?</h3>
+            <div className="grid grid-cols-3 gap-6">
+              {features.map((f, i) => {
+                const Icon = f.icon
+                return (
+                  <div key={i} className="text-center">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3"
+                      style={{ backgroundColor: `${colorValue}15` }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: colorValue }} />
+                    </div>
+                    <h4 className="font-bold text-sm text-text-primary mb-1">{f.title}</h4>
+                    <p className="text-xs text-text-secondary leading-relaxed">{f.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Social proof bar */}
+          <div className="px-8 py-6 flex items-center justify-center gap-8 border-y border-line/30">
+            {[
+              { value: '100M+', label: 'travellers' },
+              { value: '4.8★', label: 'app rating' },
+              { value: '52', label: 'markets' },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-lg font-black text-text-primary">{stat.value}</div>
+                <div className="text-xs text-text-secondary">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer CTA — only shown if second headline + CTA exist */}
+          {headlines[1] && ctas[1] && (
+            <div className="px-8 py-12 text-center" style={{ backgroundColor: 'rgb(5, 32, 60)' }}>
+              <h3 className="text-xl font-bold text-white mb-3">{headlines[1].text}</h3>
+              <button
+                className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-lg text-sm text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: colorValue }}
+              >
+                {ctas[1].text}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function CopyStudioSection({ plan, aiData, isGenerating, error, onGenerate, onClearAi }: {
@@ -895,6 +1383,18 @@ function CopyStudioSection({ plan, aiData, isGenerating, error, onGenerate, onCl
           )
         })}
       </div>
+
+      {/* Landing page preview — shown only on landing-page channel with headlines */}
+      {activeChannel === 'landing-page' && channelData.items.filter(i => i.type === 'headline').length > 0 && (
+        <LandingPagePreview
+          headlines={channelData.items.filter(i => i.type === 'headline')}
+          ctas={channelData.items.filter(i => i.type === 'cta')}
+          tagline={plan.tagline}
+          productName={plan.productName}
+          productId={plan.productId}
+          color={productCards.find(p => p.id === plan.productId)?.color || 'bg-sky-blue'}
+        />
+      )}
 
       {/* AI Reasoning */}
       <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
@@ -1046,6 +1546,149 @@ const checkCategoryLabels: Record<string, string> = {
   'post-launch': 'Post-Launch',
 }
 
+// --- Hero Action Preview Components ---
+
+function formatSlackText(text: string) {
+  const parts = text.split(/(\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <strong key={i} className="text-white font-semibold">{part.slice(1, -1)}</strong>
+    }
+    return <span key={i}>{part}</span>
+  })
+}
+
+function SlackMessagePreview({ message }: { message: { channel: string; body: string } }) {
+  return (
+    <div className="bg-[#1a1d21] rounded-xl overflow-hidden shadow-sm">
+      <div className="border-b border-white/10 px-4 py-3 flex items-center gap-2">
+        <Hash className="w-4 h-4 text-white/60" />
+        <span className="text-white/80 text-sm font-semibold">{message.channel}</span>
+      </div>
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 bg-sky-blue rounded-lg flex items-center justify-center flex-shrink-0">
+            <span className="text-white text-xs font-bold">S</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-bold text-sm">SkyVoyager AI</span>
+              <span className="bg-[#4a154b]/30 text-[#e8b4e8] text-xs px-1.5 py-0.5 rounded font-medium">APP</span>
+              <span className="text-white/30 text-xs">just now</span>
+            </div>
+            <div className="mt-2 text-white/80 text-sm whitespace-pre-line leading-relaxed">
+              {formatSlackText(message.body)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EmailDraftPreview({ draft }: { draft: { to: string; subject: string; body: string } }) {
+  return (
+    <div className="bg-white border border-line rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-surface-secondary/50 border-b border-line px-4 py-3 flex items-center gap-2">
+        <Mail className="w-4 h-4 text-text-secondary/60" />
+        <span className="text-sm font-semibold text-text-primary">New Message</span>
+        <div className="ml-auto flex gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-line" />
+          <div className="w-2 h-2 rounded-full bg-line" />
+          <div className="w-2 h-2 rounded-full bg-line" />
+        </div>
+      </div>
+      <div className="px-4 py-3 space-y-2 text-sm border-b border-line">
+        <div className="flex gap-2">
+          <span className="font-semibold text-text-secondary w-16 flex-shrink-0">To:</span>
+          <span className="text-text-secondary">{draft.to}</span>
+        </div>
+        <div className="flex gap-2">
+          <span className="font-semibold text-text-secondary w-16 flex-shrink-0">Subject:</span>
+          <span className="text-text-primary font-semibold">{draft.subject}</span>
+        </div>
+      </div>
+      <div className="px-4 py-4 text-sm text-text-secondary whitespace-pre-line leading-relaxed">
+        {draft.body}
+      </div>
+    </div>
+  )
+}
+
+function CreatorListPreview({ creators }: { creators: CreatorProfile[] }) {
+  return (
+    <div className="bg-white border border-line rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-surface-secondary/50 border-b border-line px-4 py-3 flex items-center justify-between">
+        <span className="text-sm font-semibold text-text-primary flex items-center gap-2">
+          <Users className="w-4 h-4 text-text-secondary" />
+          Creator Shortlist
+        </span>
+        <span className="text-xs text-text-secondary">{creators.length} creators identified</span>
+      </div>
+      <div className="divide-y divide-line">
+        {creators.map((creator, i) => (
+          <div
+            key={i}
+            className="px-4 py-3 flex items-center gap-4 animate-fade-in-up"
+            style={{ animationDelay: `${i * 0.08}s` }}
+          >
+            <div className="w-8 h-8 bg-sky-blue/10 rounded-full flex items-center justify-center text-sky-blue text-xs font-bold flex-shrink-0">
+              {creator.name.charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-sm text-text-primary">{creator.name}</span>
+                <span className="text-xs text-text-secondary">{creator.handle}</span>
+              </div>
+              <p className="text-xs text-text-secondary">{creator.niche}</p>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <div className="text-sm font-semibold text-text-primary">{creator.followers}</div>
+              <div className="flex items-center gap-1 justify-end">
+                <div className="w-12 h-1.5 bg-line rounded-full overflow-hidden">
+                  <div className="h-full bg-sky-blue rounded-full" style={{ width: `${creator.relevance}%` }} />
+                </div>
+                <span className="text-xs text-text-secondary">{creator.relevance}%</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const publishTargets = [
+  { name: 'Slack', color: 'bg-[#4A154B]' },
+  { name: 'Notion', color: 'bg-black' },
+  { name: 'HubSpot', color: 'bg-[#FF7A59]' },
+  { name: 'Google Docs', color: 'bg-[#4285F4]' },
+]
+
+function PublishToRow({ onPublish, heroType }: { onPublish: (service: string) => void; heroType: string }) {
+  const targets = heroType === 'slack-message'
+    ? publishTargets.filter(t => t.name !== 'Slack')
+    : publishTargets
+
+  return (
+    <div className="flex items-center gap-3 flex-wrap">
+      <span className="text-xs text-text-secondary font-semibold flex items-center gap-1">
+        <Send className="w-3 h-3" /> Publish to:
+      </span>
+      {targets.map(target => (
+        <button
+          key={target.name}
+          onClick={() => onPublish(target.name)}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-line hover:border-sky-blue/30 hover:bg-sky-blue/5 transition-colors text-text-secondary hover:text-text-primary"
+        >
+          <div className={cn('w-2 h-2 rounded-full', target.color)} />
+          {target.name}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function LaunchPlaybookSection({ plan, aiData, isGenerating, error, onGenerate, onClearAi }: {
   plan: MarketingPlan
   aiData: LaunchPlaybookData | null
@@ -1057,6 +1700,34 @@ function LaunchPlaybookSection({ plan, aiData, isGenerating, error, onGenerate, 
   const data = aiData ?? plan.launchPlaybook
   const { phases, checklist, pressAngles } = data
   const checkCategories = ['pre-launch', 'launch-day', 'post-launch'] as const
+
+  // Hero action state
+  const [expandedHeroes, setExpandedHeroes] = useState<Set<string>>(new Set())
+  const [loadingHeroes, setLoadingHeroes] = useState<Set<string>>(new Set())
+  const [toast, setToast] = useState<string | null>(null)
+
+  const toggleHero = (key: string) => {
+    if (expandedHeroes.has(key)) {
+      setExpandedHeroes(prev => { const next = new Set(prev); next.delete(key); return next })
+    } else {
+      setLoadingHeroes(prev => new Set(prev).add(key))
+      setTimeout(() => {
+        setLoadingHeroes(prev => { const next = new Set(prev); next.delete(key); return next })
+        setExpandedHeroes(prev => new Set(prev).add(key))
+      }, 1500)
+    }
+  }
+
+  const handlePublish = (service: string) => {
+    setToast(`Published to ${service}`)
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  // Landing page data for LP hero type
+  const landingPageChannel = plan.copyStudio.find(c => c.channel === 'landing-page')
+  const lpHeadlines = landingPageChannel?.items.filter(i => i.type === 'headline') ?? []
+  const lpCtas = landingPageChannel?.items.filter(i => i.type === 'cta') ?? []
+  const productColor = productCards.find(p => p.id === plan.productId)?.color ?? 'bg-sky-blue'
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -1110,13 +1781,90 @@ function LaunchPlaybookSection({ plan, aiData, isGenerating, error, onGenerate, 
                     </span>
                   </div>
                   <p className="text-sm text-text-secondary italic mb-3">&ldquo;{phase.messaging}&rdquo;</p>
-                  <div className="space-y-1.5">
-                    {phase.actions.map((action, j) => (
-                      <div key={j} className="flex gap-2 text-sm text-text-secondary">
-                        <span className="text-text-secondary/40 flex-shrink-0">&#x2022;</span>
-                        {action}
-                      </div>
-                    ))}
+                  <div className="space-y-2">
+                    {phase.actions.map((action, j) => {
+                      const heroKey = `${i}-${j}`
+
+                      // Plain string action
+                      if (typeof action === 'string') {
+                        return (
+                          <div key={j} className="flex gap-2 text-sm text-text-secondary">
+                            <span className="text-text-secondary/40 flex-shrink-0">&#x2022;</span>
+                            {action}
+                          </div>
+                        )
+                      }
+
+                      // PlaybookAction with potential hero
+                      const isExpanded = expandedHeroes.has(heroKey)
+                      const isLoading = loadingHeroes.has(heroKey)
+
+                      return (
+                        <div key={j} className="space-y-2">
+                          <div className="flex items-start gap-2 text-sm">
+                            <span className="text-text-secondary/40 flex-shrink-0 mt-0.5">&#x2022;</span>
+                            <div className="flex-1">
+                              <span className="text-text-secondary">{action.text}</span>
+                              {action.hero && (
+                                <button
+                                  onClick={() => toggleHero(heroKey)}
+                                  className={cn(
+                                    'ml-2 inline-flex items-center gap-1 text-xs font-semibold transition-colors',
+                                    isExpanded
+                                      ? 'text-text-secondary hover:text-text-primary'
+                                      : 'text-sky-blue hover:text-sky-blue/80'
+                                  )}
+                                >
+                                  {isLoading ? (
+                                    <>
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                      Drafting...
+                                    </>
+                                  ) : isExpanded ? (
+                                    <>
+                                      <ChevronDown className="w-3 h-3 rotate-180 transition-transform" />
+                                      Hide
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Sparkles className="w-3 h-3" />
+                                      {action.hero.label}
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {isExpanded && action.hero && (
+                            <div className="ml-5 animate-fade-in-up space-y-3">
+                              {action.hero.type === 'slack-message' && action.slackMessage && (
+                                <SlackMessagePreview message={action.slackMessage} />
+                              )}
+                              {action.hero.type === 'email-draft' && action.emailDraft && (
+                                <EmailDraftPreview draft={action.emailDraft} />
+                              )}
+                              {action.hero.type === 'creator-list' && action.creators && (
+                                <CreatorListPreview creators={action.creators} />
+                              )}
+                              {action.hero.type === 'landing-page' && (
+                                <div className="max-w-2xl">
+                                  <LandingPagePreview
+                                    headlines={lpHeadlines}
+                                    ctas={lpCtas}
+                                    tagline={plan.tagline}
+                                    productName={plan.productName}
+                                    productId={plan.productId}
+                                    color={productColor}
+                                  />
+                                </div>
+                              )}
+                              <PublishToRow onPublish={handlePublish} heroType={action.hero.type} />
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
@@ -1170,6 +1918,14 @@ function LaunchPlaybookSection({ plan, aiData, isGenerating, error, onGenerate, 
           </div>
         </div>
       </div>
+
+      {/* Publish toast */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 bg-eco text-white px-4 py-3 rounded-xl shadow-lg animate-fade-in flex items-center gap-2 z-50">
+          <Check className="w-4 h-4" />
+          <span className="text-sm font-semibold">{toast}</span>
+        </div>
+      )}
     </div>
   )
 }
