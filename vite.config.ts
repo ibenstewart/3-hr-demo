@@ -115,6 +115,71 @@ Rules:
             res.end(JSON.stringify({ error: message }))
           }
         })
+
+        // Marketing generate proxy
+        server.middlewares.use('/api/marketing-generate', async (req, res) => {
+          if (req.method !== 'POST') {
+            res.statusCode = 405
+            res.end('Method not allowed')
+            return
+          }
+
+          const chunks: Buffer[] = []
+          for await (const chunk of req) {
+            chunks.push(chunk as Buffer)
+          }
+          const body = JSON.parse(Buffer.concat(chunks).toString())
+
+          const apiKey = process.env.ANTHROPIC_API_KEY
+          if (!apiKey) {
+            res.statusCode = 500
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: 'ANTHROPIC_API_KEY not set in .env.local' }))
+            return
+          }
+
+          const PROMPTS: Record<string, string> = {
+            copy: 'You are an expert travel marketing copywriter for SkyVoyager. Generate ad copy for the given product. Return a JSON array of channel objects: [{ "channel": "google-ads"|"linkedin"|"email"|"social"|"landing-page", "channelLabel": string, "icon": "target"|"linkedin"|"mail"|"video"|"file-text", "items": [{ "type": "headline"|"description"|"subject-line"|"post"|"cta", "text": string, "variant": string }] }]. Google Ads: 3 headlines + 1 description. LinkedIn: 2 posts. Email: 4 subject lines. Social: 2 posts. Landing Page: 2 headlines + 2 CTAs. Be specific — name real places and numbers. Return ONLY valid JSON.',
+            calendar: 'You are a content strategist for SkyVoyager. Generate a 12-week content calendar. Return JSON: { "pillars": [{ "name": string, "color": "bg-sky-blue"|"bg-coral"|"bg-berry"|"bg-eco" }], "pieces": [{ "week": number, "title": string, "format": "blog"|"video"|"social"|"email"|"infographic", "buyerStage": "awareness"|"consideration"|"decision", "type": "searchable"|"shareable"|"both", "pillar": string, "brief": string }] }. 12-18 pieces, mix formats, ~50% awareness. Return ONLY valid JSON.',
+            launch: 'You are a launch strategist for SkyVoyager. Generate a 5-phase launch playbook using ORB framework. Return JSON: { "phases": [{ "phase": string, "timeline": string, "channelType": "owned"|"rented"|"borrowed", "messaging": string, "actions": string[] }], "checklist": [{ "label": string, "category": "pre-launch"|"launch-day"|"post-launch" }], "pressAngles": string[] }. 5 phases over 12 weeks, 10-12 checklist items, 3 press angles. Return ONLY valid JSON.',
+          }
+
+          try {
+            const { default: Anthropic } = await import('@anthropic-ai/sdk')
+            const client = new Anthropic({
+              apiKey,
+              baseURL: 'https://api.anthropic.com',
+              defaultHeaders: {},
+            })
+
+            const userMessage = `Product: ${body.productName}\nTagline: ${body.productContext?.tagline ?? ''}\nTarget Audience: ${body.productContext?.targetAudience ?? ''}\nPositioning: ${body.productContext?.positioning ?? ''}\n\nGenerate the ${body.type === 'copy' ? 'marketing copy' : body.type === 'calendar' ? 'content calendar' : 'launch playbook'} for this product.`
+
+            const message = await client.messages.create({
+              model: 'claude-sonnet-4-5-20250929',
+              max_tokens: 8192,
+              system: PROMPTS[body.type] || PROMPTS.copy,
+              messages: [{ role: 'user', content: userMessage }],
+            })
+
+            const textBlock = message.content.find((b: { type: string }) => b.type === 'text')
+            if (!textBlock || textBlock.type !== 'text') {
+              throw new Error('No text response from AI')
+            }
+
+            let jsonText = textBlock.text.trim()
+            if (jsonText.startsWith('```')) {
+              jsonText = jsonText.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '')
+            }
+            const parsed = JSON.parse(jsonText)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(parsed))
+          } catch (err) {
+            const message = err instanceof Error ? err.message : 'Unknown error'
+            res.statusCode = 500
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: message }))
+          }
+        })
       },
     },
   ],
