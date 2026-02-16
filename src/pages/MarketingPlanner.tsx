@@ -34,11 +34,12 @@ import {
   Globe,
   BookOpen,
   Share2,
+  Loader2,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { marketingPlans } from '../data/marketing-plans'
-import type { MarketingPlan, Tactic, ContentPiece } from '../data/marketing-plans'
+import type { MarketingPlan, Tactic, ContentPiece, ChannelCopy, ContentCalendarData, LaunchPlaybookData } from '../data/marketing-plans'
 
 type ViewState = 'select' | 'generating' | 'plan'
 
@@ -210,6 +211,69 @@ export default function MarketingPlanner() {
   )
 }
 
+// --- AI Generate Bar (shared by execution tabs) ---
+
+interface AiBarProps {
+  isGenerating: boolean
+  hasAiData: boolean
+  error: string | null
+  onGenerate: () => void
+  onClearAi: () => void
+  label: string
+}
+
+function AiGenerateBar({ isGenerating, hasAiData, error, onGenerate, onClearAi, label }: AiBarProps) {
+  if (isGenerating) {
+    return (
+      <div className="bg-haiti rounded-xl p-5 flex items-center gap-3">
+        <Loader2 className="w-5 h-5 text-sky-blue animate-spin" />
+        <div>
+          <p className="text-white text-sm font-semibold">Generating {label}...</p>
+          <p className="text-white/40 text-xs">This usually takes 10–20 seconds</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="bg-coral/10 border border-coral/20 rounded-xl p-4 flex items-start sm:items-center justify-between gap-3 flex-col sm:flex-row">
+        <p className="text-sm text-coral">{error}</p>
+        <div className="flex gap-3 flex-shrink-0">
+          <button onClick={onGenerate} className="text-xs font-semibold text-coral hover:text-coral/80 transition-colors">Retry</button>
+          <button onClick={onClearAi} className="text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors">Use demo data</button>
+        </div>
+      </div>
+    )
+  }
+
+  if (hasAiData) {
+    return (
+      <div className="flex items-center justify-between bg-eco/10 border border-eco/20 rounded-xl px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-eco" />
+          <span className="text-sm font-semibold text-eco">AI-generated content</span>
+        </div>
+        <div className="flex gap-3">
+          <button onClick={onGenerate} className="text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors">Regenerate</button>
+          <button onClick={onClearAi} className="text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors">Use demo data</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <button
+      onClick={onGenerate}
+      className="w-full bg-gradient-to-r from-haiti to-haiti/90 rounded-xl p-4 flex items-center justify-center gap-2 hover:from-haiti/90 hover:to-haiti/80 transition-all group"
+    >
+      <Sparkles className="w-4 h-4 text-sky-blue group-hover:animate-pulse" />
+      <span className="text-white text-sm font-semibold">Generate with AI</span>
+      <span className="text-white/40 text-xs ml-1 hidden sm:inline">— uses Claude to create fresh {label}</span>
+    </button>
+  )
+}
+
 // --- Plan view ---
 
 const sections = [
@@ -239,6 +303,66 @@ function PlanView({
   onBack: () => void
 }) {
   const productCard = productCards.find(p => p.id === plan.productId)
+
+  // AI generation state
+  const [aiContent, setAiContent] = useState<{
+    copyStudio: ChannelCopy[] | null
+    contentCalendar: ContentCalendarData | null
+    launchPlaybook: LaunchPlaybookData | null
+  }>({ copyStudio: null, contentCalendar: null, launchPlaybook: null })
+  const [aiLoading, setAiLoading] = useState<string | null>(null)
+  const [aiError, setAiError] = useState<{ type: string; message: string } | null>(null)
+
+  const generateAiContent = async (type: 'copy' | 'calendar' | 'launch') => {
+    setAiLoading(type)
+    setAiError(null)
+    try {
+      const res = await fetch('/api/marketing-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type,
+          productName: plan.productName,
+          productContext: {
+            tagline: plan.tagline,
+            targetAudience: plan.targetAudience,
+            positioning: plan.positioning,
+          },
+        }),
+      })
+      if (!res.ok) throw new Error(`API error: ${res.status}`)
+
+      const reader = res.body?.getReader()
+      if (!reader) throw new Error('No response body')
+
+      let text = ''
+      const decoder = new TextDecoder()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        text += decoder.decode(value, { stream: true })
+      }
+
+      // Strip markdown fences if present
+      let jsonText = text.trim()
+      if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '')
+      }
+      const parsed = JSON.parse(jsonText)
+
+      if (type === 'copy') {
+        setAiContent(prev => ({ ...prev, copyStudio: parsed }))
+      } else if (type === 'calendar') {
+        setAiContent(prev => ({ ...prev, contentCalendar: parsed }))
+      } else {
+        setAiContent(prev => ({ ...prev, launchPlaybook: parsed }))
+      }
+    } catch (err) {
+      setAiError({ type, message: err instanceof Error ? err.message : 'Failed to generate' })
+    } finally {
+      setAiLoading(null)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-canvas-contrast">
@@ -336,9 +460,36 @@ function PlanView({
               <TacticsSection plan={plan} activeTactic={activeTactic} setActiveTactic={setActiveTactic} />
             )}
             {activeSection === 'budget' && <BudgetSection plan={plan} />}
-            {activeSection === 'copy-studio' && <CopyStudioSection plan={plan} />}
-            {activeSection === 'content-calendar' && <ContentCalendarSection plan={plan} />}
-            {activeSection === 'launch-playbook' && <LaunchPlaybookSection plan={plan} />}
+            {activeSection === 'copy-studio' && (
+              <CopyStudioSection
+                plan={plan}
+                aiData={aiContent.copyStudio}
+                isGenerating={aiLoading === 'copy'}
+                error={aiError?.type === 'copy' ? aiError.message : null}
+                onGenerate={() => generateAiContent('copy')}
+                onClearAi={() => { setAiContent(prev => ({ ...prev, copyStudio: null })); setAiError(null) }}
+              />
+            )}
+            {activeSection === 'content-calendar' && (
+              <ContentCalendarSection
+                plan={plan}
+                aiData={aiContent.contentCalendar}
+                isGenerating={aiLoading === 'calendar'}
+                error={aiError?.type === 'calendar' ? aiError.message : null}
+                onGenerate={() => generateAiContent('calendar')}
+                onClearAi={() => { setAiContent(prev => ({ ...prev, contentCalendar: null })); setAiError(null) }}
+              />
+            )}
+            {activeSection === 'launch-playbook' && (
+              <LaunchPlaybookSection
+                plan={plan}
+                aiData={aiContent.launchPlaybook}
+                isGenerating={aiLoading === 'launch'}
+                error={aiError?.type === 'launch' ? aiError.message : null}
+                onGenerate={() => generateAiContent('launch')}
+                onClearAi={() => { setAiContent(prev => ({ ...prev, launchPlaybook: null })); setAiError(null) }}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -640,11 +791,26 @@ const copyChannelIcons: Record<string, LucideIcon> = {
   'file-text': FileText,
 }
 
-function CopyStudioSection({ plan }: { plan: MarketingPlan }) {
-  const [activeChannel, setActiveChannel] = useState(plan.copyStudio[0]?.channel ?? 'google-ads')
+function CopyStudioSection({ plan, aiData, isGenerating, error, onGenerate, onClearAi }: {
+  plan: MarketingPlan
+  aiData: ChannelCopy[] | null
+  isGenerating: boolean
+  error: string | null
+  onGenerate: () => void
+  onClearAi: () => void
+}) {
+  const data = aiData ?? plan.copyStudio
+  const [activeChannel, setActiveChannel] = useState(data[0]?.channel ?? 'google-ads')
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
-  const channelData = plan.copyStudio.find(c => c.channel === activeChannel) ?? plan.copyStudio[0]
+  // Reset channel selection when data source changes
+  useEffect(() => {
+    if (data[0] && !data.find(c => c.channel === activeChannel)) {
+      setActiveChannel(data[0].channel)
+    }
+  }, [data, activeChannel])
+
+  const channelData = data.find(c => c.channel === activeChannel) ?? data[0]
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text)
@@ -659,9 +825,18 @@ function CopyStudioSection({ plan }: { plan: MarketingPlan }) {
         <p className="text-text-secondary text-sm mb-4">Ready-to-use copy across 5 channels for {plan.productName}</p>
       </div>
 
+      <AiGenerateBar
+        isGenerating={isGenerating}
+        hasAiData={aiData !== null}
+        error={error}
+        onGenerate={onGenerate}
+        onClearAi={onClearAi}
+        label="copy"
+      />
+
       {/* Channel selector */}
       <div className="flex flex-wrap gap-2">
-        {plan.copyStudio.map((ch) => {
+        {data.map((ch) => {
           const Icon = copyChannelIcons[ch.icon] || Globe
           return (
             <button
@@ -756,8 +931,16 @@ const typeLabels: Record<string, { label: string; color: string }> = {
   both: { label: 'Search + Share', color: 'bg-haiti/10 text-haiti' },
 }
 
-function ContentCalendarSection({ plan }: { plan: MarketingPlan }) {
-  const { pillars, pieces } = plan.contentCalendar
+function ContentCalendarSection({ plan, aiData, isGenerating, error, onGenerate, onClearAi }: {
+  plan: MarketingPlan
+  aiData: ContentCalendarData | null
+  isGenerating: boolean
+  error: string | null
+  onGenerate: () => void
+  onClearAi: () => void
+}) {
+  const data = aiData ?? plan.contentCalendar
+  const { pillars, pieces } = data
   const weekRanges = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]]
   const rangeLabels = ['Foundation', 'Growth', 'Expansion', 'Momentum', 'Authority', 'Scale']
 
@@ -767,6 +950,15 @@ function ContentCalendarSection({ plan }: { plan: MarketingPlan }) {
         <h2 className="text-xl font-black text-text-primary mb-1">Content Calendar</h2>
         <p className="text-text-secondary text-sm mb-4">12 weeks of content mapped to pillars for {plan.productName}</p>
       </div>
+
+      <AiGenerateBar
+        isGenerating={isGenerating}
+        hasAiData={aiData !== null}
+        error={error}
+        onGenerate={onGenerate}
+        onClearAi={onClearAi}
+        label="content calendar"
+      />
 
       {/* Pillar legend */}
       <div className="flex flex-wrap gap-3">
@@ -854,8 +1046,16 @@ const checkCategoryLabels: Record<string, string> = {
   'post-launch': 'Post-Launch',
 }
 
-function LaunchPlaybookSection({ plan }: { plan: MarketingPlan }) {
-  const { phases, checklist, pressAngles } = plan.launchPlaybook
+function LaunchPlaybookSection({ plan, aiData, isGenerating, error, onGenerate, onClearAi }: {
+  plan: MarketingPlan
+  aiData: LaunchPlaybookData | null
+  isGenerating: boolean
+  error: string | null
+  onGenerate: () => void
+  onClearAi: () => void
+}) {
+  const data = aiData ?? plan.launchPlaybook
+  const { phases, checklist, pressAngles } = data
   const checkCategories = ['pre-launch', 'launch-day', 'post-launch'] as const
 
   return (
@@ -864,6 +1064,15 @@ function LaunchPlaybookSection({ plan }: { plan: MarketingPlan }) {
         <h2 className="text-xl font-black text-text-primary mb-1">Launch Playbook</h2>
         <p className="text-text-secondary text-sm mb-4">5-phase launch using the ORB framework for {plan.productName}</p>
       </div>
+
+      <AiGenerateBar
+        isGenerating={isGenerating}
+        hasAiData={aiData !== null}
+        error={error}
+        onGenerate={onGenerate}
+        onClearAi={onClearAi}
+        label="launch playbook"
+      />
 
       {/* ORB legend */}
       <div className="flex flex-wrap gap-4">
