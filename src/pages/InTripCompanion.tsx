@@ -35,6 +35,8 @@ export default function InTripCompanion() {
 
   const handleSaveRoute = (route: RunningRoute) => {
     if (savedRoutes.has(route.id)) return
+    // Save to first full day (Day 2+), not arrival day
+    const targetDay = activeDay === 0 ? 1 : activeDay
     const newItem = {
       id: `run-${route.id}`,
       time: '07:00',
@@ -51,10 +53,10 @@ export default function InTripCompanion() {
       actions: [{ label: 'View Route', variant: 'primary' as const }],
     }
     setDays(prev => prev.map((day, i) =>
-      i === activeDay ? { ...day, items: [newItem, ...day.items] } : day
+      i === targetDay ? { ...day, items: [newItem, ...day.items] } : day
     ))
     setSavedRoutes(prev => new Set(prev).add(route.id))
-    setToast(`Route added to Day ${activeDay + 1}`)
+    setToast(`Route added to Day ${targetDay + 1}`)
     setTimeout(() => setToast(null), 3000)
     setTimeout(() => {
       setRunSheetOpen(false)
@@ -428,11 +430,11 @@ export default function InTripCompanion() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-sm font-bold text-text-primary">Recommended Gear</h4>
-                <span className="text-xs font-bold text-[#1D1D1D] tracking-wide">UNDER ARMOUR</span>
+                <span className="text-xs font-bold text-text-primary tracking-wide">UNDER ARMOUR</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {selectedRoute.uaGear.map(gear => (
-                  <div key={gear.name} className="bg-white border border-[#1D1D1D]/10 rounded-xl overflow-hidden">
+                  <div key={gear.name} className="bg-white border border-text-primary/10 rounded-xl overflow-hidden">
                     <img src={gear.image} alt={gear.name} className="w-full h-20 object-cover" />
                     <div className="p-2">
                       <p className="text-xs font-bold text-text-primary">{gear.name}</p>
@@ -455,9 +457,9 @@ export default function InTripCompanion() {
               )}
             >
               {savedRoutes.has(selectedRoute.id) ? (
-                <span className="flex items-center justify-center gap-2"><Check className="w-4 h-4" /> Saved to Day {activeDay + 1}</span>
+                <span className="flex items-center justify-center gap-2"><Check className="w-4 h-4" /> Saved to Day {(activeDay === 0 ? 1 : activeDay) + 1}</span>
               ) : (
-                <span className="flex items-center justify-center gap-2"><Footprints className="w-4 h-4" /> Save to itinerary</span>
+                <span className="flex items-center justify-center gap-2"><Footprints className="w-4 h-4" /> Save to Day {(activeDay === 0 ? 1 : activeDay) + 1}</span>
               )}
             </button>
           </div>
@@ -467,7 +469,7 @@ export default function InTripCompanion() {
             {/* Co-branded header */}
             <div className="text-center pb-3 border-b border-line">
               <div className="flex items-center justify-center gap-2 mb-1">
-                <span className="text-xs font-bold text-[#1D1D1D] tracking-wide">UNDER ARMOUR</span>
+                <span className="text-xs font-bold text-text-primary tracking-wide">UNDER ARMOUR</span>
                 <span className="text-xs text-text-secondary">x</span>
                 <span className="text-xs font-bold text-sky-blue tracking-wide">SKYSCANNER</span>
               </div>
@@ -488,7 +490,7 @@ export default function InTripCompanion() {
                   <div className="p-3 flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="text-sm font-bold text-text-primary truncate">{route.name}</h4>
-                      <span className="text-[10px] font-bold text-[#1D1D1D]/60 bg-[#1D1D1D]/5 px-1.5 py-0.5 rounded flex-shrink-0">UA Tested</span>
+                      <span className="text-[10px] font-bold text-text-primary/60 bg-text-primary/5 px-1.5 py-0.5 rounded flex-shrink-0">UA Tested</span>
                     </div>
                     <div className="flex items-center gap-3 text-xs text-text-secondary mb-1">
                       <span className="flex items-center gap-1"><Footprints className="w-3 h-3" />{route.distanceKm} km</span>

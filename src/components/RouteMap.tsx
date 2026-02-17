@@ -18,14 +18,14 @@ function FitBounds({ positions }: { positions: LatLngExpression[] }) {
 // Custom divIcon markers to avoid Vite default marker icon bug
 const startIcon = L.divIcon({
   className: '',
-  html: '<div style="width:14px;height:14px;border-radius:50%;background:#0fa958;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
+  html: '<div style="width:14px;height:14px;border-radius:50%;background:rgb(15,161,169);border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 })
 
 const endIcon = L.divIcon({
   className: '',
-  html: '<div style="width:14px;height:14px;border-radius:50%;background:#e70866;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
+  html: '<div style="width:14px;height:14px;border-radius:50%;background:rgb(231,8,102);border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>',
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 })
