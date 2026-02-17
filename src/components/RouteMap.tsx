@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet'
 import type { LatLngExpression, PathOptions } from 'leaflet'
 import L from 'leaflet'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import 'leaflet/dist/leaflet.css'
 
 // Auto-fit map bounds to route
@@ -42,7 +42,10 @@ interface RouteMapProps {
 }
 
 export default function RouteMap({ coordinates, height = '200px' }: RouteMapProps) {
-  const positions: LatLngExpression[] = coordinates.map(([lat, lng]) => [lat, lng])
+  const positions: LatLngExpression[] = useMemo(
+    () => coordinates.map(([lat, lng]) => [lat, lng]),
+    [coordinates]
+  )
   const start = positions[0]
   const end = positions[positions.length - 1]
 

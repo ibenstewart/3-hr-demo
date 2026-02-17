@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react'
+import { useState, useRef, lazy, Suspense } from 'react'
 import { Link } from 'react-router'
 import { MessageCircle, X, Send, MapPin, Sun, Sparkles, ArrowRight, ArrowLeft, Mountain, Clock, Footprints, Check } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
@@ -13,6 +13,15 @@ const RouteMap = lazy(() => import('../components/RouteMap'))
 
 const BPK_SKY_BLUE = 'rgb(0, 98, 227)'
 const BPK_TEXT_SECONDARY = 'rgb(98, 105, 113)'
+
+const difficultyColor = (d: 'easy' | 'moderate' | 'hard') =>
+  d === 'easy' ? "bg-eco/20 text-eco" : d === 'moderate' ? "bg-coral/20 text-coral" : "bg-danger/20 text-danger"
+
+const UA_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Under_armour_logo.svg/960px-Under_armour_logo.svg.png'
+
+function UALogo({ className = "h-5" }: { className?: string }) {
+  return <img src={UA_LOGO} alt="Under Armour" className={className} />
+}
 
 function getIcon(name: string) {
   const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[name]
@@ -30,11 +39,16 @@ export default function InTripCompanion() {
   const [selectedRoute, setSelectedRoute] = useState<RunningRoute | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [savedRoutes, setSavedRoutes] = useState<Set<string>>(new Set())
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const currentDay = days[activeDay]
 
   const handleSaveRoute = (route: RunningRoute) => {
     if (savedRoutes.has(route.id)) return
+    // Cancel any pending timers from a previous save
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
     // Save to first full day (Day 2+), not arrival day
     const targetDay = activeDay === 0 ? 1 : activeDay
     const newItem = {
@@ -57,8 +71,8 @@ export default function InTripCompanion() {
     ))
     setSavedRoutes(prev => new Set(prev).add(route.id))
     setToast(`Route added to Day ${targetDay + 1}`)
-    setTimeout(() => setToast(null), 3000)
-    setTimeout(() => {
+    toastTimerRef.current = setTimeout(() => setToast(null), 3000)
+    closeTimerRef.current = setTimeout(() => {
       setRunSheetOpen(false)
       setSelectedRoute(null)
     }, 1000)
@@ -171,7 +185,6 @@ export default function InTripCompanion() {
                     item.type === 'hotel' ? "bg-haiti" :
                     item.type === 'food' ? "bg-berry" :
                     item.type === 'transport' ? "bg-coral" :
-                    item.type === 'run' ? "bg-eco" :
                     "bg-eco"
                   )}>
                     <Icon className="w-5 h-5 text-white" />
@@ -331,7 +344,11 @@ export default function InTripCompanion() {
       {/* Running Routes Bottom Sheet */}
       <BottomSheet
         isOpen={runSheetOpen}
-        onClose={() => { setRunSheetOpen(false); setSelectedRoute(null) }}
+        onClose={() => {
+          if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+          if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+          setRunSheetOpen(false); setSelectedRoute(null)
+        }}
       >
         {selectedRoute ? (
           /* Route Detail View */
@@ -347,12 +364,7 @@ export default function InTripCompanion() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-black text-text-primary">{selectedRoute.name}</h3>
-                <span className={cn(
-                  "text-xs font-bold px-2 py-0.5 rounded-full",
-                  selectedRoute.difficulty === 'easy' ? "bg-eco/20 text-eco" :
-                  selectedRoute.difficulty === 'moderate' ? "bg-coral/20 text-coral" :
-                  "bg-danger/20 text-danger"
-                )}>
+                <span className={cn("text-xs font-bold px-2 py-0.5 rounded-full", difficultyColor(selectedRoute.difficulty))}>
                   {selectedRoute.difficulty}
                 </span>
               </div>
@@ -430,7 +442,7 @@ export default function InTripCompanion() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-sm font-bold text-text-primary">Recommended Gear</h4>
-                <span className="text-xs font-bold text-text-primary tracking-wide">UNDER ARMOUR</span>
+                <UALogo className="h-3.5" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {selectedRoute.uaGear.map(gear => (
@@ -468,8 +480,8 @@ export default function InTripCompanion() {
           <div className="space-y-4">
             {/* Co-branded header */}
             <div className="text-center pb-3 border-b border-line">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <span className="text-xs font-bold text-text-primary tracking-wide">UNDER ARMOUR</span>
+              <div className="flex items-center justify-center gap-3 mb-1">
+                <UALogo className="h-5" />
                 <span className="text-xs text-text-secondary">x</span>
                 <span className="text-xs font-bold text-sky-blue tracking-wide">SKYSCANNER</span>
               </div>
@@ -497,12 +509,7 @@ export default function InTripCompanion() {
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{route.estimatedMinutes} min</span>
                       <span className="flex items-center gap-1"><Mountain className="w-3 h-3" />{route.elevationGainM}m</span>
                     </div>
-                    <span className={cn(
-                      "text-[10px] font-bold px-2 py-0.5 rounded-full",
-                      route.difficulty === 'easy' ? "bg-eco/20 text-eco" :
-                      route.difficulty === 'moderate' ? "bg-coral/20 text-coral" :
-                      "bg-danger/20 text-danger"
-                    )}>
+                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", difficultyColor(route.difficulty))}>
                       {route.difficulty}
                     </span>
                   </div>
