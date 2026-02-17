@@ -50,6 +50,8 @@ import type { LucideIcon } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { marketingPlans } from '../data/marketing-plans'
 import type { MarketingPlan, Tactic, ContentPiece, ChannelCopy, ContentCalendarData, LaunchPlaybookData, CreatorProfile } from '../data/marketing-plans'
+import { geoMarketsByProduct, geoSignalInsightsByProduct } from '../data/geo-markets'
+import type { GeoMarket } from '../data/geo-markets'
 
 type ViewState = 'select' | 'generating' | 'plan'
 
@@ -293,6 +295,7 @@ const sections = [
   { id: 'timeline', label: '90-Day Plan', icon: Clock, group: 'strategy' as const },
   { id: 'tactics', label: 'Top Tactics', icon: Lightbulb, group: 'strategy' as const },
   { id: 'budget', label: 'Budget Intelligence', icon: TrendingUp, group: 'strategy' as const },
+  { id: 'geo-growth', label: 'Geo Growth', icon: Globe, group: 'strategy' as const },
   { id: 'copy-studio', label: 'Copy Studio', icon: Pen, group: 'execution' as const },
   { id: 'content-calendar', label: 'Content', icon: CalendarDays, group: 'execution' as const },
   { id: 'launch-playbook', label: 'Launch', icon: Megaphone, group: 'execution' as const },
@@ -472,6 +475,7 @@ function PlanView({
               <TacticsSection plan={plan} activeTactic={activeTactic} setActiveTactic={setActiveTactic} />
             )}
             {activeSection === 'budget' && <BudgetIntelligenceSection plan={plan} />}
+            {activeSection === 'geo-growth' && <GeoGrowthSection plan={plan} />}
             {activeSection === 'copy-studio' && (
               <CopyStudioSection
                 plan={plan}
@@ -1665,7 +1669,7 @@ const publishTargets = [
   { name: 'Google Docs', color: 'bg-[#4285F4]' },
 ]
 
-function PublishToRow({ onPublish, heroType }: { onPublish: (service: string) => void; heroType: string }) {
+function PublishToRow({ onPublish, heroType }: { onPublish: (service: string) => void; heroType?: string }) {
   const targets = heroType === 'slack-message'
     ? publishTargets.filter(t => t.name !== 'Slack')
     : publishTargets
@@ -1685,6 +1689,489 @@ function PublishToRow({ onPublish, heroType }: { onPublish: (service: string) =>
           {target.name}
         </button>
       ))}
+    </div>
+  )
+}
+
+// --- Geo Growth Section ---
+
+const tierConfig = {
+  'launch-now': { label: 'Launch Now', border: 'border-l-eco', badge: 'bg-eco/20 text-eco' },
+  'next-quarter': { label: 'Next Quarter', border: 'border-l-coral', badge: 'bg-coral/20 text-coral' },
+  'watch': { label: 'Watch', border: 'border-l-line', badge: 'bg-surface-subtle text-text-secondary' },
+} as const
+
+const dimensionLabels = [
+  { key: 'demand' as const, label: 'Demand' },
+  { key: 'competition' as const, label: 'Competition' },
+  { key: 'position' as const, label: 'Position' },
+  { key: 'regulatory' as const, label: 'Regulatory' },
+]
+
+function GeoGrowthSection({ plan }: { plan: MarketingPlan }) {
+  const [geoTab, setGeoTab] = useState<'prioritization' | 'signals'>('prioritization')
+  const [expandedMarkets, setExpandedMarkets] = useState<Set<string>>(new Set())
+  const [loadingMarkets, setLoadingMarkets] = useState<Set<string>>(new Set())
+  const [expandedAdCopy, setExpandedAdCopy] = useState<Set<string>>(new Set())
+  const [loadingAdCopy, setLoadingAdCopy] = useState<Set<string>>(new Set())
+  const [geoToast, setGeoToast] = useState<string | null>(null)
+
+  const markets = geoMarketsByProduct[plan.productId] ?? []
+  const insights = geoSignalInsightsByProduct[plan.productId] ?? []
+  const tiers: ('launch-now' | 'next-quarter' | 'watch')[] = ['launch-now', 'next-quarter', 'watch']
+
+  const toggleMarket = (key: string) => {
+    if (expandedMarkets.has(key)) {
+      setExpandedMarkets(prev => { const next = new Set(prev); next.delete(key); return next })
+      setExpandedAdCopy(prev => { const next = new Set(prev); next.delete(key); return next })
+    } else {
+      setLoadingMarkets(prev => new Set(prev).add(key))
+      setTimeout(() => {
+        setLoadingMarkets(prev => { const next = new Set(prev); next.delete(key); return next })
+        setExpandedMarkets(prev => new Set(prev).add(key))
+      }, 1500)
+    }
+  }
+
+  const toggleAdCopy = (key: string) => {
+    if (expandedAdCopy.has(key)) {
+      setExpandedAdCopy(prev => { const next = new Set(prev); next.delete(key); return next })
+    } else {
+      setLoadingAdCopy(prev => new Set(prev).add(key))
+      setTimeout(() => {
+        setLoadingAdCopy(prev => { const next = new Set(prev); next.delete(key); return next })
+        setExpandedAdCopy(prev => new Set(prev).add(key))
+      }, 1500)
+    }
+  }
+
+  const handleGeoPublish = (service: string) => {
+    setGeoToast(`Published to ${service}`)
+    setTimeout(() => setGeoToast(null), 3000)
+  }
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h2 className="text-xl font-black text-text-primary mb-1">Geo Growth</h2>
+        <p className="text-text-secondary text-sm mb-4">Market prioritization and entry playbooks for {plan.productName}</p>
+      </div>
+
+      {/* Sub-tabs */}
+      <div className="flex gap-1 bg-surface-subtle rounded-lg p-1">
+        {([
+          { id: 'prioritization' as const, label: 'Market Prioritization' },
+          { id: 'signals' as const, label: 'Signal Analysis' },
+        ]).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setGeoTab(tab.id)}
+            className={cn(
+              'flex-1 px-3 py-2 rounded-md text-sm font-semibold transition-colors',
+              geoTab === tab.id
+                ? 'bg-white text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Market Prioritization Tab */}
+      {geoTab === 'prioritization' && (
+        <div className="space-y-8 animate-fade-in">
+          {tiers.map((tier) => {
+            const tierMarkets = markets.filter(m => m.tier === tier)
+            if (tierMarkets.length === 0) return null
+            const config = tierConfig[tier]
+            return (
+              <div key={tier}>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={cn('px-2.5 py-1 rounded-full text-xs font-bold', config.badge)}>{config.label}</span>
+                  <span className="text-xs text-text-secondary">{tierMarkets.length} market{tierMarkets.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="space-y-3">
+                  {tierMarkets.map((market, i) => (
+                    <GeoMarketCard
+                      key={market.country}
+                      market={market}
+                      config={config}
+                      index={i}
+                      isExpanded={expandedMarkets.has(market.country)}
+                      isLoading={loadingMarkets.has(market.country)}
+                      isAdCopyExpanded={expandedAdCopy.has(market.country)}
+                      isAdCopyLoading={loadingAdCopy.has(market.country)}
+                      onToggleMarket={() => toggleMarket(market.country)}
+                      onToggleAdCopy={() => toggleAdCopy(market.country)}
+                      onPublish={handleGeoPublish}
+                      onCopyToast={(msg: string) => { setGeoToast(msg); setTimeout(() => setGeoToast(null), 3000) }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Signal Analysis Tab */}
+      {geoTab === 'signals' && (
+        <GeoSignalAnalysis plan={plan} markets={markets} insights={insights} />
+      )}
+
+      {/* Toast */}
+      {geoToast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-eco text-white px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in-up">
+          <Check className="w-4 h-4" />
+          <span className="text-sm font-semibold">{geoToast}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function GeoMarketCard({ market, config, index, isExpanded, isLoading, isAdCopyExpanded, isAdCopyLoading, onToggleMarket, onToggleAdCopy, onPublish, onCopyToast }: {
+  market: GeoMarket
+  config: { label: string; border: string; badge: string }
+  index: number
+  isExpanded: boolean
+  isLoading: boolean
+  isAdCopyExpanded: boolean
+  isAdCopyLoading: boolean
+  onToggleMarket: () => void
+  onToggleAdCopy: () => void
+  onPublish: (service: string) => void
+  onCopyToast: (msg: string) => void
+}) {
+  return (
+    <div
+      className={cn('bg-white rounded-xl shadow-sm border-l-4 overflow-hidden animate-fade-in-up', config.border)}
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">{market.flag}</span>
+            <div>
+              <h3 className="font-bold text-text-primary">{market.country}</h3>
+              <p className="text-xs text-text-secondary">{market.region}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-black text-text-primary">{market.pmfScore}</div>
+            <div className="text-xs text-text-secondary">PMF Score</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2 mb-3">
+          {dimensionLabels.map((dim) => (
+            <div key={dim.key} className="flex items-center gap-2">
+              <span className="text-xs text-text-secondary w-20 shrink-0">{dim.label}</span>
+              <div className="flex-1 h-2 bg-surface-subtle rounded-full overflow-hidden">
+                <div className="h-full bg-sky-blue rounded-full transition-all duration-500" style={{ width: `${market.dimensions[dim.key]}%` }} />
+              </div>
+              <span className="text-xs font-semibold text-text-primary w-7 text-right">{market.dimensions[dim.key]}</span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-sm text-text-secondary mb-3">{market.insight}</p>
+
+        <button
+          onClick={onToggleMarket}
+          disabled={isLoading}
+          className={cn(
+            'inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all',
+            isExpanded ? 'bg-sky-blue/10 text-sky-blue' : 'bg-sky-blue text-white hover:bg-sky-blue/90'
+          )}
+        >
+          {isLoading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" />Analyzing market...</>
+          ) : isExpanded ? (
+            <><ChevronDown className="w-4 h-4" />Hide entry playbook</>
+          ) : (
+            <><Sparkles className="w-4 h-4" />View entry playbook</>
+          )}
+        </button>
+      </div>
+
+      {isExpanded && (
+        <GeoPlaybookExpanded
+          market={market}
+          isAdCopyExpanded={isAdCopyExpanded}
+          isAdCopyLoading={isAdCopyLoading}
+          onToggleAdCopy={onToggleAdCopy}
+          onPublish={onPublish}
+          onCopyToast={onCopyToast}
+        />
+      )}
+    </div>
+  )
+}
+
+function GeoPlaybookExpanded({ market, isAdCopyExpanded, isAdCopyLoading, onToggleAdCopy, onPublish, onCopyToast }: {
+  market: GeoMarket
+  isAdCopyExpanded: boolean
+  isAdCopyLoading: boolean
+  onToggleAdCopy: () => void
+  onPublish: (service: string) => void
+  onCopyToast: (msg: string) => void
+}) {
+  return (
+    <div className="border-t border-line bg-surface-secondary/30 p-5 space-y-5 animate-fade-in-up">
+      {/* Localized Channel Mix */}
+      <div>
+        <h4 className="font-bold text-text-primary text-sm mb-3 flex items-center gap-2">
+          <BarChart3 className="w-4 h-4 text-sky-blue" />
+          Localized Channel Mix
+        </h4>
+        <div className="space-y-2">
+          {market.playbook.channels.map((ch) => {
+            const Icon = channelIcons[ch.icon] ?? Globe
+            return (
+              <div key={ch.name} className="flex items-center gap-3 bg-white rounded-lg p-3">
+                <Icon className="w-4 h-4 text-sky-blue shrink-0" />
+                <span className="font-semibold text-sm text-text-primary w-28 shrink-0">{ch.name}</span>
+                <div className="flex-1 h-2 bg-surface-subtle rounded-full overflow-hidden">
+                  <div className="h-full bg-sky-blue/60 rounded-full" style={{ width: `${ch.budgetPct}%` }} />
+                </div>
+                <span className="text-xs font-bold text-text-primary w-10 text-right">{ch.budgetPct}%</span>
+                <span className="text-xs text-text-secondary hidden md:block flex-1">{ch.note}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Local Competitors */}
+      <div>
+        <h4 className="font-bold text-text-primary text-sm mb-3 flex items-center gap-2">
+          <Swords className="w-4 h-4 text-coral" />
+          Local Competitor Positioning
+        </h4>
+        <div className="space-y-2">
+          {market.playbook.competitors.map((comp) => (
+            <div key={comp.name} className="bg-white rounded-lg p-3">
+              <span className="font-semibold text-sm text-text-primary">{comp.name}</span>
+              <p className="text-xs text-text-secondary mb-1"><strong>Local strength:</strong> {comp.localStrength}</p>
+              <p className="text-xs text-eco"><strong>Our angle:</strong> {comp.angle}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Messaging Angles */}
+      <div>
+        <h4 className="font-bold text-text-primary text-sm mb-3 flex items-center gap-2">
+          <Megaphone className="w-4 h-4 text-berry" />
+          Messaging Angles
+        </h4>
+        <div className="space-y-1.5">
+          {market.playbook.messaging.map((msg, j) => (
+            <div key={j} className="flex items-start gap-2 bg-white rounded-lg p-3">
+              <span className="text-xs font-bold text-berry bg-berry/10 rounded-full w-5 h-5 flex items-center justify-center shrink-0">{j + 1}</span>
+              <span className="text-sm text-text-primary">{msg}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Regulatory Notes */}
+      <div>
+        <h4 className="font-bold text-text-primary text-sm mb-3 flex items-center gap-2">
+          <Shield className="w-4 h-4 text-warning" />
+          Regulatory Notes
+        </h4>
+        <div className="space-y-1.5">
+          {market.playbook.regulatory.map((note, j) => (
+            <div key={j} className="flex items-start gap-2 bg-warning/5 border border-warning/20 rounded-lg p-3">
+              <span className="text-warning text-xs mt-0.5">&#9888;</span>
+              <span className="text-sm text-text-primary">{note}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Content Brief */}
+      <div>
+        <h4 className="font-bold text-text-primary text-sm mb-3 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-sky-blue" />
+          Content Brief
+        </h4>
+        <div className="space-y-1.5">
+          {market.playbook.contentBrief.map((item, j) => (
+            <div key={j} className="flex items-start gap-2 bg-white rounded-lg p-3">
+              <span className="text-xs font-bold text-sky-blue bg-sky-blue/10 rounded-full w-5 h-5 flex items-center justify-center shrink-0">{j + 1}</span>
+              <span className="text-sm text-text-primary">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Hero Action: Draft localized Google Ads copy */}
+      <div>
+        <button
+          onClick={onToggleAdCopy}
+          disabled={isAdCopyLoading}
+          className={cn(
+            'inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all',
+            isAdCopyExpanded ? 'bg-sky-blue/10 text-sky-blue' : 'bg-sky-blue text-white hover:bg-sky-blue/90'
+          )}
+        >
+          {isAdCopyLoading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" />Drafting localized ads...</>
+          ) : isAdCopyExpanded ? (
+            <><ChevronDown className="w-4 h-4" />Hide ad variants</>
+          ) : (
+            <><Sparkles className="w-4 h-4" />Draft localized Google Ads copy</>
+          )}
+        </button>
+
+        {isAdCopyExpanded && (
+          <div className="mt-3 space-y-2 animate-fade-in-up">
+            {market.playbook.adVariants.map((ad, j) => (
+              <div key={j} className="bg-white rounded-lg p-4 border border-line">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="font-bold text-sky-blue text-sm mb-1">{ad.headline}</p>
+                    <p className="text-sm text-text-secondary">{ad.description}</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${ad.headline}\n${ad.description}`)
+                      onCopyToast('Copied to clipboard')
+                    }}
+                    className="ml-3 p-1.5 rounded-md hover:bg-surface-subtle transition-colors text-text-secondary hover:text-text-primary"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="mt-2 flex items-center gap-1 text-xs text-text-secondary">
+                  <span className="text-eco">Ad {j + 1} of {market.playbook.adVariants.length}</span>
+                  <span className="mx-1">·</span>
+                  <span>Google Ads format</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Publish to row */}
+      <PublishToRow onPublish={onPublish} />
+    </div>
+  )
+}
+
+function GeoSignalAnalysis({ plan, markets, insights }: { plan: MarketingPlan; markets: GeoMarket[]; insights: { text: string; type: string }[] }) {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* AI Reasoning callout */}
+      <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
+        <div className="flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-sky-blue shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-bold text-text-primary text-sm mb-2">PMF Scoring Methodology</h3>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              SkyVoyager&apos;s PMF score combines 4 weighted signals: <strong>Demand</strong> (search volume, travel spend, growth trajectory),
+              <strong> Competition</strong> (inverse — higher means less competition), <strong>Position</strong> (SkyVoyager brand awareness and existing traffic),
+              and <strong>Regulatory</strong> (ease of market entry, data laws, payment infrastructure).
+              Markets scoring 75+ are recommended for immediate launch. 55-74 need preparation. Below 55 are monitoring only.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Dimension breakdown table */}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-line">
+          <h3 className="font-bold text-text-primary">Market Dimension Breakdown</h3>
+          <p className="text-xs text-text-secondary mt-1">All markets ranked by overall PMF score</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-surface-subtle">
+                <th className="text-left px-4 py-3 font-semibold text-text-secondary">Market</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">PMF</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">Demand</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">Competition</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">Position</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">Regulatory</th>
+                <th className="text-center px-3 py-3 font-semibold text-text-secondary">Tier</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...markets].sort((a, b) => b.pmfScore - a.pmfScore).map((market, i) => {
+                const config = tierConfig[market.tier]
+                return (
+                  <tr key={market.country} className={cn('border-b border-line last:border-0 animate-fade-in-up', i % 2 === 0 ? 'bg-white' : 'bg-surface-secondary/20')} style={{ animationDelay: `${i * 0.05}s` }}>
+                    <td className="px-4 py-3 font-semibold text-text-primary">
+                      <span className="mr-2">{market.flag}</span>{market.country}
+                    </td>
+                    <td className="text-center px-3 py-3 font-black text-text-primary">{market.pmfScore}</td>
+                    {dimensionLabels.map((dim) => (
+                      <td key={dim.key} className="text-center px-3 py-3">
+                        <span className={cn('font-semibold', market.dimensions[dim.key] >= 80 ? 'text-eco' : market.dimensions[dim.key] >= 60 ? 'text-text-primary' : 'text-coral')}>
+                          {market.dimensions[dim.key]}
+                        </span>
+                      </td>
+                    ))}
+                    <td className="text-center px-3 py-3">
+                      <span className={cn('px-2 py-0.5 rounded-full text-xs font-bold', config.badge)}>{config.label}</span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Non-obvious insights */}
+      {insights.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="font-bold text-text-primary">Key Insights</h3>
+          {insights.map((insight, i) => (
+            <div
+              key={i}
+              className={cn(
+                'rounded-xl p-4 border animate-fade-in-up',
+                insight.type === 'opportunity' ? 'bg-eco/5 border-eco/20' :
+                insight.type === 'caution' ? 'bg-warning/5 border-warning/20' :
+                'bg-sky-blue/5 border-sky-blue/20'
+              )}
+              style={{ animationDelay: `${i * 0.1}s` }}
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-lg">{insight.type === 'opportunity' ? '🟢' : insight.type === 'caution' ? '🟡' : '🔵'}</span>
+                <p className="text-sm text-text-primary leading-relaxed">{insight.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* AI Reasoning - launch sequence */}
+      <div className="bg-sky-blue/5 border border-sky-blue/20 rounded-xl p-5">
+        <div className="flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-sky-blue shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-bold text-text-primary text-sm mb-2">Recommended Launch Sequence</h3>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Based on signal analysis, {plan.productName} should enter {markets.filter(m => m.tier === 'launch-now').map(m => m.country).join(', ')} immediately
+              where PMF scores exceed 75 and SkyVoyager has existing market presence.
+              {markets.filter(m => m.tier === 'next-quarter').length > 0 && (
+                <> Prepare {markets.filter(m => m.tier === 'next-quarter').map(m => m.country).join(', ')} for next quarter — these markets show strong demand but require localization or regulatory preparation.</>
+              )}
+              {markets.filter(m => m.tier === 'watch').length > 0 && (
+                <> Monitor {markets.filter(m => m.tier === 'watch').map(m => m.country).join(', ')} for emerging signals before committing resources.</>
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
