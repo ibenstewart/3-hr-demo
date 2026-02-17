@@ -1,7 +1,7 @@
 export interface TimelineItem {
   id: string
   time: string
-  type: 'flight' | 'transport' | 'hotel' | 'activity' | 'food' | 'suggestion' | 'alert'
+  type: 'flight' | 'transport' | 'hotel' | 'activity' | 'food' | 'suggestion' | 'alert' | 'run'
   title: string
   description: string
   details?: Record<string, string>
@@ -405,6 +405,12 @@ export const quickActions: QuickAction[] = [
       { title: 'Hospital del Mar', detail: 'Nearest A&E — Passeig Marítim, 25-29' },
       { title: 'Pharmacy (24hr)', detail: 'Farmacia Torres — Carrer Aribau, 62' },
     ],
+  },
+  {
+    id: 'running',
+    icon: 'Footprints',
+    label: 'Run',
+    items: [],
   },
   {
     id: 'documents',

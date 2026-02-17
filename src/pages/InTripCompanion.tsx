@@ -1,9 +1,18 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { Link } from 'react-router'
-import { MessageCircle, X, Send, MapPin, Sun, Sparkles, ArrowRight } from 'lucide-react'
+import { MessageCircle, X, Send, MapPin, Sun, Sparkles, ArrowRight, ArrowLeft, Mountain, Clock, Footprints, Check } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
+import { Area, AreaChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { cn } from '../lib/utils'
-import { tripDays, chatMessages as initialChat, quickActions, type ChatMessage } from '../data/barcelona-trip'
+import { tripDays as initialTripDays, chatMessages as initialChat, quickActions, type ChatMessage } from '../data/barcelona-trip'
+import { barcelonaRoutes, runningChatResponse } from '../data/running-routes'
+import type { RunningRoute } from '../data/running-routes'
+import BottomSheet from '../components/BottomSheet'
+
+const RouteMap = lazy(() => import('../components/RouteMap'))
+
+const BPK_SKY_BLUE = 'rgb(0, 98, 227)'
+const BPK_TEXT_SECONDARY = 'rgb(98, 105, 113)'
 
 function getIcon(name: string) {
   const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[name]
@@ -16,8 +25,42 @@ export default function InTripCompanion() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialChat)
   const [newMessage, setNewMessage] = useState('')
   const [activeQuickAction, setActiveQuickAction] = useState<string | null>(null)
+  const [days, setDays] = useState(initialTripDays)
+  const [runSheetOpen, setRunSheetOpen] = useState(false)
+  const [selectedRoute, setSelectedRoute] = useState<RunningRoute | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+  const [savedRoutes, setSavedRoutes] = useState<Set<string>>(new Set())
 
-  const currentDay = tripDays[activeDay]
+  const currentDay = days[activeDay]
+
+  const handleSaveRoute = (route: RunningRoute) => {
+    if (savedRoutes.has(route.id)) return
+    const newItem = {
+      id: `run-${route.id}`,
+      time: '07:00',
+      type: 'run' as const,
+      title: `Morning Run: ${route.name}`,
+      description: `${route.distanceKm}km ${route.difficulty} run — ${route.highlights[0]}`,
+      icon: 'Footprints',
+      details: {
+        'Distance': `${route.distanceKm} km`,
+        'Elevation': `${route.elevationGainM}m gain`,
+        'Est. Time': `${route.estimatedMinutes} min`,
+        'Surface': route.surface,
+      },
+      actions: [{ label: 'View Route', variant: 'primary' as const }],
+    }
+    setDays(prev => prev.map((day, i) =>
+      i === activeDay ? { ...day, items: [newItem, ...day.items] } : day
+    ))
+    setSavedRoutes(prev => new Set(prev).add(route.id))
+    setToast(`Route added to Day ${activeDay + 1}`)
+    setTimeout(() => setToast(null), 3000)
+    setTimeout(() => {
+      setRunSheetOpen(false)
+      setSelectedRoute(null)
+    }, 1000)
+  }
 
   const sendMessage = () => {
     if (!newMessage.trim()) return
@@ -44,6 +87,8 @@ export default function InTripCompanion() {
       reply = "I can help with: restaurant recommendations, transport advice, weather updates, schedule changes, activity suggestions, and emergency info. Just ask naturally — I know your itinerary and Barcelona inside out."
     } else if (lowerMsg.match(/cancel|change|move|reschedule|skip/)) {
       reply = "No problem — I've noted that change. I'll shuffle your schedule to make the most of your free time. You could visit the Boqueria market instead, or just enjoy a coffee in Plaça Reial. Want me to suggest alternatives?"
+    } else if (lowerMsg.match(/run|running|jog|5k|10k|exercise|morning run/)) {
+      reply = runningChatResponse.text
     }
 
     setTimeout(() => {
@@ -83,7 +128,7 @@ export default function InTripCompanion() {
       <div className="bg-white border-b border-line sticky top-16 z-30">
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex gap-1 overflow-x-auto py-2">
-            {tripDays.map((day, i) => (
+            {days.map((day, i) => (
               <button
                 key={day.day}
                 onClick={() => setActiveDay(i)}
@@ -124,6 +169,7 @@ export default function InTripCompanion() {
                     item.type === 'hotel' ? "bg-haiti" :
                     item.type === 'food' ? "bg-berry" :
                     item.type === 'transport' ? "bg-coral" :
+                    item.type === 'run' ? "bg-eco" :
                     "bg-eco"
                   )}>
                     <Icon className="w-5 h-5 text-white" />
@@ -192,16 +238,24 @@ export default function InTripCompanion() {
         {/* Quick actions */}
         <div className="mt-8">
           <h3 className="text-sm font-bold text-text-primary mb-3">Quick actions</h3>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {quickActions.map((action) => {
               const Icon = getIcon(action.icon)
+              const isRunning = action.id === 'running'
               return (
                 <button
                   key={action.id}
-                  onClick={() => setActiveQuickAction(activeQuickAction === action.id ? null : action.id)}
+                  onClick={() => {
+                    if (isRunning) {
+                      setRunSheetOpen(true)
+                      setActiveQuickAction(null)
+                    } else {
+                      setActiveQuickAction(activeQuickAction === action.id ? null : action.id)
+                    }
+                  }}
                   className={cn(
                     "flex flex-col items-center gap-1 p-3 rounded-xl text-xs font-semibold transition-colors",
-                    activeQuickAction === action.id
+                    (activeQuickAction === action.id || (isRunning && runSheetOpen))
                       ? "bg-sky-blue text-white"
                       : "bg-white text-text-secondary hover:bg-surface-subtle shadow-sm"
                   )}
@@ -271,6 +325,213 @@ export default function InTripCompanion() {
           </Link>
         </div>
       </div>
+
+      {/* Running Routes Bottom Sheet */}
+      <BottomSheet
+        isOpen={runSheetOpen}
+        onClose={() => { setRunSheetOpen(false); setSelectedRoute(null) }}
+      >
+        {selectedRoute ? (
+          /* Route Detail View */
+          <div className="space-y-4">
+            <button
+              onClick={() => setSelectedRoute(null)}
+              className="flex items-center gap-1 text-sm text-sky-blue font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to routes
+            </button>
+
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-lg font-black text-text-primary">{selectedRoute.name}</h3>
+                <span className={cn(
+                  "text-xs font-bold px-2 py-0.5 rounded-full",
+                  selectedRoute.difficulty === 'easy' ? "bg-eco/20 text-eco" :
+                  selectedRoute.difficulty === 'moderate' ? "bg-coral/20 text-coral" :
+                  "bg-danger/20 text-danger"
+                )}>
+                  {selectedRoute.difficulty}
+                </span>
+              </div>
+              <p className="text-sm text-text-secondary">{selectedRoute.description}</p>
+            </div>
+
+            {/* Stats row */}
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { label: 'Distance', value: `${selectedRoute.distanceKm} km` },
+                { label: 'Elevation', value: `${selectedRoute.elevationGainM}m` },
+                { label: 'Time', value: `${selectedRoute.estimatedMinutes} min` },
+                { label: 'Surface', value: selectedRoute.surface },
+              ].map(stat => (
+                <div key={stat.label} className="bg-canvas-contrast rounded-lg p-2 text-center">
+                  <p className="text-xs text-text-secondary">{stat.label}</p>
+                  <p className="text-sm font-bold text-text-primary">{stat.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Map */}
+            <Suspense fallback={<div className="h-[200px] bg-canvas-contrast rounded-xl animate-pulse" />}>
+              <RouteMap coordinates={selectedRoute.coordinates} height="200px" />
+            </Suspense>
+
+            {/* Elevation profile */}
+            <div>
+              <div className="flex items-center gap-1 mb-2">
+                <Mountain className="w-4 h-4 text-text-secondary" />
+                <h4 className="text-sm font-bold text-text-primary">Elevation Profile</h4>
+              </div>
+              <div className="h-[120px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={selectedRoute.elevationProfile}>
+                    <XAxis
+                      dataKey="distanceKm"
+                      tick={{ fontSize: 10, fill: BPK_TEXT_SECONDARY }}
+                      tickFormatter={(v) => `${v}km`}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: BPK_TEXT_SECONDARY }}
+                      tickFormatter={(v) => `${v}m`}
+                      domain={['dataMin - 5', 'dataMax + 10']}
+                      width={40}
+                    />
+                    <Tooltip
+                      formatter={(value) => [`${value}m`, 'Elevation']}
+                      labelFormatter={(label) => `${label} km`}
+                      contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="elevationM"
+                      stroke={BPK_SKY_BLUE}
+                      fill={BPK_SKY_BLUE}
+                      fillOpacity={0.15}
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Highlights */}
+            <div className="flex flex-wrap gap-2">
+              {selectedRoute.highlights.map(h => (
+                <span key={h} className="text-xs bg-canvas-contrast text-text-secondary px-3 py-1 rounded-full font-medium">
+                  {h}
+                </span>
+              ))}
+            </div>
+
+            {/* UA Gear */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-bold text-text-primary">Recommended Gear</h4>
+                <span className="text-xs font-bold text-[#1D1D1D] tracking-wide">UNDER ARMOUR</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {selectedRoute.uaGear.map(gear => (
+                  <div key={gear.name} className="bg-white border border-[#1D1D1D]/10 rounded-xl overflow-hidden">
+                    <img src={gear.image} alt={gear.name} className="w-full h-20 object-cover" />
+                    <div className="p-2">
+                      <p className="text-xs font-bold text-text-primary">{gear.name}</p>
+                      <p className="text-xs text-text-secondary">{gear.type}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Save button */}
+            <button
+              onClick={() => handleSaveRoute(selectedRoute)}
+              disabled={savedRoutes.has(selectedRoute.id)}
+              className={cn(
+                "w-full py-3 rounded-xl text-sm font-bold transition-colors",
+                savedRoutes.has(selectedRoute.id)
+                  ? "bg-eco/20 text-eco cursor-default"
+                  : "bg-sky-blue text-white hover:bg-sky-blue/90"
+              )}
+            >
+              {savedRoutes.has(selectedRoute.id) ? (
+                <span className="flex items-center justify-center gap-2"><Check className="w-4 h-4" /> Saved to Day {activeDay + 1}</span>
+              ) : (
+                <span className="flex items-center justify-center gap-2"><Footprints className="w-4 h-4" /> Save to itinerary</span>
+              )}
+            </button>
+          </div>
+        ) : (
+          /* Route List View */
+          <div className="space-y-4">
+            {/* Co-branded header */}
+            <div className="text-center pb-3 border-b border-line">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-xs font-bold text-[#1D1D1D] tracking-wide">UNDER ARMOUR</span>
+                <span className="text-xs text-text-secondary">x</span>
+                <span className="text-xs font-bold text-sky-blue tracking-wide">SKYSCANNER</span>
+              </div>
+              <h3 className="text-lg font-black text-text-primary">Run the World</h3>
+              <p className="text-xs text-text-secondary">Discover the best running routes in Barcelona</p>
+            </div>
+
+            {/* Route cards */}
+            {barcelonaRoutes.map((route, i) => (
+              <button
+                key={route.id}
+                onClick={() => setSelectedRoute(route)}
+                className="w-full text-left bg-white rounded-xl shadow-sm border border-line overflow-hidden hover:shadow-md transition-shadow animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                <div className="flex">
+                  <img src={route.image} alt={route.name} className="w-24 h-24 object-cover flex-shrink-0" />
+                  <div className="p-3 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="text-sm font-bold text-text-primary truncate">{route.name}</h4>
+                      <span className="text-[10px] font-bold text-[#1D1D1D]/60 bg-[#1D1D1D]/5 px-1.5 py-0.5 rounded flex-shrink-0">UA Tested</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-text-secondary mb-1">
+                      <span className="flex items-center gap-1"><Footprints className="w-3 h-3" />{route.distanceKm} km</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{route.estimatedMinutes} min</span>
+                      <span className="flex items-center gap-1"><Mountain className="w-3 h-3" />{route.elevationGainM}m</span>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-bold px-2 py-0.5 rounded-full",
+                      route.difficulty === 'easy' ? "bg-eco/20 text-eco" :
+                      route.difficulty === 'moderate' ? "bg-coral/20 text-coral" :
+                      "bg-danger/20 text-danger"
+                    )}>
+                      {route.difficulty}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            ))}
+
+            {/* Generate custom route link */}
+            <button
+              onClick={() => {
+                setRunSheetOpen(false)
+                setSelectedRoute(null)
+                setChatOpen(true)
+                setNewMessage('Find me a running route in Barcelona')
+              }}
+              className="w-full py-3 rounded-xl border-2 border-dashed border-sky-blue/30 text-sky-blue text-sm font-semibold hover:bg-sky-blue/5 transition-colors flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Generate custom route with AI
+            </button>
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-24 right-6 bg-eco text-white px-4 py-3 rounded-xl shadow-lg animate-fade-in flex items-center gap-2 z-50">
+          <Check className="w-4 h-4" />
+          <span className="text-sm font-semibold">{toast}</span>
+        </div>
+      )}
 
       {/* Chat FAB */}
       <button
