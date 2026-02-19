@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase, Megaphone, Code2, Play } from 'lucide-react'
+import { Plane, Map, ShoppingBag, TrendingUp, Compass, Briefcase, Megaphone, Palette, Code2, Play } from 'lucide-react'
 
 const demos = [
   {
@@ -58,6 +58,14 @@ const demos = [
     phase: 'Go-to-Market',
     color: 'bg-coral',
   },
+  {
+    to: '/white-label',
+    icon: Palette,
+    title: 'White-Label Platform',
+    description: 'Partner-branded travel products powered by Skyscanner intelligence. Full admin + customer experience.',
+    phase: 'B2B Platform',
+    color: 'bg-eco',
+  },
 ]
 
 export default function DemoHub() {
@@ -68,10 +76,10 @@ export default function DemoHub() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 animate-fade-in-up">
             One engineer. Three hours.{' '}
-            <span className="text-sky-blue">Seven products.</span>
+            <span className="text-sky-blue">Eight products.</span>
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto animate-fade-in-up stagger-1">
-            Seven product demos exploring SkyVoyager as a travel operating system.
+            Eight product demos exploring SkyVoyager as a travel operating system.
           </p>
           <Link
             to="/journey"
