@@ -10,6 +10,7 @@ const links = [
   { to: '/experiences', label: 'Experiences' },
   { to: '/business-travel', label: 'Biz Travel' },
   { to: '/marketing', label: 'Marketing' },
+  { to: '/white-label', label: 'White Label' },
   { to: '/stats', label: 'The Build' },
 ]
 
