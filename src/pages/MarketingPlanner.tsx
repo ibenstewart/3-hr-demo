@@ -62,6 +62,7 @@ const productCards = [
   { id: 'prices', label: 'Price Intelligence', color: 'bg-berry', route: '/prices' },
   { id: 'experiences', label: 'Tours & Experiences', color: 'bg-haiti', route: '/experiences' },
   { id: 'business-travel', label: 'Business Travel Agent', color: 'bg-sky-blue', route: '/business-travel' },
+  { id: 'white-label', label: 'White-Label Platform', color: 'bg-eco', route: '/white-label' },
 ]
 
 const channelIcons: Record<string, LucideIcon> = {

@@ -59,6 +59,11 @@ export const geoSignalInsightsByProduct: Record<string, GeoSignalInsight[]> = {
     { text: 'Netherlands has strict works council requirements for new enterprise software adoption — factor 3-6 months for procurement cycles.', type: 'caution' },
     { text: 'UAE\'s free zones have different corporate travel policies than mainland — segment by zone for more targeted enterprise sales.', type: 'insight' },
   ],
+  'white-label': [
+    { text: 'UK has the densest concentration of digital-first banks (Monzo, Starling, Revolut) — embedded travel is a natural extension of their super-app strategies.', type: 'opportunity' },
+    { text: 'UAE banking regulations require foreign fintech platform providers to register with the Central Bank — factor 3-month approval process before partner launches.', type: 'caution' },
+    { text: 'Germany\'s strong Hausbank tradition means white-label travel products positioned through established banks carry inherently higher trust than startup brands.', type: 'insight' },
+  ],
 }
 
 export const geoMarketsByProduct: Record<string, GeoMarket[]> = {
@@ -1347,6 +1352,191 @@ export const geoMarketsByProduct: Record<string, GeoMarket[]> = {
           { headline: 'Duurzaam Zakelijk Reizen met AI', description: 'Lagere kosten, lagere CO2-uitstoot en automatische compliance. Het AI-reisplatform voor Nederlandse ondernemingen.' },
           { headline: 'Cut Travel Emissions 30% With AI', description: 'SkyVoyager optimises routes for lowest carbon, enforces policy automatically, and tracks Scope 3 emissions. Demo today.' },
           { headline: 'BCD Costs Too Much. AI Costs Less.', description: 'Replace manual travel management with AI — Dutch multinationals save 40% while cutting carbon. GDPR compliant.' },
+        ],
+      },
+    },
+  ],
+  'white-label': [
+    {
+      country: 'United Kingdom', flag: '🇬🇧', region: 'Europe', tier: 'launch-now', pmfScore: 92,
+      dimensions: { demand: 95, competition: 70, position: 92, regulatory: 88 },
+      insight: 'Densest market of digital-first banks and fintechs globally. Monzo, Starling, Revolut all exploring super-app strategies where embedded travel fits perfectly.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 35, note: 'Direct outreach to Head of Product at top 20 UK neobanks and fintechs' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'Money20/20 Europe, Finovate London, WiT Europe — demo-driven selling' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 20, note: 'Target product directors and digital transformation leads at UK banks' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 15, note: 'Case studies + "Why banks are launching travel" thought leadership' },
+          { name: 'PR & Press', icon: 'newspaper', budgetPct: 5, note: 'Sifted, AltFi, The Fintech Times — embedded travel angle' },
+        ],
+        competitors: [
+          { name: 'Amadeus', localStrength: 'Established travel tech infrastructure with deep airline relationships', angle: 'Amadeus is built for travel companies; SkyVoyager is built for any brand that wants to offer travel' },
+          { name: 'Travelport', localStrength: 'Legacy GDS contracts with major UK travel agencies and TMCs', angle: 'Travelport takes months; SkyVoyager launches in days with full brand control and self-service' },
+          { name: 'Kiwi.com Tequila', localStrength: 'Developer-friendly API with virtual interlining for unique routes', angle: 'Tequila gives you an API; SkyVoyager gives you a complete branded product with analytics and onboarding' },
+        ],
+        messaging: [
+          'Your customers already book flights — they just do it somewhere else. What if they did it in your app?',
+          'Meridian Bank launched branded flights in 14 days. Your brand could be next.',
+          'Embedded travel for UK fintechs: your brand, Skyscanner intelligence, revenue from day one',
+        ],
+        regulatory: ['FCA considerations for financial services firms offering travel products', 'UK GDPR and data processing for travel booking PII', 'Consumer Duty requirements for fair product presentation'],
+        contentBrief: ['Case study: "How a UK bank launched flights in 14 days"', 'White paper: "The Embedded Travel Opportunity for UK Fintechs"', 'Comparison: Build vs buy — the true cost of a travel product'],
+        adVariants: [
+          { headline: 'Your Customers Book Flights. You Should Earn From It.', description: 'Add branded flight search to your banking app. Skyscanner data, your brand, revenue on every booking. Live in 14 days.' },
+          { headline: 'Launch Branded Flights in 2 Weeks', description: 'No engineering required. Full brand control. Real-time analytics. The white-label platform UK fintechs are choosing.' },
+          { headline: 'The Shopify of Travel — For Banks', description: 'SkyVoyager\'s platform lets any brand sell flights under their own name. 5 partners live. Yours could be next.' },
+        ],
+      },
+    },
+    {
+      country: 'United Arab Emirates', flag: '🇦🇪', region: 'Middle East & Africa', tier: 'launch-now', pmfScore: 87,
+      dimensions: { demand: 90, competition: 65, position: 85, regulatory: 78 },
+      insight: 'UAE banks and telecoms aggressively pursuing super-app strategies. Emirates NBD, FAB, and du/e& all investing in digital ecosystems where embedded travel is a killer feature.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 40, note: 'Relationship-driven market. Target C-suite at top 10 UAE banks and telecoms' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'GITEX, Arabian Travel Market, Dubai Fintech Summit — demo booths drive pipeline' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 15, note: 'Target CDOs and SVP Digital at UAE financial institutions' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 15, note: 'Arabic + English thought leadership on embedded finance and travel' },
+          { name: 'Partner Channel', icon: 'handshake', budgetPct: 5, note: 'Big 4 consulting firms advising UAE banks on digital transformation' },
+        ],
+        competitors: [
+          { name: 'Amadeus', localStrength: 'Deep relationships with Gulf carriers (Emirates, Etihad, Qatar Airways)', angle: 'Amadeus powers airlines; SkyVoyager empowers non-travel brands to launch travel products independently' },
+          { name: 'Wego', localStrength: 'Regional MENA travel search leader with strong Arabic-language presence', angle: 'Wego is a consumer brand; SkyVoyager is the platform that powers brands like yours' },
+          { name: 'Cleartrip (Flipkart)', localStrength: 'Growing MENA presence backed by Walmart/Flipkart investment', angle: 'Cleartrip competes with your brand; SkyVoyager enhances it with embedded travel' },
+        ],
+        messaging: [
+          'UAE banks are building super-apps. Travel is the missing piece. We provide it.',
+          'Branded flight booking for Emirates NBD, FAB, and every bank in between — live in 14 days',
+          'Your customers fly 4x per year. Each flight is revenue you\'re leaving on the table.',
+        ],
+        regulatory: ['Central Bank of UAE fintech registration for foreign platform providers', 'DIFC and ADGM data protection regulations', 'Arabic language requirements for consumer-facing financial products'],
+        contentBrief: ['Report: "The Super-App Race in UAE Banking — Where Travel Fits"', 'Case study: Embedded travel pilot with UAE financial institution', 'Guide: Regulatory pathway for travel platform partnerships in UAE'],
+        adVariants: [
+          { headline: 'UAE Banks: Add Flights to Your Super-App', description: 'Branded flight search powered by Skyscanner. Your customers book, you earn. Live in 14 days. Central Bank compliant.' },
+          { headline: 'Embedded Travel for Gulf Financial Institutions', description: 'Your customers fly 4x/year. Each flight is revenue you\'re missing. SkyVoyager\'s platform changes that. Book a demo.' },
+          { headline: 'Launch a Travel Product Without Building One', description: 'Skyscanner data. Your brand. Full analytics. The fastest path to embedded travel for UAE banks and telecoms.' },
+        ],
+      },
+    },
+    {
+      country: 'Germany', flag: '🇩🇪', region: 'Europe', tier: 'launch-now', pmfScore: 84,
+      dimensions: { demand: 85, competition: 72, position: 82, regulatory: 80 },
+      insight: 'Europe\'s largest banking market with strong Hausbank tradition. White-label travel through a trusted bank brand carries higher inherent trust than any startup.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 35, note: 'Target digital banking teams at Deutsche Bank, Commerzbank, N26, and Sparkassen network' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'ITB Berlin, Bits & Pretzels, Banking Exchange — travel meets fintech' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 20, note: 'German-language case studies and white papers. "Eingebettetes Reisen" positioning.' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 15, note: 'Target Leiter Digitale Produkte and Produktmanager at German banks' },
+          { name: 'Partner Channel', icon: 'handshake', budgetPct: 5, note: 'German IT consultancies (Accenture DACH, Capgemini) advising on digital transformation' },
+        ],
+        competitors: [
+          { name: 'Amadeus', localStrength: 'Munich HQ gives strong local enterprise relationships across DACH', angle: 'Amadeus sells to travel companies; SkyVoyager lets banks become travel companies overnight' },
+          { name: 'Peakwork', localStrength: 'German travel tech company with dynamic packaging for tour operators', angle: 'Peakwork serves tour operators; SkyVoyager serves any brand wanting to add flights — simpler, faster, branded' },
+          { name: 'Travelport', localStrength: 'Established GDS relationships with German travel agencies (DER Touristik)', angle: 'Travelport is agency infrastructure; SkyVoyager is brand infrastructure — self-service and live in days' },
+        ],
+        messaging: [
+          'Deutsche Banken können jetzt Flugreisen anbieten — in 14 Tagen, ohne Entwicklerteam',
+          'Embedded travel for German banks: your brand, Skyscanner data, revenue from day one',
+          'The Hausbank advantage: customers trust their bank. Now their bank offers flights.',
+        ],
+        regulatory: ['BaFin oversight for financial institutions offering ancillary products', 'DSGVO (German GDPR) with stricter interpretation than EU baseline', 'Pauschalreiserichtlinie (Package Travel Directive) implications for bundled offerings'],
+        contentBrief: ['White paper: "Eingebettetes Reisen — Die nächste Chance für deutsche Banken"', 'Calculator: Revenue potential from embedded flights based on customer base size', 'Guide: BaFin and regulatory considerations for banks offering travel products'],
+        adVariants: [
+          { headline: 'Flugreisen in Ihrer Banking-App — In 14 Tagen Live', description: 'SkyVoyager ermöglicht deutschen Banken, Flugreisen unter eigener Marke anzubieten. Skyscanner-Daten. Ihre Marke. Sofort Umsatz.' },
+          { headline: 'Embedded Travel for German Banks', description: 'Your customers fly 3x/year. Each flight is revenue your bank is missing. SkyVoyager launches your branded travel product in days.' },
+          { headline: 'N26 bietet Reisen an. Ihre Bank auch?', description: 'White-Label-Flugsuche für Banken und Fintechs. Volle Markenkontrolle, Echtzeit-Analytics, DSGVO-konform.' },
+        ],
+      },
+    },
+    {
+      country: 'Singapore', flag: '🇸🇬', region: 'Asia Pacific', tier: 'next-quarter', pmfScore: 81,
+      dimensions: { demand: 82, competition: 68, position: 78, regulatory: 85 },
+      insight: 'APAC fintech hub with DBS, OCBC, and Grab all building super-apps. Singapore is the beachhead for APAC embedded travel expansion.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 40, note: 'Direct outreach to DBS, OCBC, UOB, and Grab digital teams' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'Singapore Fintech Festival, WiT Singapore, Travel Tech Asia' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 20, note: 'Target VP Digital at APAC banks headquartered in Singapore' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 15, note: 'APAC-focused case studies. Position as the embedded travel platform for super-apps.' },
+        ],
+        competitors: [
+          { name: 'Amadeus', localStrength: 'Strong APAC HQ in Singapore with local airline relationships (SIA, Scoot)', angle: 'Amadeus is airline infrastructure; SkyVoyager is brand infrastructure for non-travel companies' },
+          { name: 'Traveloka', localStrength: 'Southeast Asian super-app with flights, hotels, and financial products', angle: 'Traveloka competes with your brand; SkyVoyager powers your brand to compete with Traveloka' },
+          { name: 'Agoda', localStrength: 'Booking Holdings-backed OTA with strong APAC presence and affiliate programme', angle: 'Agoda is an affiliate link; SkyVoyager is your own branded product — better UX, better data, better margins' },
+        ],
+        messaging: [
+          'APAC super-apps need travel. SkyVoyager provides the platform to launch it under your brand.',
+          'DBS has a super-app. Grab has a super-app. Your embedded travel starts here.',
+          'Branded flights for Singapore banks: live in 14 days, revenue from week one',
+        ],
+        regulatory: ['MAS (Monetary Authority of Singapore) guidelines for financial institution partnerships', 'PDPA compliance for customer travel booking data', 'Singapore Competition Act considerations for platform partnerships'],
+        contentBrief: ['Report: "Embedded Travel in APAC Super-Apps — The Next Frontier"', 'Case study: White-label pilot with Singapore financial institution', 'Comparison: Building vs buying a travel product in the APAC regulatory environment'],
+        adVariants: [
+          { headline: 'Embedded Travel for APAC Super-Apps', description: 'Add branded flights to your banking or super-app. Skyscanner data, your brand, APAC content. Live in 14 days.' },
+          { headline: 'Your Super-App Needs Flights. We Power Them.', description: 'SkyVoyager\'s white-label platform lets Singapore banks and fintechs launch branded travel instantly. MAS-ready.' },
+          { headline: 'DBS, Grab, and Now You — Offer Flights in Your App', description: 'The embedded travel platform APAC banks are choosing. Your brand. Skyscanner intelligence. Book a demo today.' },
+        ],
+      },
+    },
+    {
+      country: 'Australia', flag: '🇦🇺', region: 'Asia Pacific', tier: 'next-quarter', pmfScore: 79,
+      dimensions: { demand: 80, competition: 62, position: 80, regulatory: 82 },
+      insight: 'High-travel-frequency market with strong fintech scene (Afterpay, Zip). Banks like CBA and ANZ investing heavily in digital ecosystems.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 35, note: 'Target Big Four banks (CBA, Westpac, ANZ, NAB) and fintech leaders' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'Sibos APAC, Intersekt (fintech festival), CAPA Aviation Summit' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 20, note: 'Target GM Digital at Australian banks and loyalty programme managers at Qantas FF and Velocity' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 20, note: 'Loyalty programme + embedded travel positioning for Australian market' },
+        ],
+        competitors: [
+          { name: 'Amadeus', localStrength: 'Powers Qantas distribution and major Australian travel agencies', angle: 'Amadeus serves airlines; SkyVoyager serves the banks and retailers that want to offer travel alongside their core products' },
+          { name: 'Webjet', localStrength: 'Dominant Australian OTA with B2B division (WebBeds) for wholesale distribution', angle: 'Webjet is a competing brand; SkyVoyager enhances your brand — customers stay in your ecosystem' },
+          { name: 'Flight Centre TTV', localStrength: 'Largest Australian travel retail network with corporate and leisure arms', angle: 'Flight Centre is a travel agency; SkyVoyager lets you become your own travel brand without the overhead' },
+        ],
+        messaging: [
+          'Australians fly more than almost any other nationality. Your bank should be earning from every trip.',
+          'CBA customers book 8 flights a year. Imagine if they booked through the CommBank app.',
+          'White-label flights for Australian banks: Skyscanner data, your brand, Qantas FF integration-ready',
+        ],
+        regulatory: ['APRA prudential standards for banking partnerships', 'Australian Consumer Law requirements for travel product transparency', 'Privacy Act 1988 and Australian Privacy Principles for booking data'],
+        contentBrief: ['Report: "The Embedded Travel Opportunity for Australian Banks"', 'Case study: Loyalty programme integration with white-label flights', 'Calculator: Revenue from embedded flights based on Australian bank customer base size'],
+        adVariants: [
+          { headline: 'Australian Banks: Add Flights to Your App', description: 'Your customers fly 8x/year. Each flight is revenue you\'re missing. SkyVoyager launches branded travel in 14 days.' },
+          { headline: 'Embedded Travel for CBA, ANZ, and Beyond', description: 'Branded flight search powered by Skyscanner. Your app, your brand, your revenue. Qantas FF integration-ready.' },
+          { headline: 'Loyalty Points + Flights = Your Super-App', description: 'SkyVoyager\'s white-label platform connects flights to your loyalty programme. Live in 14 days. Book a demo.' },
+        ],
+      },
+    },
+    {
+      country: 'Brazil', flag: '🇧🇷', region: 'Latin America', tier: 'watch', pmfScore: 68,
+      dimensions: { demand: 78, competition: 55, position: 62, regulatory: 58 },
+      insight: 'Latin America\'s largest fintech market (Nubank, PicPay). Massive domestic travel market with growing international demand. Regulatory complexity is the main barrier.',
+      playbook: {
+        channels: [
+          { name: 'Enterprise Sales', icon: 'briefcase', budgetPct: 40, note: 'Target Nubank, Itaú, Bradesco, and PicPay digital teams' },
+          { name: 'Industry Events', icon: 'mic', budgetPct: 25, note: 'Fintech Conference LATAM, WTM Latin America, ABAV Expo' },
+          { name: 'Content Marketing', icon: 'file-text', budgetPct: 20, note: 'Portuguese-language content. Position around PIX-enabled travel payments.' },
+          { name: 'LinkedIn Ads', icon: 'linkedin', budgetPct: 15, note: 'Target Diretor de Produtos Digitais at Brazilian banks and fintechs' },
+        ],
+        competitors: [
+          { name: 'Decolar (Despegar)', localStrength: 'Largest LATAM OTA with deep local airline content and instalment payments', angle: 'Decolar is a competing consumer brand; SkyVoyager powers your own brand to offer flights natively' },
+          { name: 'MaxMilhas', localStrength: 'Brazilian miles marketplace — strong loyalty programme integration', angle: 'MaxMilhas monetises existing miles; SkyVoyager creates new travel revenue streams for your platform' },
+          { name: 'Amadeus', localStrength: 'Powers Gol, LATAM, and Azul distribution infrastructure', angle: 'Amadeus is airline infrastructure; SkyVoyager is platform infrastructure for any Brazilian brand' },
+        ],
+        messaging: [
+          'Nubank tem 90 milhões de clientes. E se cada um reservasse voos pelo app?',
+          'Brazilian fintechs are becoming super-apps. Embedded travel is the next feature your users want.',
+          'White-label flights with PIX payments and parcelamento — designed for the Brazilian market',
+        ],
+        regulatory: ['BACEN (Central Bank of Brazil) requirements for financial institution partnerships', 'LGPD (Brazilian data protection) compliance for travel booking data', 'ANAC regulations for travel distribution and consumer protection', 'Complex state-level tax (ICMS) implications for displayed prices'],
+        contentBrief: ['Report: "Viagens Embutidas — A Oportunidade para Fintechs Brasileiras"', 'Case study: Embedded travel pilot with Brazilian digital bank', 'Guide: Navigating BACEN and LGPD for travel platform partnerships in Brazil'],
+        adVariants: [
+          { headline: 'Voos no Seu App — Em 14 Dias', description: 'Plataforma white-label de viagens para bancos e fintechs brasileiros. Dados Skyscanner, sua marca, pagamento via PIX.' },
+          { headline: 'Brazilian Fintechs: Add Flights to Your Super-App', description: 'SkyVoyager\'s platform lets any brand sell flights. Skyscanner data, your brand, PIX-ready. Book a demo.' },
+          { headline: '90M Nubank Users Book Flights Somewhere Else', description: 'What if they booked through your app? SkyVoyager\'s white-label platform launches branded travel in days.' },
         ],
       },
     },
