@@ -11,6 +11,7 @@ import Experiences from './pages/Experiences'
 import ExperienceDetail from './pages/ExperienceDetail'
 import BusinessTravel from './pages/BusinessTravel'
 import MarketingPlanner from './pages/MarketingPlanner'
+import WhiteLabel from './pages/WhiteLabel'
 import Stats from './pages/Stats'
 import Journey from './pages/Journey'
 
@@ -29,6 +30,9 @@ export default function App() {
         <Route path="/experiences/:id" element={<ExperienceDetail />} />
         <Route path="/business-travel" element={<BusinessTravel />} />
         <Route path="/marketing" element={<MarketingPlanner />} />
+        <Route path="/white-label" element={<WhiteLabel />} />
+        <Route path="/white-label/admin" element={<WhiteLabel />} />
+        <Route path="/white-label/customer" element={<WhiteLabel />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/journey" element={<Journey />} />
       </Routes>
