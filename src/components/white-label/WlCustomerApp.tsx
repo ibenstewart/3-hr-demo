@@ -44,7 +44,7 @@ export default function WlCustomerApp() {
 
   const handleConfirmBooking = useCallback(() => {
     if (!selectedFlight) return
-    const ref = 'MBT-' + Math.random().toString(36).substring(2, 8).toUpperCase()
+    const ref = 'TC-' + Math.random().toString(36).substring(2, 8).toUpperCase()
     setBookings(prev => [...prev, { flight: selectedFlight, ref, passengerName: 'James Mitchell' }])
     setState('confirmed')
   }, [selectedFlight])

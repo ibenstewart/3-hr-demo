@@ -108,7 +108,7 @@ export default function WlBrandConfigurator({ onBack }: WlBrandConfiguratorProps
               onClick={resetBrand}
               className="flex items-center gap-1 text-sm px-4 py-2 rounded-lg border border-line text-text-secondary hover:bg-gray-50"
             >
-              <RotateCcw className="w-4 h-4" /> Reset to Meridian Defaults
+              <RotateCcw className="w-4 h-4" /> Reset to TravelConnect Defaults
             </button>
           </div>
         </div>

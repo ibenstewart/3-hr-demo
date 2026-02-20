@@ -16,8 +16,8 @@ interface WlMyTripsProps {
 }
 
 const pastTrips = [
-  { ref: 'MBT-X7K9P2', destination: 'Paris (CDG)', date: '22 Jan 2026', airline: '🇫🇷 Air France', price: 185 },
-  { ref: 'MBT-L3M8N5', destination: 'Barcelona (BCN)', date: '8 Dec 2025', airline: '🇪🇸 Vueling', price: 124 },
+  { ref: 'TC-X7K9P2', destination: 'Paris (CDG)', date: '22 Jan 2026', airline: '🇫🇷 Air France', price: 185 },
+  { ref: 'TC-L3M8N5', destination: 'Barcelona (BCN)', date: '8 Dec 2025', airline: '🇪🇸 Vueling', price: 124 },
 ]
 
 export default function WlMyTrips({ bookings, onSearchFlights }: WlMyTripsProps) {

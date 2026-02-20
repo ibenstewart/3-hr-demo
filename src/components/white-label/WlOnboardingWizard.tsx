@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useBrandContext } from './WlBrandContext'
 import { wlWizardSteps } from '../../data/white-label'
-import { Palette, Plane, PoundSterling, Plug, Rocket, Check, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Globe, Layers, Palette, Languages, LayoutGrid, Rocket, Check, ArrowLeft, ArrowRight, CheckCircle, Search, BarChart3, Bell, Award } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
-const stepIcons = { Palette, Plane, PoundSterling, Plug, Rocket }
+const stepIcons = { Globe, Layers, Palette, Languages, LayoutGrid, Rocket }
 
 interface WlOnboardingWizardProps {
   onComplete: () => void
@@ -15,6 +15,8 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
   const { brand, updateBrand } = useBrandContext()
   const [activeStep, setActiveStep] = useState(0)
   const [launched, setLaunched] = useState(false)
+  const [cnameVerified, setCnameVerified] = useState(false)
+  const [revenueModel, setRevenueModel] = useState<'revenue-share' | 'fixed-markup'>('revenue-share')
 
   const handleLaunch = () => {
     setLaunched(true)
@@ -42,7 +44,7 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
       {/* Progress Bar */}
       <div className="flex items-center gap-2 mb-8">
         {wlWizardSteps.map((step, i) => {
-          const Icon = stepIcons[step.icon as keyof typeof stepIcons] || Palette
+          const Icon = stepIcons[step.icon as keyof typeof stepIcons] || Globe
           const completed = i < activeStep
           const active = i === activeStep
           return (
@@ -69,7 +71,81 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
 
       {/* Step Content */}
       <div className="bg-white rounded-xl border border-line p-6 mb-6">
+
+        {/* Step 0: Domain Setup */}
         {activeStep === 0 && (
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs text-text-secondary block mb-1">Custom Domain</label>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-400">https://</span>
+                <input
+                  type="text"
+                  defaultValue="travel.travelconnect.com"
+                  className="flex-1 border border-line rounded-lg px-3 py-2 text-sm font-mono"
+                />
+              </div>
+            </div>
+            <div className="p-4 rounded-lg bg-gray-50">
+              <p className="text-xs font-medium text-gray-700 mb-2">CNAME Configuration</p>
+              <div className="font-mono text-xs bg-white border border-line rounded-lg p-3 text-gray-600">
+                <p>travel.travelconnect.com  CNAME  wl.skyscanner.net</p>
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Add this CNAME record in your DNS provider</p>
+            </div>
+            <button
+              onClick={() => setCnameVerified(true)}
+              className={cn(
+                'flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors',
+                cnameVerified
+                  ? 'bg-eco/10 text-eco border border-eco/20'
+                  : 'bg-sky-blue text-white hover:bg-sky-blue/90'
+              )}
+            >
+              {cnameVerified ? <CheckCircle className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
+              {cnameVerified ? 'Domain Verified' : 'Verify Domain'}
+            </button>
+          </div>
+        )}
+
+        {/* Step 1: Verticals */}
+        {activeStep === 1 && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { id: 'flights', label: 'Flights', icon: '✈️', desc: 'Flight search & booking', available: true },
+                { id: 'car-hire', label: 'Car Hire', icon: '🚗', desc: 'Car rental comparison', available: true },
+                { id: 'hotels', label: 'Hotels', icon: '🏨', desc: 'Accommodation search', available: false },
+              ].map(v => (
+                <label
+                  key={v.id}
+                  className={cn(
+                    'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-colors text-center',
+                    v.available
+                      ? 'border-line hover:border-sky-blue/50'
+                      : 'border-line/50 opacity-50 cursor-not-allowed'
+                  )}
+                >
+                  {!v.available && (
+                    <span className="absolute top-2 right-2 text-[10px] bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full">Coming soon</span>
+                  )}
+                  <span className="text-2xl">{v.icon}</span>
+                  <input
+                    type="checkbox"
+                    defaultChecked={v.id === 'flights'}
+                    disabled={!v.available}
+                    className="accent-sky-blue"
+                  />
+                  <span className="text-sm font-medium">{v.label}</span>
+                  <span className="text-[11px] text-gray-400">{v.desc}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Brand Identity */}
+        {activeStep === 2 && (
           <div className="space-y-4">
             <div>
               <label className="text-xs text-text-secondary block mb-1">Logo URL</label>
@@ -145,7 +221,6 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
                 <span>Pill</span>
               </div>
             </div>
-            {/* Live Preview */}
             <div className="p-4 rounded-lg bg-gray-50 mt-4">
               <p className="text-xs text-gray-500 mb-2">Preview</p>
               <button
@@ -158,113 +233,78 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
           </div>
         )}
 
-        {activeStep === 1 && (
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs text-text-secondary block mb-2">Default Cabin Class</label>
-              <div className="flex gap-3">
-                {['Economy', 'Business', 'First'].map(c => (
-                  <label key={c} className="flex items-center gap-2 text-sm">
-                    <input type="radio" name="cabin" defaultChecked={c === 'Economy'} className="accent-sky-blue" />
-                    {c}
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="text-xs text-text-secondary block mb-2">Include Checked Baggage</label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" defaultChecked className="accent-sky-blue" />
-                1 x 23kg checked bag included
-              </label>
-            </div>
-            <div>
-              <label className="text-xs text-text-secondary block mb-2">Maximum Connections</label>
-              <div className="flex gap-3">
-                {['Direct only', '1 stop', 'Any'].map(c => (
-                  <label key={c} className="flex items-center gap-2 text-sm">
-                    <input type="radio" name="stops" defaultChecked={c === 'Any'} className="accent-sky-blue" />
-                    {c}
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="text-xs text-text-secondary block mb-2">Preferred Airlines</label>
-              <div className="flex flex-wrap gap-2">
-                {['British Airways', 'Virgin Atlantic', 'American Airlines', 'Delta', 'United'].map(a => (
-                  <label key={a} className="flex items-center gap-1.5 text-xs border border-line rounded-full px-3 py-1.5 cursor-pointer hover:bg-gray-50">
-                    <input type="checkbox" defaultChecked={a === 'British Airways' || a === 'Virgin Atlantic'} className="accent-sky-blue w-3 h-3" />
-                    {a}
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeStep === 2 && (
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs text-text-secondary block mb-2">Markup Type</label>
-              <div className="flex gap-3">
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="radio" name="markup" defaultChecked className="accent-sky-blue" />
-                  Percentage
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="radio" name="markup" className="accent-sky-blue" />
-                  Fixed Amount
-                </label>
-              </div>
-            </div>
-            <div>
-              <label className="text-xs text-text-secondary block mb-1">Markup Value</label>
-              <div className="flex items-center gap-2">
-                <input type="number" defaultValue={5} className="w-24 border border-line rounded-lg px-3 py-2 text-sm" />
-                <span className="text-sm text-gray-500">%</span>
-              </div>
-            </div>
-            <div>
-              <label className="text-xs text-text-secondary block mb-1">Currency</label>
-              <select className="border border-line rounded-lg px-3 py-2 text-sm" defaultValue="GBP">
-                <option value="GBP">GBP (£)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="USD">USD ($)</option>
-              </select>
-            </div>
-            <div className="p-4 rounded-lg bg-gray-50 mt-2">
-              <p className="text-xs text-gray-500 mb-1">Example earning</p>
-              <p className="text-sm">Customer pays: <span className="font-bold">£420</span> → You earn: <span className="font-bold text-eco">£21</span> per booking</p>
-            </div>
-          </div>
-        )}
-
+        {/* Step 3: Languages & Markets */}
         {activeStep === 3 && (
           <div className="space-y-4">
-            {[
-              { category: 'Payment', items: [{ name: 'Stripe', checked: true }, { name: 'PayPal', checked: false }, { name: 'Apple Pay', checked: false }] },
-              { category: 'Analytics', items: [{ name: 'Google Analytics', checked: true }, { name: 'Mixpanel', checked: false }] },
-              { category: 'CRM', items: [{ name: 'Salesforce', checked: false }, { name: 'HubSpot', checked: false }] },
-              { category: 'Notifications', items: [{ name: 'Email', checked: true }, { name: 'SMS', checked: false }, { name: 'Push', checked: false }] },
-            ].map(group => (
-              <div key={group.category}>
-                <label className="text-xs text-text-secondary block mb-2">{group.category}</label>
-                <div className="flex gap-3">
-                  {group.items.map(item => (
-                    <label key={item.name} className="flex items-center gap-2 text-sm border border-line rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50">
-                      <input type="checkbox" defaultChecked={item.checked} className="accent-eco" />
-                      {item.name}
-                      {item.checked && <Check className="w-3 h-3 text-eco" />}
-                    </label>
-                  ))}
-                </div>
+            <div>
+              <label className="text-xs text-text-secondary block mb-2">Supported Languages</label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { code: 'en', label: 'English', flag: '🇬🇧' },
+                  { code: 'es', label: 'Spanish', flag: '🇪🇸' },
+                  { code: 'de', label: 'German', flag: '🇩🇪' },
+                  { code: 'fr', label: 'French', flag: '🇫🇷' },
+                  { code: 'ar', label: 'Arabic', flag: '🇦🇪' },
+                  { code: 'zh', label: 'Mandarin', flag: '🇨🇳' },
+                ].map(lang => (
+                  <label key={lang.code} className="flex items-center gap-2 text-sm border border-line rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-50">
+                    <input type="checkbox" defaultChecked={lang.code === 'en'} className="accent-sky-blue" />
+                    <span>{lang.flag}</span>
+                    <span>{lang.label}</span>
+                  </label>
+                ))}
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-text-secondary block mb-1">Default Market</label>
+                <select className="w-full border border-line rounded-lg px-3 py-2 text-sm" defaultValue="UK">
+                  <option value="UK">United Kingdom</option>
+                  <option value="US">United States</option>
+                  <option value="DE">Germany</option>
+                  <option value="AE">UAE</option>
+                  <option value="SG">Singapore</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-text-secondary block mb-1">Default Currency</label>
+                <select className="w-full border border-line rounded-lg px-3 py-2 text-sm" defaultValue="GBP">
+                  <option value="GBP">GBP (£)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="AED">AED (د.إ)</option>
+                  <option value="SGD">SGD (S$)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Widget Configuration */}
+        {activeStep === 4 && (
+          <div className="space-y-3">
+            {[
+              { id: 'search', label: 'Search Bar', desc: 'Embeddable flight search with autocomplete', icon: Search, checked: true },
+              { id: 'deals', label: 'Deal Cards', desc: 'Dynamic cards showing best fares from partner markets', icon: BarChart3, checked: true },
+              { id: 'alerts', label: 'Price Alerts', desc: 'Email notifications when tracked routes drop in price', icon: Bell, checked: false },
+              { id: 'score', label: 'Flight Score Badge', desc: 'Visual quality indicator for search results', icon: Award, checked: true },
+            ].map(widget => (
+              <label key={widget.id} className="flex items-center gap-4 p-4 rounded-xl border border-line cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="checkbox" defaultChecked={widget.checked} className="accent-eco w-4 h-4" />
+                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                  <widget.icon className="w-5 h-5 text-gray-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{widget.label}</p>
+                  <p className="text-xs text-gray-400">{widget.desc}</p>
+                </div>
+              </label>
             ))}
           </div>
         )}
 
-        {activeStep === 4 && (
+        {/* Step 5: Review & Launch */}
+        {activeStep === 5 && (
           <div className="space-y-4">
             <div className="flex items-center gap-4 p-4 rounded-lg bg-gray-50">
               <img src={brand.logo} alt={brand.name} className="w-12 h-12 rounded-full object-cover" />
@@ -283,22 +323,53 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
                 Sample Button
               </button>
             </div>
+
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="p-3 rounded-lg bg-gray-50">
-                <p className="text-xs text-gray-500 mb-1">Cabin Class</p>
-                <p className="font-medium">Economy</p>
+                <p className="text-xs text-gray-500 mb-1">Domain</p>
+                <p className="font-medium font-mono text-xs">travel.travelconnect.com</p>
               </div>
               <div className="p-3 rounded-lg bg-gray-50">
-                <p className="text-xs text-gray-500 mb-1">Markup</p>
-                <p className="font-medium">5% per booking</p>
+                <p className="text-xs text-gray-500 mb-1">Verticals</p>
+                <p className="font-medium">Flights</p>
               </div>
               <div className="p-3 rounded-lg bg-gray-50">
-                <p className="text-xs text-gray-500 mb-1">Integrations</p>
-                <p className="font-medium">Stripe, GA, Email</p>
+                <p className="text-xs text-gray-500 mb-1">Languages</p>
+                <p className="font-medium">English</p>
               </div>
               <div className="p-3 rounded-lg bg-gray-50">
-                <p className="text-xs text-gray-500 mb-1">Currency</p>
-                <p className="font-medium">GBP (£)</p>
+                <p className="text-xs text-gray-500 mb-1">Widgets</p>
+                <p className="font-medium">Search, Deals, Score</p>
+              </div>
+            </div>
+
+            {/* Revenue Model Selection */}
+            <div className="border-t border-line pt-4">
+              <label className="text-xs text-text-secondary block mb-2">Commercial Model</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setRevenueModel('revenue-share')}
+                  className={cn(
+                    'p-4 rounded-xl border-2 text-left transition-colors',
+                    revenueModel === 'revenue-share' ? 'border-eco bg-eco/5' : 'border-line hover:border-gray-300'
+                  )}
+                >
+                  <p className="text-sm font-bold mb-1">Revenue Share</p>
+                  <p className="text-xs text-gray-500">Earn a percentage of each booking. Aligned incentives — you grow when travellers book.</p>
+                  {revenueModel === 'revenue-share' && (
+                    <p className="text-xs text-eco font-medium mt-2">Recommended</p>
+                  )}
+                </button>
+                <button
+                  onClick={() => setRevenueModel('fixed-markup')}
+                  className={cn(
+                    'p-4 rounded-xl border-2 text-left transition-colors',
+                    revenueModel === 'fixed-markup' ? 'border-eco bg-eco/5' : 'border-line hover:border-gray-300'
+                  )}
+                >
+                  <p className="text-sm font-bold mb-1">Fixed Markup</p>
+                  <p className="text-xs text-gray-500">Add a fixed amount per ticket. Predictable margins regardless of booking value.</p>
+                </button>
               </div>
             </div>
           </div>
@@ -313,7 +384,7 @@ export default function WlOnboardingWizard({ onComplete, onBack }: WlOnboardingW
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
-        {activeStep < 4 ? (
+        {activeStep < 5 ? (
           <button
             onClick={() => setActiveStep(s => s + 1)}
             className="flex items-center gap-1 text-sm px-4 py-2 rounded-lg bg-sky-blue text-white hover:bg-sky-blue/90"

@@ -1376,7 +1376,7 @@ export const geoMarketsByProduct: Record<string, GeoMarket[]> = {
         ],
         messaging: [
           'Your customers already book flights — they just do it somewhere else. What if they did it in your app?',
-          'Meridian Bank launched branded flights in 14 days. Your brand could be next.',
+          'TravelConnect launched branded flights in 14 days. Your brand could be next.',
           'Embedded travel for UK fintechs: your brand, Skyscanner intelligence, revenue from day one',
         ],
         regulatory: ['FCA considerations for financial services firms offering travel products', 'UK GDPR and data processing for travel booking PII', 'Consumer Duty requirements for fair product presentation'],

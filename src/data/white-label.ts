@@ -5,6 +5,14 @@ export interface BrandConfig {
   accentColor: string
   fontFamily: string
   buttonRadius: number
+  // Wizard fields (optional — demo only, not all persisted)
+  cname?: string
+  verticals?: ('flights' | 'car-hire')[]
+  languages?: string[]
+  defaultMarket?: string
+  defaultCurrency?: string
+  revenueModel?: 'revenue-share' | 'fixed-markup'
+  widgets?: string[]
 }
 
 export interface WlFlight {
@@ -44,11 +52,11 @@ export interface WlWizardStep {
   icon: string
 }
 
-export const defaultMeridianConfig: BrandConfig = {
-  name: 'Meridian Bank Travel',
-  logo: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=200&h=200&fit=crop',
-  primaryColor: '#1B3A5C',
-  accentColor: '#C9A84C',
+export const defaultPartnerConfig: BrandConfig = {
+  name: 'TravelConnect',
+  logo: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200&h=200&fit=crop',
+  primaryColor: '#0A6E72',
+  accentColor: '#E85D3A',
   fontFamily: 'DM Sans',
   buttonRadius: 9999,
 }
@@ -202,9 +210,10 @@ function generateAnalytics(): WlAnalyticsDay[] {
 export const wlAnalytics: WlAnalyticsDay[] = generateAnalytics()
 
 export const wlWizardSteps: WlWizardStep[] = [
-  { id: 'brand', title: 'Brand Identity', description: 'Upload your logo and set your brand colours', icon: 'Palette' },
-  { id: 'flights', title: 'Flight Configuration', description: 'Choose cabin classes and airline preferences', icon: 'Plane' },
-  { id: 'pricing', title: 'Pricing & Margin', description: 'Set your markup and earning model', icon: 'PoundSterling' },
-  { id: 'integrations', title: 'Integrations', description: 'Connect payment, analytics and CRM tools', icon: 'Plug' },
+  { id: 'domain', title: 'Domain Setup', description: 'Configure your CNAME and custom domain', icon: 'Globe' },
+  { id: 'verticals', title: 'Verticals', description: 'Choose flights, car hire, or both', icon: 'Layers' },
+  { id: 'brand', title: 'Brand Identity', description: 'Upload your logo and set brand colours', icon: 'Palette' },
+  { id: 'languages', title: 'Languages & Markets', description: 'Set supported languages and default market', icon: 'Languages' },
+  { id: 'widgets', title: 'Widget Configuration', description: 'Choose which widgets to embed', icon: 'LayoutGrid' },
   { id: 'launch', title: 'Review & Launch', description: 'Review your setup and go live', icon: 'Rocket' },
 ]
