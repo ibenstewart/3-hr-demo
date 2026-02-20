@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
 import type { BrandConfig } from '../../data/white-label'
-import { defaultMeridianConfig } from '../../data/white-label'
+import { defaultPartnerConfig } from '../../data/white-label'
 
 interface BrandContextType {
   brand: BrandConfig
@@ -25,9 +25,14 @@ function applyBrandToCSS(config: BrandConfig) {
 function loadFromStorage(): BrandConfig {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      // Migrate old Meridian Bank config to new defaults
+      if (parsed.name && parsed.name.includes('Meridian')) return defaultPartnerConfig
+      return parsed
+    }
   } catch { /* ignore */ }
-  return defaultMeridianConfig
+  return defaultPartnerConfig
 }
 
 function saveToStorage(config: BrandConfig) {
@@ -59,7 +64,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const resetBrand = useCallback(() => {
-    setBrand(defaultMeridianConfig)
+    setBrand(defaultPartnerConfig)
   }, [setBrand])
 
   return (

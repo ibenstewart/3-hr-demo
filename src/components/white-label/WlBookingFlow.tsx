@@ -97,7 +97,7 @@ export default function WlBookingFlow({ flight, onConfirm, onBack }: WlBookingFl
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">Email</label>
-              <input type="email" defaultValue="j.mitchell@meridianbank.co.uk" className="w-full border rounded-lg px-3 py-2 text-sm" />
+              <input type="email" defaultValue="j.mitchell@travelconnect.com" className="w-full border rounded-lg px-3 py-2 text-sm" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">Phone</label>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { wlAnalytics } from '../../data/white-label'
 import { useBrandContext } from './WlBrandContext'
-import { TrendingUp, TrendingDown, MousePointerClick, Ticket, PoundSterling, BarChart3 } from 'lucide-react'
+import { TrendingUp, TrendingDown, MousePointerClick, Ticket, PoundSterling, BarChart3, History, AlertTriangle, Zap, CheckCircle2 } from 'lucide-react'
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 
 // Recharts needs raw RGB strings, not CSS vars
@@ -163,6 +163,73 @@ export default function WlAdminDashboard() {
                 <Area type="monotone" dataKey="revenue" stroke={CHART_BERRY} fill={CHART_BERRY} fillOpacity={0.15} strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Platform Evolution Timeline */}
+      <div className="mt-6 bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <History className="w-5 h-5" style={{ color: brand.primaryColor }} />
+          <h3 className="text-sm font-bold text-gray-900">Platform Evolution</h3>
+        </div>
+
+        <div className="relative pl-6 space-y-6">
+          {/* Vertical line */}
+          <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-gray-200" />
+
+          {/* 2015 */}
+          <div className="relative">
+            <div className="absolute -left-6 w-[18px] h-[18px] rounded-full bg-sky-blue flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-white" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">2015</p>
+              <p className="text-sm font-medium text-gray-900">Microsoft / Bing Partnership</p>
+              <p className="text-xs text-gray-500 mt-0.5">First white-label at scale — flights embedded across Bing and MSN properties</p>
+            </div>
+          </div>
+
+          {/* 2020 */}
+          <div className="relative">
+            <div className="absolute -left-6 w-[18px] h-[18px] rounded-full bg-amber-400 flex items-center justify-center">
+              <AlertTriangle className="w-2.5 h-2.5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">2020</p>
+              <p className="text-sm font-medium text-gray-900">Platform Decommissioned</p>
+              <p className="text-xs text-gray-500 mt-0.5">Lonely Planet, MSN, Travel Super Market offboarded. Lessons: needed self-serve onboarding, better analytics, clear lifecycle ownership</p>
+            </div>
+          </div>
+
+          {/* 2026 */}
+          <div className="relative">
+            <div className="absolute -left-6 w-[18px] h-[18px] rounded-full bg-eco flex items-center justify-center">
+              <Zap className="w-2.5 h-2.5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">2026</p>
+              <p className="text-sm font-medium text-gray-900">Componentized Relaunch</p>
+              <p className="text-xs text-gray-500 mt-0.5">Self-serve setup, real-time analytics, brand-native experiences — built on reusable consumer components</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Why This Time Is Different */}
+        <div className="mt-5 p-4 rounded-lg bg-gray-50 border border-gray-100">
+          <p className="text-xs font-semibold text-gray-700 mb-2">Why this time is different</p>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              'Self-serve partner onboarding',
+              'Real-time analytics dashboard',
+              'Componentized architecture',
+              'Clear lifecycle ownership',
+            ].map(item => (
+              <div key={item} className="flex items-center gap-1.5 text-xs text-gray-600">
+                <CheckCircle2 className="w-3 h-3 text-eco shrink-0" />
+                {item}
+              </div>
+            ))}
           </div>
         </div>
       </div>

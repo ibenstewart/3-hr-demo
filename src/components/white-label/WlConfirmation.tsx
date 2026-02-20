@@ -70,7 +70,7 @@ export default function WlConfirmation({ booking, onViewTrips, onSearchMore }: W
 
       <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <Mail className="w-4 h-4" />
-        Confirmation sent to j.mitchell@meridianbank.co.uk
+        Confirmation sent to j.mitchell@travelconnect.com
       </div>
 
       <div className="flex gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '300ms' }}>
